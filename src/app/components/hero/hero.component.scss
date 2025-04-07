@@ -3,17 +3,51 @@
 /* Hero Section */
 .hero {
     height: 100vh;
-    /* Fix background image path and add gradient fallback */
-    background: linear-gradient(rgba(30, 41, 59, 0.95), rgba(30, 41, 59, 0.9));
-    /* If you really want to use an image, use a proper path: */
-    /* background-image: linear-gradient(rgba(30, 41, 59, 0.9), rgba(30, 41, 59, 0.9)), url('../../../assets/background.jpg'); */
-    background-size: cover;
-    background-position: center;
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(20, 30, 48, 0.95));
     position: relative;
     overflow: hidden;
     color: white;
     display: flex;
     align-items: center;
+}
+
+// Add animated background elements
+.hero::before {
+    content: '';
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(rgba(0, 116, 228, 0.1), rgba(0, 116, 228, 0.01));
+    top: -100px;
+    left: -100px;
+    animation: float 15s ease-in-out infinite alternate;
+}
+
+.hero::after {
+    content: '';
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(rgba(0, 116, 228, 0.08), rgba(0, 116, 228, 0));
+    bottom: -200px;
+    right: -200px;
+    animation: float 20s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes float {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    50% {
+        transform: translate(30px, 20px) scale(1.05);
+    }
+
+    100% {
+        transform: translate(-20px, 40px) scale(0.95);
+    }
 }
 
 .particles-container {
@@ -23,6 +57,7 @@
     width: 100%;
     height: 100%;
     z-index: 0;
+    opacity: 0.6;
 }
 
 .container {
@@ -37,14 +72,18 @@
 .hero-content {
     max-width: 700px;
     margin: 0 auto;
+    padding: 10px 10px 35px 10px;
     text-align: center;
     animation: fadeInUp 1s ease-out;
-    padding: 30px 20px 50px 20px;
+    position: relative;
+    z-index: 10;
 }
 
+// Enhanced profile
 .profile-container {
+    margin-bottom: 30px;
     position: relative;
-    margin-bottom: 25px;
+    z-index: 2;
 }
 
 .profile-avatar {
@@ -52,82 +91,164 @@
     height: 150px;
     margin: 0 auto;
     border-radius: 50%;
-    overflow: hidden;
     position: relative;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-    border: 3px solid rgba(255, 255, 255, 0.2);
-    transition: all 0.5s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    border: none;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+    // Multiple border effect
+    &::before {
+        content: '';
+        position: absolute;
+        top: -10px;
+        left: -10px;
+        right: -10px;
+        bottom: -10px;
+        border: 3px solid rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        animation: pulse 3s infinite;
+    }
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: -5px;
+        left: -5px;
+        right: -5px;
+        bottom: -5px;
+        border: 2px solid rgba(0, 116, 228, 0.5);
+        border-radius: 50%;
+    }
+
+    &:hover {
+        transform: scale(1.08) rotate(3deg);
+    }
 }
 
-.profile-avatar:hover {
-    transform: scale(1.05);
-}
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
 
-.profile-avatar:hover img {
-    transform: scale(1.1);
-}
+    50% {
+        transform: scale(1.05);
+        opacity: 0.3;
+    }
 
-.profile-avatar:hover .avatar-border {
-    transform: rotate(360deg);
-}
-
-.avatar-border {
-    position: absolute;
-    top: -10px;
-    left: -10px;
-    right: -10px;
-    bottom: -10px;
-    border: 2px dashed var(--primary-color);
-    border-radius: 50%;
-    animation: rotate 20s linear infinite;
-    transition: transform 0.5s ease;
+    100% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
 }
 
 .profile-avatar img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.5s ease;
+    border-radius: 50%;
+    transition: all 0.5s ease;
+    border: 3px solid rgba(255, 255, 255, 0.2);
+}
+
+.profile-avatar:hover img {
+    transform: scale(1.1);
+}
+
+.avatar-border {
+    position: absolute;
+    top: -15px;
+    left: -15px;
+    right: -15px;
+    bottom: -15px;
+    border: 2px dashed rgba(0, 116, 228, 0.7);
+    border-radius: 50%;
+    animation: rotate 20s linear infinite;
+    opacity: 0.7;
 }
 
 .social-icons {
+    margin-top: 25px;
     display: flex;
     justify-content: center;
-    gap: 15px;
-    margin-top: 20px;
+    gap: 20px;
 }
 
 .social-icons a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     width: 40px;
     height: 40px;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
     color: white;
     font-size: 18px;
-    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to right, rgba(0, 116, 228, 0), rgba(0, 116, 228, 0.5), rgba(0, 116, 228, 0));
+        transform: translateX(-100%);
+        transition: transform 0.5s ease;
+    }
+
+    &:hover {
+        background: var(--primary-color);
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+
+        &::before {
+            transform: translateX(100%);
+        }
+    }
 }
 
-.social-icons a:hover {
-    background: var(--primary-color);
-    transform: translateY(-5px);
-}
-
+// Enhanced title with animation
 .hero-content h1 {
     font-size: 48px;
     font-weight: 700;
-    margin-bottom: 10px;
-    background: linear-gradient(45deg, #fff, #a3d8ff);
+    margin-bottom: 15px;
+    background: linear-gradient(45deg, #fff, #a3d8ff, #fff);
+    background-size: 200% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: gradientShift 3s ease infinite;
+    animation: shine 3s linear infinite;
+    position: relative;
+
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 3px;
+        background: linear-gradient(to right, transparent, var(--primary-color), transparent);
+    }
 }
 
+@keyframes shine {
+    to {
+        background-position: 200% center;
+    }
+}
+
+// Better typing animation container
 .role-container {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     height: 40px;
+    position: relative;
+    display: flex;
+    justify-content: center;
 }
 
 .hero-content h2 {
@@ -138,13 +259,14 @@
 }
 
 .static-text {
-    color: white;
+    color: rgba(255, 255, 255, 0.9);
     margin-right: 8px;
 }
 
 .dynamic-text {
     position: relative;
     color: var(--primary-color);
+    font-weight: 600;
 }
 
 .dynamic-text::after {
@@ -155,6 +277,7 @@
     animation: blink 0.7s infinite;
 }
 
+// Enhanced description
 .hero-content p {
     font-size: 18px;
     margin-bottom: 30px;
@@ -163,21 +286,27 @@
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
+    line-height: 1.7;
+    animation: fadeIn 2s ease;
 }
 
+// Enhanced linkedin badge
 .professional-badge {
-    margin-bottom: 20px;
-    background-color: rgba(255, 255, 255, 0.1);
+    margin-bottom: 25px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
     display: inline-block;
-    padding: 8px 15px;
+    padding: 10px 18px;
     border-radius: 30px;
     font-size: 14px;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .professional-badge:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-    transform: translateY(-3px);
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
 .professional-badge a {
@@ -185,19 +314,21 @@
     text-decoration: none;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
 }
 
 .professional-badge i {
     color: #0077b5;
     font-size: 16px;
+    animation: pulse 2s infinite;
 }
 
+// Enhanced buttons
 .hero-buttons {
     display: flex;
-    gap: 15px;
+    gap: 20px;
     justify-content: center;
-    margin-bottom: 30px;
+    margin-bottom: 40px;
 }
 
 .btn {
@@ -205,17 +336,19 @@
     align-items: center;
     justify-content: center;
     gap: 10px;
-    padding: 12px 25px;
+    padding: 12px 30px;
     border-radius: 30px;
     font-weight: 500;
     text-align: center;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     border: 2px solid transparent;
     font-size: 16px;
     position: relative;
     overflow: hidden;
     z-index: 1;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    min-width: 180px;
 }
 
 .btn::before {
@@ -225,7 +358,7 @@
     left: 0;
     width: 0%;
     height: 100%;
-    transition: all 0.5s ease;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     z-index: -1;
 }
 
@@ -234,75 +367,117 @@
 }
 
 .btn i {
-    transition: transform 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
 }
 
 .btn:hover i {
-    transform: translateX(3px);
+    transform: translateX(3px) scale(1.2);
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .primary-btn {
-    background-color: var(--primary-color);
+    background: linear-gradient(135deg, var(--primary-color), #0055a5);
     color: white;
-    border-color: var(--primary-color);
+    border-color: transparent;
 }
 
 .primary-btn::before {
-    background-color: transparent;
-}
-
-.primary-btn:hover {
-    color: var(--primary-color);
-}
-
-.primary-btn:hover i {
-    color: var(--primary-color);
+    background: linear-gradient(135deg, #0055a5, var(--primary-color));
 }
 
 .secondary-btn {
-    background-color: transparent;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
     color: white;
-    border-color: white;
+    border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
 .secondary-btn::before {
-    background-color: white;
+    background: rgba(255, 255, 255, 0.9);
 }
 
 .secondary-btn:hover {
     color: var(--secondary-color);
+    border-color: white;
 }
 
 .secondary-btn:hover i {
     color: var(--secondary-color);
 }
 
+// Enhanced scroll indicator
 .scroll-indicator {
     position: absolute;
     bottom: 5px;
-    /* Adjusted from 30px to 20px */
     left: 50%;
     transform: translateX(-50%);
     display: flex;
     flex-direction: column;
     align-items: center;
-    animation: bounce 2s infinite;
+    animation: fadeInUpDown 2s infinite;
     cursor: pointer;
-    z-index: 1;
-    /* Added z-index */
+    z-index: 10;
+    transition: all 0.3s ease;
+}
+
+.scroll-indicator:hover {
+    transform: translateX(-50%) scale(1.1);
 }
 
 .scroll-indicator span {
     font-size: 12px;
     text-transform: uppercase;
-    letter-spacing: 2px;
-    margin-bottom: 5px;
+    letter-spacing: 3px;
+    margin-bottom: 10px;
     color: rgba(255, 255, 255, 0.7);
+    transition: all 0.3s ease;
 }
 
 .scroll-indicator i {
-    font-size: 16px;
+    font-size: 20px;
     color: var(--primary-color);
+    animation: bounce 2s infinite;
+    filter: drop-shadow(0 0 5px rgba(0, 116, 228, 0.5));
+}
+
+@keyframes fadeInUpDown {
+
+    0%,
+    100% {
+        opacity: 0.7;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+@keyframes bounce {
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        transform: translateY(0);
+    }
+
+    40% {
+        transform: translateY(-10px);
+    }
+
+    60% {
+        transform: translateY(-5px);
+    }
 }
 
 /* Animations */
@@ -325,25 +500,6 @@
 
     100% {
         transform: rotate(360deg);
-    }
-}
-
-@keyframes bounce {
-
-    0%,
-    20%,
-    50%,
-    80%,
-    100% {
-        transform: translateY(0) translateX(-50%);
-    }
-
-    40% {
-        transform: translateY(-10px) translateX(-50%);
-    }
-
-    60% {
-        transform: translateY(-5px) translateX(-50%);
     }
 }
 

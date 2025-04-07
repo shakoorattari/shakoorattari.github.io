@@ -1,10 +1,13 @@
-<section class="about">
+<section class="about" id="about">
     <div class="container">
-        <div class="section-title">
+        <div class="section-title" data-aos="fade-down">
             <h2>About Me</h2>
+            <p>Discover my professional journey and expertise</p>
         </div>
+
         <div class="about-content">
-            <div class="profile-image">
+            <!-- Profile Image Side -->
+            <div class="profile-image" data-aos="fade-right" data-aos-delay="100">
                 <div class="image-container">
                     <img src="assets/files/shakoor_pic.jpeg" alt="Shakoor Hussain Attari" class="profile-photo">
                     <div class="social-overlay">
@@ -14,33 +17,107 @@
                         <a href="https://github.com/shakoorattari" target="_blank" rel="noopener noreferrer">
                             <i class="fab fa-github"></i>
                         </a>
-                    </div>
-                </div>
-                <div class="profile-badge">
-                    <span>Full Stack Developer</span>
-                </div>
-            </div>
-            <div class="about-text">
-                <p>I'm a Senior Full Stack Developer with over 12+ years of experience in the IT field, specializing
-                    in .NET development, Angular, database development, and automation testing. I hold a BS in
-                    Computer Science along with multiple Microsoft certifications.</p>
-                <p>I'm looking to leverage my technical skills and educational background in a dynamic environment
-                    that values innovation and problem-solving. My goal is to contribute to an organization's
-                    advancement while pursuing continuous professional growth in the field of technology.</p>
-                <div class="personal-info">
-                    <div class="info-item" *ngFor="let info of personalInfo">
-                        <span>{{info.label}}:</span> {{info.value}}
+                        <a href="mailto:binmushtaq@gmail.com">
+                            <i class="fas fa-envelope"></i>
+                        </a>
                     </div>
                 </div>
 
+                <div class="profile-badge">
+                    <span><i class="fas fa-code"></i> Full Stack Developer</span>
+                </div>
+
+                <div class="quick-stats">
+                    <div class="stat-item" *ngFor="let stat of professionalStats">
+                        <div class="stat-value">{{stat.value}}</div>
+                        <div class="stat-label">{{stat.label}}</div>
+                    </div>
+                </div>
+
+                <div class="availability-status" [ngClass]="{'available': isAvailableForWork}">
+                    <i class="fas" [ngClass]="isAvailableForWork ? 'fa-check-circle' : 'fa-clock'"></i>
+                    <span>{{isAvailableForWork ? 'Available for Work' : 'Limited Availability'}}</span>
+                </div>
+            </div>
+
+            <!-- About Text Side -->
+            <div class="about-text" data-aos="fade-left" data-aos-delay="200">
+                <div class="about-intro">
+                    <h3><span class="highlight">Senior Full Stack Developer</span> specialized in modern web
+                        technologies</h3>
+                    <p class="summary">{{aboutSummary}}</p>
+                </div>
+
+                <div class="professional-highlights">
+                    <h3>Professional Highlights</h3>
+                    <ul class="highlights-list">
+                        <li *ngFor="let highlight of professionalHighlights">
+                            <i class="fas fa-check"></i>
+                            <span>{{highlight}}</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="personal-info">
+                    <h3>Details</h3>
+                    <div class="info-grid">
+                        <div class="info-item" *ngFor="let info of personalInfo">
+                            <div class="info-label">
+                                <i [class]="info.icon"></i>
+                                <span>{{info.label}}</span>
+                            </div>
+                            <div class="info-value">
+                                <a *ngIf="info.isLink" [href]="info.linkPrefix + info.value"
+                                    [target]="info.isExternal ? '_blank' : '_self'"
+                                    rel="noopener noreferrer">{{info.value}}</a>
+                                <span *ngIf="!info.isLink">{{info.value}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="call-to-action">
+                    <a href="assets/files/Shakoor_Hussain_Resume.pdf" class="btn primary-btn" download>
+                        <i class="fas fa-download"></i> Download Resume
+                    </a>
+                    <button (click)="scrollToContact()" class="btn secondary-btn">
+                        <i class="fas fa-paper-plane"></i> Contact Me
+                    </button>
+                </div>
+
                 <div class="endorsements-section">
-                    <h3>LinkedIn Endorsements</h3>
+                    <h3>Skills Endorsements</h3>
                     <div class="endorsements-grid">
-                        <div class="endorsement-item" *ngFor="let item of endorsements">
-                            <div class="endorsement-skill">{{item.skill}}</div>
-                            <div class="endorsement-count">
-                                <i class="fas fa-thumbs-up"></i>
-                                <span>{{item.count}}</span>
+                        <div class="endorsement-item" *ngFor="let item of endorsements"
+                            [ngStyle]="{'--endorsement-level': getEndorsementLevel(item.count)}">
+                            <div class="endorsement-header">
+                                <div class="endorsement-skill">{{item.skill}}</div>
+                                <div class="endorsement-count">
+                                    <i class="fas fa-thumbs-up"></i>
+                                    <span>{{item.count}}</span>
+                                </div>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" [style.width.%]="getEndorsementPercentage(item.count)">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="certifications">
+                    <h3>Certifications</h3>
+                    <div class="certificates-list">
+                        <div class="certificate" *ngFor="let cert of certifications">
+                            <div class="certificate-logo">
+                                <i [class]="cert.icon"></i>
+                            </div>
+                            <div class="certificate-info">
+                                <h4>{{cert.name}}</h4>
+                                <p>{{cert.issuer}} • {{cert.year}}</p>
+                                <a *ngIf="cert.link" [href]="cert.link" target="_blank" rel="noopener noreferrer">
+                                    <i class="fas fa-external-link-alt"></i> Verify
+                                </a>
                             </div>
                         </div>
                     </div>
