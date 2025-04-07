@@ -1,7 +1,7 @@
-<header [ngClass]="{'scrolled': scrolled}" [style.transform]="headerTransform">
+<header [ngClass]="{'scrolled': scrolled}">
   <div class="container">
     <nav>
-      <div class="logo">SH</div>
+      <div class="logo" (click)="scrollToSection('home')">SH</div>
       <ul class="nav-links" [ngClass]="{'active': menuOpen}">
         <li><a (click)="scrollToSection('home')">Home</a></li>
         <li><a (click)="scrollToSection('about')">About</a></li>
@@ -10,7 +10,7 @@
         <li><a (click)="scrollToSection('projects')">Projects</a></li>
         <li><a (click)="scrollToSection('contact')">Contact</a></li>
       </ul>
-      <div class="menu-toggle" (click)="toggleMenu()">
+      <div class="menu-toggle" [ngClass]="{'active': menuOpen}" (click)="toggleMenu()">
         <span></span>
         <span></span>
         <span></span>

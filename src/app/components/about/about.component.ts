@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
 })
 export class AboutComponent {
   personalInfo = [
-    { label: 'Name', value: 'Shakoor Hussain Attari Attari' },
+    { label: 'Name', value: 'Shakoor Hussain Attari' },
     { label: 'Email', value: 'binmushtaq@gmail.com' },
     { label: 'Phone', value: '+971 50 8066 735' },
     { label: 'Location', value: 'Sharjah, UAE' },

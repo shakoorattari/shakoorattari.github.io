@@ -39,6 +39,7 @@
     margin: 0 auto;
     text-align: center;
     animation: fadeInUp 1s ease-out;
+    padding: 30px 20px 50px 20px;
 }
 
 .profile-container {
@@ -278,7 +279,8 @@
 
 .scroll-indicator {
     position: absolute;
-    bottom: 20px; /* Adjusted from 30px to 20px */
+    bottom: 5px;
+    /* Adjusted from 30px to 20px */
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -286,7 +288,8 @@
     align-items: center;
     animation: bounce 2s infinite;
     cursor: pointer;
-    z-index: 1; /* Added z-index */
+    z-index: 1;
+    /* Added z-index */
 }
 
 .scroll-indicator span {

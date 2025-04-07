@@ -9,28 +9,13 @@ import { ViewportScroller } from '@angular/common';
 export class HeaderComponent {
   menuOpen = false;
   scrolled = false;
-  lastScrollTop = 0;
-  headerTransform = 'translateY(0)';
   
   constructor(private viewportScroller: ViewportScroller) {}
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    
-    // Add background color when scrolled
-    this.scrolled = scrollTop > 50;
-    
-    // Header hide/show on scroll
-    if (scrollTop > this.lastScrollTop) {
-      // Scrolling down
-      this.headerTransform = 'translateY(-100%)';
-    } else {
-      // Scrolling up
-      this.headerTransform = 'translateY(0)';
-    }
-    
-    this.lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+    // Simple check for scroll position to add background
+    this.scrolled = window.pageYOffset > 50;
   }
   
   toggleMenu() {
