@@ -1,0 +1,34 @@
+<div class="home-container">
+  <!-- Hero Section -->
+  <app-hero id="home" class="section"></app-hero>
+  
+  <!-- About Section -->
+  <app-about id="about" class="section"></app-about>
+  
+  <!-- Skills Section -->
+  <app-skills id="skills" class="section"></app-skills>
+  
+  <!-- Experience Section -->
+  <app-experience id="experience" class="section"></app-experience>
+  
+  <!-- Projects Section -->
+  <app-projects id="projects" class="section"></app-projects>
+  
+  <!-- Contact Section -->
+  <app-contact id="contact" class="section"></app-contact>
+  
+  <!-- Scroll to Top Button -->
+  <button class="scroll-top-btn" [ngClass]="{'show': showScrollButton}" (click)="scrollToTop()">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+  
+  <!-- Section Indicator -->
+  <div class="section-indicator">
+    <div class="indicator-dot" 
+         *ngFor="let section of sections; let i = index" 
+         [ngClass]="{'active': currentSectionIndex === i}"
+         (click)="scrollToSection(section.id)">
+      <span class="tooltip">{{section.name}}</span>
+    </div>
+  </div>
+</div>

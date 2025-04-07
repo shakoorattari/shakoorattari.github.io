@@ -543,6 +543,109 @@ footer {
     transform: translateY(-3px);
 }
 
+/* Profile Image Styles */
+.profile-image {
+    margin-right: 30px;
+    flex: 0 0 280px;
+    position: relative;
+}
+
+.image-container {
+    position: relative;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+}
+
+.profile-photo {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: var(--transition);
+}
+
+.image-container:hover {
+    transform: translateY(-8px);
+}
+
+.image-container:hover .profile-photo {
+    transform: scale(1.05);
+}
+
+.social-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+    padding: 20px 15px 15px;
+    opacity: 0;
+    transition: var(--transition);
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.image-container:hover .social-overlay {
+    opacity: 1;
+}
+
+.profile-badge {
+    background-color: var(--primary-color);
+    color: white;
+    font-size: 14px;
+    padding: 8px 16px;
+    border-radius: 30px;
+    display: inline-block;
+    margin-top: 15px;
+    box-shadow: 0 3px 10px rgba(0, 116, 228, 0.2);
+    text-align: center;
+}
+
+/* Hero Profile Avatar */
+.profile-avatar {
+    width: 150px;
+    height: 150px;
+    margin: 0 auto 25px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.profile-avatar:hover img {
+    transform: scale(1.1);
+}
+
+/* Contact Profile Image */
+.contact-profile {
+    grid-column: span 2;
+}
+
+.contact-profile-image {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 15px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid var(--primary-color);
+}
+
+.contact-profile-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 /* Responsive Styles */
 @media (max-width: 992px) {
     .timeline::before {
@@ -551,6 +654,11 @@ footer {
 
     .contact-content {
         grid-template-columns: 1fr;
+    }
+
+    .profile-image {
+        margin-bottom: 30px;
+        margin-right: 0;
     }
 }
 
@@ -620,6 +728,15 @@ footer {
     .copyright {
         margin-bottom: 20px;
     }
+
+    .contact-profile {
+        grid-column: span 1;
+    }
+
+    .profile-avatar {
+        width: 120px;
+        height: 120px;
+    }
 }
 
 @media (max-width: 576px) {
@@ -633,5 +750,10 @@ footer {
 
     .section-title h2 {
         font-size: 28px;
+    }
+
+    .profile-avatar {
+        width: 100px;
+        height: 100px;
     }
 }

@@ -1,0 +1,196 @@
+.about {
+    background-color: var(--light-bg);
+}
+
+.about-content {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 50px;
+}
+
+.profile-image {
+    flex: 0 0 280px;
+    position: relative;
+}
+
+.image-container {
+    position: relative;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+}
+
+.image-container:hover {
+    transform: translateY(-8px);
+}
+
+.profile-photo {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: var(--transition);
+}
+
+.image-container:hover .profile-photo {
+    transform: scale(1.03);
+}
+
+.social-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+    padding: 20px 15px 15px;
+    opacity: 0;
+    transition: var(--transition);
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.image-container:hover .social-overlay {
+    opacity: 1;
+}
+
+.social-overlay a {
+    background-color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+}
+
+.social-overlay a i {
+    color: var(--secondary-color);
+    font-size: 16px;
+}
+
+.social-overlay a:hover {
+    background-color: var(--primary-color);
+    transform: translateY(-3px);
+}
+
+.social-overlay a:hover i {
+    color: white;
+}
+
+.profile-badge {
+    background-color: var(--primary-color);
+    color: white;
+    font-size: 14px;
+    padding: 8px 16px;
+    border-radius: 30px;
+    display: inline-block;
+    margin-top: 15px;
+    box-shadow: 0 3px 10px rgba(0, 116, 228, 0.2);
+    margin-left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+}
+
+.about-text {
+    flex: 1;
+}
+
+.about-text p {
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+.personal-info {
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.info-item {
+    margin-bottom: 10px;
+}
+
+.info-item span {
+    font-weight: 600;
+    color: var(--secondary-color);
+    margin-right: 10px;
+}
+
+.endorsements-section {
+    margin-top: 30px;
+}
+
+.endorsements-section h3 {
+    position: relative;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    color: var(--secondary-color);
+}
+
+.endorsements-section h3::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background-color: var(--primary-color);
+}
+
+.endorsements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 15px;
+}
+
+.endorsement-item {
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: var(--box-shadow);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.endorsement-skill {
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--secondary-color);
+}
+
+.endorsement-count {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.endorsement-count i {
+    color: #0077b5;
+}
+
+@media (max-width: 992px) {
+    .about-content {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .profile-image {
+        margin-bottom: 30px;
+    }
+}
+
+@media (max-width: 768px) {
+    .about-content {
+        flex-direction: column;
+    }
+
+    .personal-info {
+        grid-template-columns: 1fr;
+    }
+}

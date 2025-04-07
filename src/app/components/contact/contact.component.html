@@ -1,0 +1,86 @@
+<section class="contact">
+    <div class="container">
+        <div class="section-title">
+            <h2>Contact Me</h2>
+        </div>
+        <div class="contact-content">
+            <div class="contact-info">
+                <div class="contact-item contact-profile">
+                    <div class="contact-profile-image">
+                        <img src="assets/files/shakoor_pic.jpeg" alt="Shakoor Hussain Attari">
+                    </div>
+                    <h3>Shakoor Hussain Attari</h3>
+                    <p>Available for freelance work</p>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <h3>Email</h3>
+                    <p><a href="mailto:binmushtaq@gmail.com">binmushtaq@gmail.com</a></p>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-phone"></i>
+                    <h3>Phone</h3>
+                    <p><a href="tel:+971508066735">+971 50 8066 735</a></p>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <h3>Location</h3>
+                    <p>Sharjah, UAE</p>
+                </div>
+                <div class="contact-item">
+                    <i class="fab fa-skype"></i>
+                    <h3>Skype</h3>
+                    <p><a href="skype:shakoorattari@outlook.com">shakoorattari@outlook.com</a></p>
+                </div>
+                <div class="contact-item linkedin-badge">
+                    <i class="fab fa-linkedin"></i>
+                    <h3>LinkedIn</h3>
+                    <p><a href="https://www.linkedin.com/in/shakoorattari/" target="_blank"
+                            rel="noopener noreferrer">Connect on LinkedIn</a></p>
+                </div>
+            </div>
+            <div class="contact-form">
+                <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+                    <div class="alert success" *ngIf="success">
+                        Your message has been sent successfully!
+                    </div>
+                    <div class="alert error" *ngIf="error">
+                        Sorry, there was an error sending your message. Please try again.
+                    </div>
+                    <div class="form-group">
+                        <input type="text" formControlName="name" placeholder="Your Name"
+                            [ngClass]="{ 'invalid': submitted && f['name'].errors }">
+                        <div class="error-message" *ngIf="submitted && f['name'].errors?.['required']">
+                            Name is required
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" formControlName="email" placeholder="Your Email"
+                            [ngClass]="{ 'invalid': submitted && f['email'].errors }">
+                        <div class="error-message" *ngIf="submitted && f['email'].errors?.['required']">
+                            Email is required
+                        </div>
+                        <div class="error-message" *ngIf="submitted && f['email'].errors?.['email']">
+                            Please enter a valid email
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" formControlName="subject" placeholder="Subject"
+                            [ngClass]="{ 'invalid': submitted && f['subject'].errors }">
+                        <div class="error-message" *ngIf="submitted && f['subject'].errors?.['required']">
+                            Subject is required
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <textarea formControlName="message" placeholder="Your Message"
+                            [ngClass]="{ 'invalid': submitted && f['message'].errors }"></textarea>
+                        <div class="error-message" *ngIf="submitted && f['message'].errors?.['required']">
+                            Message is required
+                        </div>
+                    </div>
+                    <button type="submit" class="btn primary-btn">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>

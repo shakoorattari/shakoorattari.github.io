@@ -1,0 +1,25 @@
+<section class="experience">
+  <div class="container">
+    <div class="section-title">
+      <h2>Work Experience</h2>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item" *ngFor="let job of jobs">
+        <div class="timeline-date">
+          <span>{{job.period}}</span>
+        </div>
+        <div class="timeline-content">
+          <h3>{{job.title}}</h3>
+          <h4>{{job.company}}</h4>
+          <p>{{job.description}}</p>
+          <div class="tech-stack">
+            <span *ngFor="let tech of job.technologies">{{tech}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="section-cta">
+      <a href="assets/files/Shakoor_Hussain_Resume.pdf" class="btn secondary-btn" download>Download Full Resume</a>
+    </div>
+  </div>
+</section>

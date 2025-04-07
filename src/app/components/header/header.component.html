@@ -1,0 +1,20 @@
+<header [ngClass]="{'scrolled': scrolled}" [style.transform]="headerTransform">
+  <div class="container">
+    <nav>
+      <div class="logo">SH</div>
+      <ul class="nav-links" [ngClass]="{'active': menuOpen}">
+        <li><a (click)="scrollToSection('home')">Home</a></li>
+        <li><a (click)="scrollToSection('about')">About</a></li>
+        <li><a (click)="scrollToSection('skills')">Skills</a></li>
+        <li><a (click)="scrollToSection('experience')">Experience</a></li>
+        <li><a (click)="scrollToSection('projects')">Projects</a></li>
+        <li><a (click)="scrollToSection('contact')">Contact</a></li>
+      </ul>
+      <div class="menu-toggle" (click)="toggleMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </nav>
+  </div>
+</header>

@@ -1,0 +1,19 @@
+<footer>
+  <div class="container">
+    <div class="footer-content">
+      <div class="copyright">
+        <p>&copy; {{currentYear}} Shakoor Hussain Attari. All Rights Reserved.</p>
+      </div>
+      <div class="social-links">
+        <a *ngFor="let social of socialLinks" 
+           [href]="social.url" 
+           target="_blank" 
+           rel="noopener noreferrer" 
+           [attr.aria-label]="'Follow me on ' + social.label"
+           [attr.title]="'Follow me on ' + social.label">
+          <i class="fab fa-{{social.icon}}"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
