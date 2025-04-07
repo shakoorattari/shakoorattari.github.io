@@ -1,84 +1,206 @@
 <section class="contact">
     <div class="container">
-        <div class="section-title">
+        <div class="section-title" data-aos="fade-down">
             <h2>Contact Me</h2>
+            <p>Get in touch for opportunities or just to say hello!</p>
         </div>
+        
         <div class="contact-content">
-            <div class="contact-info">
+            <!-- Contact Information -->
+            <div class="contact-info" data-aos="fade-right" data-aos-delay="100">
                 <div class="contact-item contact-profile">
                     <div class="contact-profile-image">
                         <img src="assets/files/shakoor_pic.jpeg" alt="Shakoor Hussain Attari">
+                        <div class="online-indicator"></div>
                     </div>
                     <h3>Shakoor Hussain Attari</h3>
-                    <p>Available for freelance work</p>
+                    <p>Available for freelance opportunities</p>
+                    <div class="availability">
+                        <span class="availability-status">Currently Available</span>
+                        <span class="response-time">Responds within 24 hours</span>
+                    </div>
                 </div>
-                <div class="contact-item">
+                
+                <div class="contact-item" (mouseenter)="animateIcon('email')" [class.animated]="animatedIcon === 'email'">
                     <i class="fas fa-envelope"></i>
                     <h3>Email</h3>
                     <p><a href="mailto:binmushtaq@gmail.com">binmushtaq@gmail.com</a></p>
+                    <div class="contact-action">
+                        <button class="action-btn copy-btn" (click)="copyToClipboard('binmushtaq@gmail.com', 'Email')">
+                            <i class="fas fa-copy"></i> Copy Email
+                        </button>
+                    </div>
                 </div>
-                <div class="contact-item">
+                
+                <div class="contact-item" (mouseenter)="animateIcon('phone')" [class.animated]="animatedIcon === 'phone'">
                     <i class="fas fa-phone"></i>
                     <h3>Phone</h3>
                     <p><a href="tel:+971508066735">+971 50 8066 735</a></p>
+                    <div class="contact-action">
+                        <button class="action-btn copy-btn" (click)="copyToClipboard('+971508066735', 'Phone')">
+                            <i class="fas fa-copy"></i> Copy Phone
+                        </button>
+                    </div>
                 </div>
-                <div class="contact-item">
+                
+                <div class="contact-item" (mouseenter)="animateIcon('location')" [class.animated]="animatedIcon === 'location'">
                     <i class="fas fa-map-marker-alt"></i>
                     <h3>Location</h3>
                     <p>Sharjah, UAE</p>
+                    <div class="contact-action">
+                        <a href="https://maps.google.com/?q=Sharjah,UAE" target="_blank" class="action-btn">
+                            <i class="fas fa-external-link-alt"></i> Open Map
+                        </a>
+                    </div>
                 </div>
-                <div class="contact-item">
-                    <i class="fab fa-skype"></i>
-                    <h3>Skype</h3>
-                    <p><a href="skype:shakoorattari@outlook.com">shakoorattari@outlook.com</a></p>
+                
+                <div class="contact-item" (mouseenter)="animateIcon('teams')" [class.animated]="animatedIcon === 'teams'">
+                    <i class="fab fa-microsoft"></i>
+                    <h3>MS Teams</h3>
+                    <p><a href="mailto:shakoorattari@outlook.com">shakoorattari@outlook.com</a></p>
+                    <div class="contact-action">
+                        <button class="action-btn copy-btn" (click)="copyToClipboard('shakoorattari@outlook.com', 'Teams ID')">
+                            <i class="fas fa-copy"></i> Copy Teams ID
+                        </button>
+                    </div>
                 </div>
-                <div class="contact-item linkedin-badge">
+                
+                <div class="contact-item linkedin-badge" (mouseenter)="animateIcon('linkedin')" [class.animated]="animatedIcon === 'linkedin'">
                     <i class="fab fa-linkedin"></i>
                     <h3>LinkedIn</h3>
-                    <p><a href="https://www.linkedin.com/in/shakoorattari/" target="_blank"
-                            rel="noopener noreferrer">Connect on LinkedIn</a></p>
+                    <p><a href="https://www.linkedin.com/in/shakoorattari/" target="_blank" rel="noopener noreferrer">Connect on LinkedIn</a></p>
+                    <div class="contact-action">
+                        <a href="https://www.linkedin.com/in/shakoorattari/" target="_blank" class="action-btn">
+                            <i class="fas fa-external-link-alt"></i> View Profile
+                        </a>
+                    </div>
                 </div>
             </div>
-            <div class="contact-form">
-                <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
-                    <div class="alert success" *ngIf="success">
-                        Your message has been sent successfully!
+            
+            <!-- Contact Form -->
+            <div class="contact-form" data-aos="fade-left" data-aos-delay="200">
+                <div class="form-header">
+                    <h3>Send Me a Message</h3>
+                    <p>I'll get back to you as soon as possible</p>
+                </div>
+                
+                <!-- Toast Notification -->
+                <div class="toast" [ngClass]="{'show': toastVisible, 'success': toastType === 'success', 'error': toastType === 'error'}">
+                    <div class="toast-icon">
+                        <i [class]="toastType === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle'"></i>
                     </div>
-                    <div class="alert error" *ngIf="error">
-                        Sorry, there was an error sending your message. Please try again.
+                    <div class="toast-content">
+                        <p>{{ toastMessage }}</p>
                     </div>
-                    <div class="form-group">
-                        <input type="text" formControlName="name" placeholder="Your Name"
-                            [ngClass]="{ 'invalid': submitted && f['name'].errors }">
-                        <div class="error-message" *ngIf="submitted && f['name'].errors?.['required']">
-                            Name is required
+                    <button class="toast-close" (click)="hideToast()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" #formElement>
+                    <div class="form-row">
+                        <div class="form-group" [ngClass]="{'focused': focusedField === 'name'}">
+                            <label for="name">Your Name</label>
+                            <div class="input-container">
+                                <i class="fas fa-user"></i>
+                                <input 
+                                    type="text" 
+                                    id="name" 
+                                    formControlName="name" 
+                                    placeholder="Enter your name" 
+                                    [ngClass]="{ 'invalid': isFieldInvalid('name') }"
+                                    (focus)="onFocus('name')"
+                                    (blur)="onBlur('name')"
+                                >
+                            </div>
+                            <div class="error-message" *ngIf="isFieldInvalidWithError('name', 'required')">
+                                <i class="fas fa-exclamation-circle"></i> Name is required
+                            </div>
+                        </div>
+                        
+                        <div class="form-group" [ngClass]="{'focused': focusedField === 'email'}">
+                            <label for="email">Your Email</label>
+                            <div class="input-container">
+                                <i class="fas fa-envelope"></i>
+                                <input 
+                                    type="email" 
+                                    id="email" 
+                                    formControlName="email" 
+                                    placeholder="Enter your email" 
+                                    [ngClass]="{ 'invalid': isFieldInvalid('email') }"
+                                    (focus)="onFocus('email')"
+                                    (blur)="onBlur('email')"
+                                >
+                            </div>
+                            <div class="error-message" *ngIf="isFieldInvalidWithError('email', 'required')">
+                                <i class="fas fa-exclamation-circle"></i> Email is required
+                            </div>
+                            <div class="error-message" *ngIf="isFieldInvalidWithError('email', 'email')">
+                                <i class="fas fa-exclamation-circle"></i> Please enter a valid email
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <input type="email" formControlName="email" placeholder="Your Email"
-                            [ngClass]="{ 'invalid': submitted && f['email'].errors }">
-                        <div class="error-message" *ngIf="submitted && f['email'].errors?.['required']">
-                            Email is required
+                    
+                    <div class="form-group" [ngClass]="{'focused': focusedField === 'subject'}">
+                        <label for="subject">Subject</label>
+                        <div class="input-container">
+                            <i class="fas fa-heading"></i>
+                            <input 
+                                type="text" 
+                                id="subject" 
+                                formControlName="subject" 
+                                placeholder="What is this regarding?" 
+                                [ngClass]="{ 'invalid': isFieldInvalid('subject') }"
+                                (focus)="onFocus('subject')"
+                                (blur)="onBlur('subject')"
+                            >
                         </div>
-                        <div class="error-message" *ngIf="submitted && f['email'].errors?.['email']">
-                            Please enter a valid email
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" formControlName="subject" placeholder="Subject"
-                            [ngClass]="{ 'invalid': submitted && f['subject'].errors }">
-                        <div class="error-message" *ngIf="submitted && f['subject'].errors?.['required']">
-                            Subject is required
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <textarea formControlName="message" placeholder="Your Message"
-                            [ngClass]="{ 'invalid': submitted && f['message'].errors }"></textarea>
-                        <div class="error-message" *ngIf="submitted && f['message'].errors?.['required']">
-                            Message is required
+                        <div class="error-message" *ngIf="isFieldInvalidWithError('subject', 'required')">
+                            <i class="fas fa-exclamation-circle"></i> Subject is required
                         </div>
                     </div>
-                    <button type="submit" class="btn primary-btn">Send Message</button>
+                    
+                    <div class="form-group" [ngClass]="{'focused': focusedField === 'message'}">
+                        <label for="message">Message</label>
+                        <div class="input-container textarea-container">
+                            <i class="fas fa-comment-alt"></i>
+                            <textarea 
+                                id="message" 
+                                formControlName="message" 
+                                placeholder="How can I help you?" 
+                                rows="5" 
+                                [ngClass]="{ 'invalid': isFieldInvalid('message') }"
+                                (focus)="onFocus('message')"
+                                (blur)="onBlur('message')"
+                                (input)="updateCharCount()"
+                            ></textarea>
+                        </div>
+                        <div class="char-count" [ngClass]="{'warning': messageChars > 400}">
+                            {{ messageChars }}/500 characters
+                        </div>
+                        <div class="error-message" *ngIf="isFieldInvalidWithError('message', 'required')">
+                            <i class="fas fa-exclamation-circle"></i> Message is required
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button 
+                            type="submit" 
+                            class="btn primary-btn submit-btn"
+                            [disabled]="isSubmitting"
+                            [class.loading]="isSubmitting"
+                        >
+                            <span *ngIf="!isSubmitting">Send Message</span>
+                            <div class="spinner" *ngIf="isSubmitting">
+                                <div class="bounce1"></div>
+                                <div class="bounce2"></div>
+                                <div class="bounce3"></div>
+                            </div>
+                        </button>
+                        <button type="button" class="btn secondary-btn reset-btn" (click)="resetForm()">
+                            Reset Form
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
