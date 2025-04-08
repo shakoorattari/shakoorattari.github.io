@@ -52,6 +52,23 @@ export class SkillsComponent {
         'GIT, GitHub, TFS',
         'CICD, Agile, Scrum, Kanban'
       ]
+    },
+    {
+      title: 'Certifications',
+      skills: [
+        'Microsoft Certified: Azure Developer Associate',
+        'Angular Developer Certification',
+        'Oracle Database SQL Certified Associate'
+      ]
+    },
+    {
+      title: 'Soft Skills',
+      skills: [
+        'Team Leadership and Mentoring',
+        'Effective Communication',
+        'Problem Solving and Critical Thinking',
+        'Adaptability and Time Management'
+      ]
     }
   ];
 }

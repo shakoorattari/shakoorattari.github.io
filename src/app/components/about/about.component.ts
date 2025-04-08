@@ -91,21 +91,21 @@ export class AboutComponent implements OnInit {
       issuer: 'Microsoft',
       year: '2022',
       icon: 'fab fa-microsoft',
-      link: '#'
+      link: 'https://www.microsoft.com/en-us/learning/certification-overview.aspx'
     },
     {
       name: 'Angular Developer Certification',
       issuer: 'Google',
       year: '2021',
       icon: 'fab fa-angular',
-      link: '#'
+      link: 'https://www.google.com'
     },
     {
       name: 'Oracle Database SQL Certified Associate',
       issuer: 'Oracle',
       year: '2020',
       icon: 'fas fa-database',
-      link: '#'
+      link: 'https://education.oracle.com/oracle-database-sql-certified-associate/overview'
     }
   ];
 

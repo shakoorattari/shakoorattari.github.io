@@ -4,7 +4,7 @@
       <h2>Work Experience</h2>
     </div>
     <div class="timeline">
-      <div class="timeline-item" *ngFor="let job of jobs">
+      <div class="timeline-item" *ngFor="let job of jobs; let i = index" [ngClass]="{'timeline-left': i % 2 === 0, 'timeline-right': i % 2 !== 0}">
         <div class="timeline-date">
           <span>{{job.period}}</span>
         </div>
