@@ -3,12 +3,12 @@
     <nav>
       <div class="logo" (click)="scrollToSection('home')">SH</div>
       <ul class="nav-links" [ngClass]="{'active': menuOpen}">
-        <li><a (click)="scrollToSection('home')">Home</a></li>
-        <li><a (click)="scrollToSection('about')">About</a></li>
-        <li><a (click)="scrollToSection('skills')">Skills</a></li>
-        <li><a (click)="scrollToSection('experience')">Experience</a></li>
-        <li><a (click)="scrollToSection('projects')">Projects</a></li>
-        <li><a (click)="scrollToSection('contact')">Contact</a></li>
+        <li><a (click)="scrollToSection('home')" [class.active]="currentSection === 'home'">Home</a></li>
+        <li><a (click)="scrollToSection('about')" [class.active]="currentSection === 'about'">About</a></li>
+        <li><a (click)="scrollToSection('skills')" [class.active]="currentSection === 'skills'">Skills</a></li>
+        <li><a (click)="scrollToSection('experience')" [class.active]="currentSection === 'experience'">Experience</a></li>
+        <li><a (click)="scrollToSection('projects')" [class.active]="currentSection === 'projects'">Projects</a></li>
+        <li><a (click)="scrollToSection('contact')" [class.active]="currentSection === 'contact'">Contact</a></li>
       </ul>
       <div class="menu-toggle" [ngClass]="{'active': menuOpen}" (click)="toggleMenu()">
         <span></span>

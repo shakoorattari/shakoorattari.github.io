@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 interface Job {
   period: string;
@@ -13,7 +13,7 @@ interface Job {
   templateUrl: './experience.component.html',
   styleUrls: ['./experience.component.scss']
 })
-export class ExperienceComponent {
+export class ExperienceComponent implements OnInit {
   jobs: Job[] = [
     {
       period: '2022 - Present',
@@ -44,4 +44,9 @@ export class ExperienceComponent {
       technologies: ['ASP.Net 4.5', 'C#', 'jQuery', 'Oracle']
     }
   ];
+
+  ngOnInit(): void {
+    // Reset scroll position when navigating to this component
+    window.scrollTo(0, 0);
+  }
 }

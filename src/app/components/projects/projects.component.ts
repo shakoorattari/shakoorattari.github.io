@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 interface Project {
   title: string;
@@ -11,7 +11,7 @@ interface Project {
   templateUrl: './projects.component.html',
   styleUrls: ['./projects.component.scss']
 })
-export class ProjectsComponent {
+export class ProjectsComponent implements OnInit {
   projects: Project[] = [
     {
       title: 'Legal Department CMS',
@@ -44,4 +44,9 @@ export class ProjectsComponent {
       technologies: ['ASP.NET 4.5', 'jQuery Charts', 'Oracle']
     }
   ];
+
+  ngOnInit(): void {
+    // Reset scroll position when navigating to this component
+    window.scrollTo(0, 0);
+  }
 }

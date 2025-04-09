@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ViewportScroller } from '@angular/common';
+import { Router } from '@angular/router';
 
 // Declare AOS (Animate On Scroll) library if you're using it
 declare const AOS: any;
@@ -109,7 +109,7 @@ export class AboutComponent implements OnInit {
     }
   ];
 
-  constructor(private viewportScroller: ViewportScroller) { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
     // Initialize AOS animation library if available
@@ -120,10 +120,22 @@ export class AboutComponent implements OnInit {
         once: true
       });
     }
+    
+    // Reset scroll position when navigating to this component
+    window.scrollTo(0, 0);
   }
 
   scrollToContact(): void {
-    this.viewportScroller.scrollToAnchor('contact');
+    // Update URL
+    this.router.navigate(['/contact']);
+    
+    // Scroll to contact section if it exists on the current page
+    setTimeout(() => {
+      const element = document.getElementById('contact');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
   }
 
   getEndorsementPercentage(count: number): number {

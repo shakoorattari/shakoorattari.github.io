@@ -1,5 +1,5 @@
 import { Component, AfterViewInit, ElementRef } from '@angular/core';
-import { ViewportScroller } from '@angular/common';
+import { Router } from '@angular/router';
 import { trigger, transition, style, animate } from '@angular/animations';
 
 declare var particlesJS: any;
@@ -18,7 +18,7 @@ declare var particlesJS: any;
   ]
 })
 export class HeroComponent implements AfterViewInit {
-  constructor(private viewportScroller: ViewportScroller, private elementRef: ElementRef) {}
+  constructor(private router: Router, private elementRef: ElementRef) {}
 
   ngAfterViewInit(): void {
     this.initParticles();
@@ -26,11 +26,29 @@ export class HeroComponent implements AfterViewInit {
   }
 
   scrollToContact(): void {
-    this.viewportScroller.scrollToAnchor('contact');
+    // Update URL
+    this.router.navigate(['/contact']);
+    
+    // Smooth scroll if element exists on current page
+    setTimeout(() => {
+      const element = document.getElementById('contact');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
   }
   
   scrollToAbout(): void {
-    this.viewportScroller.scrollToAnchor('about');
+    // Update URL
+    this.router.navigate(['/about']);
+    
+    // Smooth scroll if element exists on current page
+    setTimeout(() => {
+      const element = document.getElementById('about');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
   }
 
   private initParticles(): void {

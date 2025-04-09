@@ -49,6 +49,9 @@ export class ContactComponent implements OnInit {
         once: true
       });
     }
+    
+    // Reset scroll position when navigating to this component
+    window.scrollTo(0, 0);
   }
 
   // Form field focus handling

@@ -1,11 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-skills',
   templateUrl: './skills.component.html',
   styleUrls: ['./skills.component.scss']
 })
-export class SkillsComponent {
+export class SkillsComponent implements OnInit {
   skillCategories = [
     {
       title: '.NET Development',
@@ -71,4 +71,9 @@ export class SkillsComponent {
       ]
     }
   ];
+
+  ngOnInit(): void {
+    // Reset scroll position when navigating to this component
+    window.scrollTo(0, 0);
+  }
 }
