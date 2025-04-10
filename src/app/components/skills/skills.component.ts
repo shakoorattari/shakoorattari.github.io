@@ -8,6 +8,29 @@ import { Component, OnInit } from '@angular/core';
 export class SkillsComponent implements OnInit {
   skillCategories = [
     {
+      title: 'Leadership & Management',
+      skills: [
+        'Technical Team Leadership (5+ years)',
+        'Engineering Best Practices Implementation',
+        'Architectural Decision Making',
+        'Cross-functional Team Coordination',
+        'Developer Mentoring & Growth Planning',
+        'Project Estimation & Resource Planning'
+      ]
+    },
+    {
+      title: 'Microservices Architecture',
+      skills: [
+        'Distributed Systems Design',
+        'API Gateway Implementation',
+        'Service Discovery & Registry',
+        'Event-Driven Architecture',
+        'Message Brokers (RabbitMQ, Kafka)',
+        'Container Orchestration with Kubernetes',
+        'Docker Containerization'
+      ]
+    },
+    {
       title: '.NET Development',
       skills: [
         'ASP.NET Web APIs and MVC (.Net 3, 4, 6, 8)',
