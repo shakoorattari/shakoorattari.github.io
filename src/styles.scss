@@ -141,7 +141,7 @@ section {
   .timeline::before {
     left: 40px;
   }
-  
+
   .contact-content {
     grid-template-columns: 1fr;
   }
@@ -151,7 +151,7 @@ section {
   section {
     padding: 70px 0;
   }
-  
+
   .nav-links {
     position: fixed;
     top: 70px;
@@ -164,52 +164,52 @@ section {
     justify-content: center;
     transition: var(--transition);
   }
-  
+
   .nav-links.active {
     left: 0;
   }
-  
+
   .nav-links li {
     margin: 15px 0;
   }
-  
+
   .menu-toggle {
     display: flex;
   }
-  
+
   .hero-content h1 {
     font-size: 36px;
   }
-  
+
   .hero-content h2 {
     font-size: 20px;
   }
-  
+
   .about-content {
     flex-direction: column;
   }
-  
+
   .personal-info {
     grid-template-columns: 1fr;
   }
-  
+
   .timeline-date {
     min-width: 80px;
   }
-  
+
   .timeline-content::before {
     left: -28px;
   }
-  
+
   .contact-info {
     grid-template-columns: 1fr;
   }
-  
+
   .footer-content {
     flex-direction: column;
     text-align: center;
   }
-  
+
   .copyright {
     margin-bottom: 20px;
   }
@@ -219,11 +219,11 @@ section {
   .hero-buttons {
     flex-direction: column;
   }
-  
+
   .projects-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .section-title h2 {
     font-size: 28px;
   }
