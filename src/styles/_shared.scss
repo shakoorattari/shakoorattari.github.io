@@ -1,0 +1,146 @@
+// Shared variables
+$primary-color: #333; // Replace with your actual colors
+$secondary-color: #777;
+$transition-standard: all 0.3s ease;
+
+// Common mixins
+@mixin flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@mixin flex-between {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+@mixin responsive-padding {
+    padding: 1rem;
+
+    @media (min-width: 768px) {
+        padding: 1.5rem;
+    }
+
+    @media (min-width: 1200px) {
+        padding: 2rem;
+    }
+}
+
+@mixin grid-layout($columns: 2, $minwidth: false) {
+    display: grid;
+
+    @if $minwidth {
+        grid-template-columns: repeat(auto-fill, minmax($minwidth, 1fr));
+    }
+
+    @else {
+        grid-template-columns: repeat($columns, 1fr);
+    }
+
+    gap: var(--grid-gap, 20px);
+}
+
+@mixin dot-indicator($size: 12px) {
+    width: $size;
+    height: $size;
+    border-radius: 50%;
+    border: 2px solid var(--primary-color);
+    background-color: rgba(255, 255, 255, 0.7);
+    transition: transform 0.3s ease, background-color 0.3s ease;
+
+    &.active {
+        background-color: var(--primary-color);
+    }
+}
+
+// Section style mixins
+@mixin about-section {
+  background-color: var(--light-bg);
+  padding: 100px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+@mixin hero-section {
+//   height: 100vh;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+@mixin experience-section {
+  background-color: var(--light-bg);
+  padding: 100px 0;
+  position: relative;
+}
+
+@mixin contact-section {
+  background-color: var(--light-bg);
+  padding: 100px 0;
+  position: relative;
+}
+
+@mixin home-page-section {
+  width: 100%;
+}
+
+// Section heading style
+@mixin section-header {
+  font-size: 20px;
+  margin-bottom: 15px;
+  color: var(--secondary-color);
+  position: relative;
+  padding-left: 15px;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background-color: var(--primary-color);
+    border-radius: 2px;
+  }
+}
+
+// Common animations
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}

@@ -1,19 +1,32 @@
 <div class="home-container">
   <!-- Hero Section -->
-  <app-hero id="home" class="section"></app-hero>
+  <app-hero id="home" class="section" style="--index: 1;"></app-hero>
 
   <!-- About Section -->
-  <app-about id="about" class="section"></app-about>
-  
+  <app-about id="about" class="section" style="--index: 2;"></app-about>
+
   <!-- Skills Section -->
-  <app-skills id="skills" class="section"></app-skills>
-  
+  <app-skills id="skills" class="section" style="--index: 3;"></app-skills>
+
   <!-- Experience Section -->
-  <app-experience id="experience" class="section"></app-experience>
-  
+  <app-experience id="experience" class="section" style="--index: 4;"></app-experience>
+
   <!-- Projects Section -->
-  <app-projects id="projects" class="section"></app-projects>
-  
+  <app-projects id="projects" class="section" style="--index: 5;"></app-projects>
+
   <!-- Contact Section -->
-  <app-contact id="contact" class="section"></app-contact>
+  <app-contact id="contact" class="section" style="--index: 6;"></app-contact>
+
+  <!-- Scroll to top button - Fixed binding issue -->
+  <button class="scroll-top-btn" [ngClass]="{'show': showScrollBtn}" (click)="scrollToTop()">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+
+  <!-- Section indicator - Fixed binding issue -->
+  <div class="section-indicator" *ngIf="sectionList && sectionList.length">
+    <div *ngFor="let section of sectionList; let i = index" class="indicator-dot"
+      [ngClass]="{'active': currentSection === section.id}" (click)="navigateToSection(section.id)">
+      <div class="tooltip">{{section.name}}</div>
+    </div>
+  </div>
 </div>
