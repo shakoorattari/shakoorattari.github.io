@@ -1,0 +1,37 @@
+{
+    "servers": {
+        "sequential-thinking": {
+            "command": "node",
+            "args": [
+                "${workspaceFolder}/.vscode/mcp-wrapper.js",
+                "npx",
+                "-y",
+                "@modelcontextprotocol/server-sequential-thinking"
+            ],
+            "env": {
+                "NODE_ENV": "production",
+                "WORKSPACE_FOLDER": "${workspaceFolder}"
+            }
+        },
+        "filesystem": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@modelcontextprotocol/server-filesystem",
+                "${workspaceFolder}",
+            ]
+        },
+        // "mcp-gp-pdf-reader": {
+        //     "command": "node",
+        //     "args": [
+        //         "D:/github/mcp-servers-3rd-party/mcp_pdf_reader/index.js"
+        //     ]
+        // },
+        "mcp-pandoc": {
+            "command": "uvx",
+            "args": [
+                "mcp-pandoc"
+            ]
+        }
+    }
+}
