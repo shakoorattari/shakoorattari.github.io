@@ -9,8 +9,9 @@ jobs:
   build-and-deploy:
     runs-on: self-hosted
     steps:
-      - name: Checkout repository
-        uses: ./.github/actions/checkout
+      - name: Manual checkout
+        run: |
+          git clone https://github.com/${{ github.repository }}.git .
 
       - name: Set up Node.js
         uses: ./.github/actions/setup-node
