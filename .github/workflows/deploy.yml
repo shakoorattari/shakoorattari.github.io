@@ -24,13 +24,13 @@ jobs:
         run: npm ci
 
       - name: Build Angular app
-        run: npm run build -- --output-path=dist --base-href=/portfolio/
+        run: npm run build -- --base-href=/portfolio/
 
       - name: Deploy to GitHub Pages
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
-          cd ./dist
+          cd ./dist/shakoor-portfolio
           git init
           git checkout --orphan gh-pages
           git add .
