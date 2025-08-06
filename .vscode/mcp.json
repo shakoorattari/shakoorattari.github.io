@@ -21,12 +21,13 @@
                 "${workspaceFolder}",
             ]
         },
-        // "mcp-gp-pdf-reader": {
-        //     "command": "node",
-        //     "args": [
-        //         "D:/github/mcp-servers-3rd-party/mcp_pdf_reader/index.js"
-        //     ]
-        // },
+        // https://github.com/gpetraroli/mcp_pdf_reader
+        "mcp-gp-pdf-reader": {
+            "command": "node",
+            "args": [
+                "/Users/shakoorhussain/git/mcp-servers-public/mcp_pdf_reader/index.js"
+            ]
+        },
         "mcp-pandoc": {
             "command": "uvx",
             "args": [
