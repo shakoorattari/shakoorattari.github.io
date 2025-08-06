@@ -6,6 +6,18 @@ runs:
     - name: Checkout code
       run: |
         git init
+        git remote add origin https://github.com/${{ github.repository }}.git
+        git fetch --depth=1 origin ${{ github.sha }}
+        git checkout FETCH_HEAD
+      shell: bash
+name: 'Local Checkout'
+description: 'Checkout repository content'
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout code
+      run: |
+        git init
         git remote add origin ${{ github.repositoryUrl }}
         git fetch --depth=1 origin ${{ github.sha }}
         git checkout FETCH_HEAD
