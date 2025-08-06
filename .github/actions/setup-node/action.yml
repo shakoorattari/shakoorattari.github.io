@@ -1,0 +1,14 @@
+name: 'Local Setup Node.js'
+description: 'Setup Node.js environment'
+inputs:
+  node-version:
+    description: 'Node.js version'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Node.js
+      run: |
+        curl -fsSL https://deb.nodesource.com/setup_${{ inputs.node-version }}.x | bash -
+        sudo apt-get install -y nodejs
+      shell: bash

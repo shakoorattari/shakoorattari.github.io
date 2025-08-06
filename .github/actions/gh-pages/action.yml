@@ -1,0 +1,30 @@
+name: 'Local Deploy to GitHub Pages'
+description: 'Deploy to GitHub Pages branch'
+inputs:
+  github_token:
+    required: true
+    description: 'GitHub token'
+  publish_dir:
+    required: true
+    description: 'Directory to publish'
+  publish_branch:
+    required: true
+    description: 'Branch to publish to'
+  force_orphan:
+    required: false
+    default: 'false'
+    description: 'Force orphan branch'
+runs:
+  using: 'composite'
+  steps:
+    - name: Deploy to GitHub Pages
+      run: |
+        git config --global user.name "github-actions"
+        git config --global user.email "github-actions@github.com"
+        cd ${{ inputs.publish_dir }}
+        git init
+        git checkout --orphan ${{ inputs.publish_branch }}
+        git add .
+        git commit -m "Deploy to GitHub Pages"
+        git push --force "https://x-access-token:${{ inputs.github_token }}@github.com/${{ github.repository }}.git" HEAD:${{ inputs.publish_branch }}
+      shell: bash
