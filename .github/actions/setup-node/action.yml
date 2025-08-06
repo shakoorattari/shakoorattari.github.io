@@ -1,5 +1,5 @@
 name: 'Local Setup Node.js'
-description: 'Setup Node.js environment'
+description: 'Check Node.js version (assumes Node.js is pre-installed)'
 inputs:
   node-version:
     description: 'Node.js version'
@@ -7,8 +7,10 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - name: Setup Node.js
+    - name: Check Node.js version
       run: |
-        curl -fsSL https://deb.nodesource.com/setup_${{ inputs.node-version }}.x | bash -
-        sudo apt-get install -y nodejs
+        echo "Node.js version on runner:"
+        node --version
+        echo "NPM version on runner:"
+        npm --version
       shell: bash
