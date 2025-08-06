@@ -9,9 +9,9 @@ jobs:
   build-and-deploy:
     runs-on: self-hosted
     steps:
-      - name: Manual checkout
+      - name: Cleanup workspace
         run: |
-          git clone https://github.com/${{ github.repository }}.git .
+          rm -rf dist node_modules
 
       - name: Set up Node.js
         uses: ./.github/actions/setup-node
