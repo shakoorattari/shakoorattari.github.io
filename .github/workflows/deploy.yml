@@ -13,10 +13,12 @@ jobs:
         run: |
           rm -rf dist node_modules
 
-      - name: Set up Node.js
-        uses: ./.github/actions/setup-node
-        with:
-          node-version: '20'
+      - name: Check Node.js version
+        run: |
+          echo "Node.js version on runner:"
+          node --version
+          echo "NPM version on runner:"
+          npm --version
 
       - name: Install dependencies
         run: npm ci
@@ -25,9 +27,12 @@ jobs:
         run: npm run build -- --output-path=dist --base-href=/portfolio/
 
       - name: Deploy to GitHub Pages
-        uses: ./.github/actions/gh-pages
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-          publish_branch: gh-pages
-          force_orphan: true
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          cd ./dist
+          git init
+          git checkout --orphan gh-pages
+          git add .
+          git commit -m "Deploy to GitHub Pages"
+          git push --force "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" HEAD:gh-pages
