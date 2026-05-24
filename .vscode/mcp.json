@@ -25,7 +25,7 @@
         "mcp-gp-pdf-reader": {
             "command": "node",
             "args": [
-                "/Users/shakoorhussain/git/mcp-servers-public/mcp_pdf_reader/index.js"
+                "/Users/shakoorhussain/projects/github/mcp_pdf_reader/index.js"
             ]
         },
         "mcp-pandoc": {
