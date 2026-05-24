@@ -4,340 +4,191 @@
 
 # SHAKOOR HUSSAIN ATTARI
 
-## Lead Software Engineer
+## Lead Software Engineer | Full-Stack Architect | 15+ Years
 
-**Phone:** +971 50 8066735  
-**Email:** <Binmushtaq@gmail.com>  
-**LinkedIn:** [linkedin.com/in/shakoor-hussain-attari](https://linkedin.com/in/shakoor-hussain-attari)  
+**Phone:** +971 50 806 6735
+**Email:** <binmushtaq@gmail.com>
+**LinkedIn:** [linkedin.com/in/shakoorattari](https://www.linkedin.com/in/shakoorattari/)
 **Location:** Sharjah, UAE
 
 ---
 
-## Executive Summary
+## Professional Summary
 
-- **Experience:** 12+ Years in IT Field specializing in **Technical Leadership**, **Software Architecture**, and **Full Stack Development**
-- **Leadership:** Led cross-functional teams of 5-15 developers, mentored 20+ junior engineers, and delivered 15+ enterprise-scale applications
-- **Core Technologies:** .NET Framework 4.x, .NET Core 3.x/5/6/8, Angular 9-18, MS SQL Server (T-SQL), Oracle (PL/SQL), Azure DevOps, Jenkins
-- **AI/ML Technologies:** MCP Servers, GitHub Copilot, Prompt Engineering, Instruction Tuning, RAG (Retrieval-Augmented Generation), AI Integration
-- **Academic Qualification:** BS (Computer Science), Allama Iqbal Open University, Pakistan
-- **Professional Qualifications:** MCP, MCTS (.Net Development Web Apps), MCTS (Microsoft SharePoint 2013)
-- **Specializations:**
-  - Technical Team Leadership & Engineering Management
-  - AI/ML Integration & MCP Server Development
-  - Enterprise Software Architecture & Design Patterns
-  - DevOps & CI/CD Pipeline Implementation (Azure DevOps, Jenkins, Docker, Kubernetes)
-  - Microservices Architecture & RESTful API Design
-  - Database Architecture & Performance Optimization
-  - Agile/Scrum Leadership & Stakeholder Management
+Results-driven Lead Software Engineer and Application Architect with 15+ years of enterprise software delivery experience across the UAE public sector. Deep expertise in .NET / ASP.NET Core, Angular, RESTful API design, OAuth 2.0 / OIDC, multi-tenant IAM, and Azure DevOps CI/CD. Proven track record of owning end-to-end solution architecture — from requirements analysis through production operations — for mission-critical government platforms serving multiple Sharjah entities. Passionate about clean code, developer experience, and leveraging AI tooling to accelerate engineering velocity.
 
 ---
 
-## Objective
+## Core Competencies
 
-As a **Lead Software Engineer** with 12+ years of experience, I drive technical excellence and innovation through hands-on leadership of development teams. Seeking opportunities to leverage my expertise in **.NET 4.x/.NET Core 3.x-8**, **Angular 9-18**, **MS SQL (T-SQL)**, **Oracle (PL/SQL)**, **DevOps**, and emerging **AI/ML technologies** including **MCP Servers**, **Prompt Engineering**, and **RAG implementations** to architect scalable enterprise solutions, mentor high-performing engineering teams, and deliver transformative technology initiatives that drive business growth.
-
----
-
-## Leadership & Soft Skills
-
-- **Technical Leadership:** Led engineering teams of 5-15 developers, established coding standards, and implemented best practices across multiple projects
-- **People Management:** Mentored 20+ junior developers with 80% retention rate and 40% internal promotion success
-- **Communication Excellence:** Fluent in technical and business communication, experienced in stakeholder presentations and client-facing roles
-- **Problem-Solving:** Analytical approach to complex technical challenges, with proven track record of delivering innovative solutions under tight deadlines
-- **Adaptability:** Rapid adoption of new technologies, frameworks, and methodologies; led successful technology migrations and modernization initiatives
-- **Cross-functional Collaboration:** Expertise in working with diverse, multicultural teams across development, QA, DevOps, and business stakeholders
-- **Project Leadership:** Agile/Scrum expertise with experience managing project lifecycles from conception to deployment and maintenance
-
----
-
-## Technical Skills
-
-| Category | Skills |
-|----------|--------|
-| **Leadership & Management** | Technical Team Leadership (5-15 developers), Engineering Management, Cross-functional Collaboration, Agile/Scrum Leadership, Stakeholder Management, Technical Mentoring, Code Review Leadership |
-| **AI/ML & Modern Tools** | MCP (Model Context Protocol) Servers Development, GitHub Copilot Integration, Prompt Engineering, Instruction Tuning, RAG (Retrieval-Augmented Generation), AI-Assisted Development, Intelligent Code Generation |
-| **.NET Development** | .NET Framework 4.x, .NET Core 3.x/5/6/8, ASP.NET Web APIs, ASP.NET MVC, C#, REST APIs, Web Services, API Authentication (JWT, OAuth, Token-based), Windows Services, Entity Framework, LINQ |
-| **Frontend Development** | Angular 9-18, TypeScript, JavaScript, jQuery, HTML5, CSS3, Responsive Design, Material Design, Bootstrap 3/4/5, Progressive Web Apps (PWA) |
-| **Database Architecture** | MS SQL Server (T-SQL), Oracle (PL/SQL), MySQL, Database Design, Performance Tuning, Stored Procedures, Functions, Triggers, Views, Data Modeling |
-| **DevOps & CI/CD** | Azure DevOps, Jenkins, Docker, Kubernetes, Git/GitHub, TFS, CI/CD Pipelines, Infrastructure as Code, SonarQube, Automated Testing Integration |
-| **Cloud & Integration** | Azure (SSO, Graph APIs, Active Directory), AWS, Microsoft Exchange (EWS), SignalR, Redis Cache, Microservices Architecture, RESTful API Design |
-| **Quality Assurance** | Selenium Test Automation, Test Framework Design, Unit Testing, Integration Testing, Performance Testing (HP LoadRunner), Manual Testing, Test Strategy |
-| **Architecture & Design** | Software Architecture, Design Patterns (MVC, MVVM, Repository, Factory), Microservices, Event-Driven Architecture, Domain-Driven Design (DDD), SOLID Principles |
-| **Business Intelligence** | Power BI, Reporting Dashboards, Data Visualization, Analytics, SSRS, Crystal Reports |
-| **Additional Technologies** | OutSystems, SharePoint 2013, PowerShell Scripting, Excel VBA, XML/JSON, AJAX, UML, Microsoft Visio, Splunk |
+| Category | Stack |
+|----------|-------|
+| **Backend** | ASP.NET Core / .NET 8, 10 · .NET Web APIs & MVC |
+| **Frontend** | Angular 7–18 (TypeScript) · SPA & Lazy-Loading Modules |
+| **Identity & Security** | OAuth 2.0 / OIDC / JWT · UAE PASS & Azure Entra ID SSO · Multi-Tenant IAM · RBAC & Scoped Authorization |
+| **Databases** | Microsoft SQL Server · Oracle DB & PL/SQL |
+| **DevOps & CI/CD** | Azure DevOps & CI/CD · GitHub Actions · Jenkins |
+| **Real-Time & Caching** | SignalR & Real-Time Apps · Redis Distributed Cache |
+| **Testing** | Playwright & Test Automation · HP LoadRunner · Selenium |
+| **Integration** | Microservices & REST APIs · MS Graph APIs |
+| **Low-Code** | OutSystems · Service & Integration Studio |
+| **Methodology** | Agile / Scrum / Kanban · JIRA · TFS |
+| **AI Tooling** | MCP Servers · AIRIA Orchestration · RAG · Engineering Workflow Automation |
 
 ---
 
-## Professional Experience and Projects
+## Professional Experience
 
-### Legal Department of Sharjah (Sep. 2022 – Present)
+### Lead Software Engineer / Application Architect — Sharjah Digital Department (SDD)
+*Jan 2023 – Present · formerly Department of eGovernment*
 
-**Lead Software Engineer / Technical Lead**  
-Department of eGovernment, Sharjah  
-**Tech Stack:** .NET Core 6.0/8, C#, Web APIs, Angular 14-17, MS SQL 2017, Azure DevOps, Docker, Kubernetes
+Engineering lead and organization-wide technical authority responsible for a team of 8 engineers (2 front-end, 6 full-stack), cross-organizational architectural consultancy, and end-to-end ownership of SDD's enterprise platform portfolio. Primary technical point of contact for G2G (Government-to-Government) service integrations, vendor engagements, and security compliance initiatives in partnership with Sharjah's Cyber Security and IT Security departments.
 
-**Leadership & Management Achievements:**
+**People Leadership & Delivery**
 
-- **Led a cross-functional team of 8 developers** and 3 QA engineers to deliver enterprise-scale applications
-- **Mentored 5 junior developers**, resulting in 2 promotions and 40% improvement in code quality metrics
-- **Architected and implemented DevOps practices**, reducing deployment time by 60% and increasing release frequency by 300%
-- **Established technical standards and code review processes**, improving application performance by 35%
+- Lead, mentor, and conduct performance reviews for a cross-functional team of 8 engineers; define sprint goals, capacity plans, and individual growth paths aligned with organizational OKRs.
+- Own delivery governance end-to-end — from requirements decomposition and architecture review through release sign-off — using Azure DevOps boards, pipelines, and quality gates.
+- Drive CI/CD maturity across SDD: standardized pipeline templates, automated code-quality gates (SonarQube), branch strategies, and environment promotion workflows, reducing deployment risk and cycle time.
 
-**Technical Achievements:**
+**Architectural Consultancy & G2G Integration**
 
-- Architected and led development of a high-performance SPA using Angular with lazy loading, achieving 90+ Lighthouse performance scores
-- Designed and implemented a modular Content Management System serving 50,000+ government employees
-- **Integrated AI-powered development tools** including GitHub Copilot for accelerated coding and intelligent code suggestions
-- **Developed custom MCP servers** for enhanced development workflow and automated code generation, improving team productivity by 25%
-- Implemented SEO optimization strategies, improving search rankings by 400%
-- **Applied prompt engineering techniques** for automated documentation generation and code review processes
-- Delivered 3 major applications on time and under budget, generating cost savings of $200K annually
+- Organization-wide architectural consultant across multiple concurrent projects — advising on technology selection, integration patterns, data contracts, and system boundaries.
+- Lead architecture and delivery of G2G service integrations: inter-agency API contracts, secure data-exchange protocols, and compliance requirements across Sharjah government entities.
+- Manage end-to-end vendor relationships and technical due-diligence: evaluating third-party platforms, negotiating integration approaches, and overseeing vendor delivery against agreed SLAs.
+- Designed multi-tenant, API-first architectures with SSO (UAE PASS, Azure Entra ID), RBAC, and audit-ready security controls across all platforms.
+- Defined reusable integration patterns (REST, event-driven, webhook) and platform components adopted org-wide.
 
----
+**Cyber Security & IT Security Alignment**
 
-### Meeting Rooms Booking System (Aug. 2021 – Present)
+- Primary engineering liaison with Sharjah Cyber Security Department and IT Security teams — translating security policies into actionable architectural controls and ensuring full compliance across the application estate.
+- Embedded security-by-design principles across all platforms: threat modelling, least-privilege RBAC, secure-by-default API configurations, secrets management, and audit-log readiness.
+- Led OAuth 2.0 / OIDC implementation (PKCE, token validation, audience scoping) and UAE PASS / Azure Entra ID SSO federation in alignment with Sharjah's identity governance standards.
+- Conducted security architecture reviews for new initiatives and vendor-supplied components.
 
-**Lead Software Engineer / Technical Architect**  
-Department of eGovernment, Sharjah  
-**Tech Stack:** .NET Core 6.0/8, C#, Web APIs, Angular 12-16, MS SQL 2017, Azure, Microservices, Exchange EWS
+**Azure DevOps Server Administration & CI/CD Platform Ownership**
 
-**Leadership & Architecture Achievements:**
+- Sole owner and administrator of SDD's on-premises Azure DevOps Server 2022.2 installation — initial environment setup, upgrades, capacity planning, and ongoing platform health.
+- Configured and maintain 20+ team projects with tailored process templates, repository policies, branch protection rules, and work-item configurations.
+- Provisioned and manage dozens of self-hosted build agents across multiple VM environments; own agent pool strategy and pipeline queue optimization.
+- Authored standardized organization-wide CI/CD pipeline templates (YAML) covering build, test, code-quality (SonarQube), artefact publishing, and multi-stage environment promotion.
 
-- **Led technical architecture design** for a multi-tenant SPA serving 1,500+ concurrent users across 25+ government entities
-- **Designed and implemented microservices architecture**, improving system scalability by 250% and reducing response times by 40%
-- **Led development team of 6 engineers**, establishing coding standards and implementing agile methodologies
+**AI Tooling — MCP Servers & Agentic Workflow Engineering**
 
-**Technical Achievements:**
-
-- Developed custom Outlook add-in with real-time meeting room availability validation, adopted by 5,000+ government employees
-- Architected Exchange integration using EWS events subscription, achieving 99.9% calendar synchronization accuracy
-- **Implemented intelligent booking suggestions** using basic ML algorithms to optimize room utilization based on historical data
-- **Applied RAG techniques** for enhanced search and recommendation features within the booking system
-- Implemented tablet-based booking interface with offline capabilities, reducing booking conflicts by 85%
-- Delivered comprehensive admin modules for entity management, improving operational efficiency by 60%
+- Architected and built a suite of Model Context Protocol (MCP) servers to integrate AI agents with SDD's internal systems, enabling context-aware automation across engineering and operational workflows.
+- **Azure DevOps MCP Server** — exposes on-premises Azure DevOps Server 2022.2 as a structured context source for AI agents (projects, repos, pipelines, work items, build history); purpose-built equivalent of Microsoft's public Azure DevOps MCP with SDD-specific security scoping.
+- **TransLynk MCP Server** — scans application source code to extract all localization strings, labels, UI text, and tooltips; auto-generates English and Arabic translations; diffs against existing TransLynk project translations; and upserts only net-new entries.
+- **Active Directory MCP Server** — structured, query-able interface into on-premises Active Directory, enabling identity lookups, group membership queries, and organizational context resolution within agentic workflows.
+- **AIRIA Orchestration Platform** — engineering and configuration of AI agents, RAG pipelines, security guardrails, and intent-routing models within SDD's enterprise AIRIA environment.
+- **OnePortal AI Assistant** — context-aware chatbot within OnePortal using AIRIA RAG pipelines, ingesting GRC policies, HR policies, IT/technical help content, and the OnePortal service catalogue.
 
 ---
 
-### Covid Portal (Feb. 2021 – Jun. 2021)
+### OnePortal IAM — Identity & Access Management / Authorization Server
+*2024 – Present · Application Architect & Technical Lead*
+**Stack:** .NET 8, ASP.NET Core, OAuth 2.0/OIDC, Azure Entra ID, UAE PASS
 
-**Senior Full Stack Developer**  
-Department of eGovernment, Sharjah  
-**Tech Stack:** ASP.Net 4.8, C#, Web APIs, Angular 11, MS SQL 2017, Azure
-
-**Key Achievements:**
-
-- Developed SPA for COVID-19 analytics and reporting
-- Implemented multi-level form validation and data integration
-- Integrated with MS Active Directory for secure authentication
+- Defined the overall IAM architecture: multi-tenant OAuth 2.0 / OIDC flows (Authorization Code, Client Credentials, PKCE, On-Behalf-Of), token issuance strategy, audience validation, and secure API protection patterns adopted across all SDD services.
+- Established UAE PASS and Azure Entra ID SSO federation design — specifying identity propagation contracts, trust boundaries, and integration standards for consuming applications.
+- Authored architectural guidelines for tenant-aware RBAC with fine-grained scope definitions; conducted structured code reviews to ensure implementation fidelity.
+- Guided the development team on threat modelling, secure coding practices, and OAuth edge-case handling.
 
 ---
 
-### Sessions Management System (Sep. 2020 – Jan. 2021)
+### OnePortal — Unified Digital Workplace & Government Service Hub
+*2024 – Present · Application Architect & Technical Lead*
+**Stack:** .NET Core, Angular, Microsoft 365 (Teams / Planner / To Do), MS Graph API
 
-**Senior Full Stack Developer**  
-Department of eGovernment, Sharjah  
-**Tech Stack:** ASP.Net 4.8, C#, Web APIs, SignalR, Angular 9, MS SQL 2017
-
-**Key Achievements:**
-
-- Architected real-time communication using SignalR and Observer Pattern
-- Built instant polling/voting modules with advanced timeout logic
-- Integrated secure authentication with on-premise MSExchange/AD
+- Defined the end-to-end solution architecture: module boundaries, API contracts, integration patterns, data ownership, and security-by-design controls.
+- Architected core platform modules — Service Catalog, Knowledge Hub, Microsoft 365 collaboration integrations (Teams / Planner / To Do via MS Graph API), and announcement engine.
+- Designed workflow automation patterns for service requests, multi-level approval routing, and task orchestration; established least-privilege API access standards for all MS Graph integrations.
+- Led architectural enhancements and governed quality through structured code reviews; provided technical direction on Angular module design, lazy-loading strategy, and API consumption patterns.
+- Defined reporting and analytics dashboard architecture for KPI visibility on service adoption and usage trends.
 
 ---
 
-### Announcements Management (Apr. 2022 – Aug. 2023)
+### SDD Announce — Multi-Tenant Announcement & Campaign Orchestration Platform
+*2023 – Present · Senior Software Engineer (Full Stack)*
+**Stack:** .NET 8, ASP.NET Core Web APIs, Angular 14, SMTP Relay, MS SQL Server
 
-**Senior Full Stack Developer**  
-Department of eGovernment, Sharjah  
-**Tech Stack:** ASP.Net 6, C#, Web APIs, SignalR, Angular 14, MS SQL 2017, OneSignal
-
-**Key Achievements:**
-
-- Developed web-based text/graphics editor for notifications
-- Enabled team collaboration, social interaction, and desktop notifications
-- Applied best practices for accessibility and SEO
+- Designed and delivered a tenant-aware announcements platform with a rich content editor, configurable templates, and department-based targeting.
+- Implemented customisable multi-level approval workflows per announcement type and organizational unit; enabled scheduling and automated SMTP distribution.
+- Hardened platform for enterprise operations: auditability, RBAC, extensible configuration, and maintainable modular architecture.
 
 ---
 
-### Survey Application (Feb. 2020 – Mar. 2020)
+### AI Tooling Suite — MCP Servers & AIRIA Orchestration
+*2024 – Present · Senior Software Engineer (Full Stack)*
+**Stack:** .NET, MCP Server SDK, Azure DevOps REST API, LDAP / Active Directory, AIRIA Platform
 
-**Senior Full Stack Developer**  
-Department of eGovernment, Sharjah  
-**Tech Stack:** ASP.Net 4.8, C#, Web APIs, Angular 9, MS SQL 2017
-
-**Key Achievements:**
-
-- Built responsive SPA for dynamic survey creation and analytics
+- Designed and delivered a suite of MCP servers bringing SDD's internal systems into AI agent context — Azure DevOps Server, Active Directory, and the TransLynk localization platform.
+- AIRIA Orchestration: engineered AI agents, RAG pipelines, security guardrails, and intent-routing models within SDD's enterprise AIRIA environment for policy-compliant agentic automation.
 
 ---
 
-### Event Management Solution (Mar. 2019 – Oct. 2019)
+### Senior Full-Stack Developer — Department of eGovernment (now Sharjah Digital Department)
+*2018 – Dec 2022*
 
-**Full Stack Software Engineer**  
-Department of eGovernment, Sharjah  
-**Tech Stack:** ASP.Net 4.5.2, C#, MVC 5, Ado.Net, Entity Framework, jQuery, SignalR, Selenium, MS SQL 2017
+**Legal Department of Sharjah — Public Web Portal & CMS** *(Sep 2022 – Dec 2022)*
+.NET Core 6, C#, Web APIs, Angular 14, MS SQL Server — multi-role CMS for public-facing content management, training application bookings, and admin approval workflows; Angular lazy-loading modules; SEO best practices.
 
-**Key Achievements:**
+**Announcements Management — Enterprise Notification & Engagement Platform** *(Apr 2022 – Aug 2023)*
+.NET 6, C#, Web APIs, SignalR, Angular 14, OneSignal, MS SQL Server — role-based announcement platform with rich text/graphics editor, multi-level approval workflows, and OneSignal desktop push notifications.
 
-- Developed native live chat (SignalR), performance/load testing (HP LoadRunner)
-- Built Selenium automation framework with web UI for test execution
+**Meeting Rooms Booking System — Enterprise Room Management** *(Aug 2021 – 2022)*
+.NET Core 6, C#, Web APIs, Angular 12, EWS, Outlook Add-in, MS SQL Server — multi-role room booking platform; custom Outlook task-pane add-in with real-time free/busy validation; Windows Service to synchronise Exchange calendar events via EWS subscription events.
 
----
+**Sessions Management System — Parliamentary / Committee Session Platform** *(Sep 2020 – Jan 2021)*
+.NET 4.8, C#, Web APIs, SignalR, Angular 9, MS SQL Server — multi-role platform managing session agendas, attendance, committee requests (leave/speak), and real-time voting; fully asynchronous server–client communication using SignalR.
 
-### Smart Channels ([smart.gdrfad.gov.ae](https://smart.gdrfad.gov.ae)) (Apr. 2018 – Mar. 2019)
-
-**Full Stack Software Engineer**  
-Emaratech, Dubai  
-**Tech Stack:** OutSystems, ASP.Net 4.5, C#, MVC, Ado.Net, jQuery, JavaScript, Selenium, Oracle
-
-**Key Achievements:**
-
-- Built automation testing framework (Selenium RC), EIDA verification (OCR), biometric authentication
+**Event Management Solution — Government Event Orchestration Platform** *(Mar 2019 – Oct 2019)*
+.NET 4.5, C#, MVC, SignalR, Selenium, MS SQL Server — multi-module event platform (registrations/approvals, VIP management, Majlis bookings, live chat, large-file sharing, audit logging); Selenium-based parallel test automation framework with web UI; HP LoadRunner performance test scripts.
 
 ---
 
-### Vision E-Form ([vision.eform.ae](https://vision.eform.ae)) (2016 – 2018)
+### Full-Stack Software Engineer — Emaratech, Dubai
+*2014 – 2019*
 
-**Full Stack Developer**  
-Emaratech, Dubai  
-**Tech Stack:** ASP.Net 4.5, C#, MVC, Ado.Net, jQuery, Redis, Selenium, Oracle
+**Smart Channels — UAE Visa Application Portal (GDRFA)** *(Apr 2018 – Mar 2019)*
+OutSystems (Service Studio / Integration Studio), .NET 4.5, C#, Oracle DB, Selenium — full-stack delivery of the GDRFA visa application portal; EIDA biometric verification and OCR-based passport scanning to pre-fill application forms.
 
-**Key Achievements:**
+**Vision eForm — UAE Visa Processing Platform** *(2016 – 2018)*
+.NET 4.5, C#, MVC, ASP.NET, Redis Cache, Oracle DB, Selenium, SonarQube, Jenkins — features across the visa processing pipeline (document management, multi-channel payments, approval routing, automated visa generation via Windows Service); Redis distributed cache for session management; SonarQube and Jenkins for CI and code quality.
 
-- Developed automation testing framework (Selenium RC), unit tests for legacy code
-- Integrated SonarQube and Jenkins for CI/CD and code quality
-
----
-
-### Other E-Channels ([moifawri.ae](https://www.moifawri.ae)) (2015/16)
-
-**Software Engineer**  
-Emaratech, Dubai  
-**Tech Stack:** ASP.Net 4.5, C#, Web Forms, Ado.Net, jQuery, Oracle
-
-**Key Achievements:**
-
-- Revamped application for TRA requirements (Responsive UI)
+**Vision Tracker — ETL Monitoring Dashboard** *(2014 – 2016)*
+.NET 4.5, ASP.NET, Web APIs, jQuery Charts, Oracle DB — BI dashboard giving operations real-time visibility into ETL pipeline failures and application statuses; interactive charts, filterable data tables, and reporting module with Excel/PDF export.
 
 ---
 
-### Vision Tracker (ETL Dashboard) ([tracker.e-vision.ae](http://tracker.e-vision.ae)) (2015)
+### Application & IT Support Engineer — eGates / Smart Gates · Emaratech, Sharjah
+*2007 – 2013*
 
-**Software Engineer**  
-Emaratech, Dubai  
-**Tech Stack:** ASP.Net 4.5, C#, MVC, Ado.Net, jQuery, Bootstrap, Web APIs, Charts, Oracle
-
-**Key Achievements:**
-
-- Developed BI-Application for core project "vision"
-- Designed dashboards and reporting modules
+Provided application and field support for Emaratech's biometric eGate systems at Dubai and Sharjah airports, Ajman, and UAQ immigration points — covering passport verifiers, facial-capture cameras, and iris scanners.
 
 ---
 
-### Helpdesk Inventory Controller ([invsys.emaratech.ae](http://invsys.emaratech.ae)) (2014)
+## Education
 
-**Emaratech, Dubai**  
-**Tech Stack:** ASP.Net 4.5, C#, Ado.Net, CSS, JavaScript, jQuery, SQL
-
----
-
-### Hospital Management System (2013)
-
-**Emaratech, Dubai**  
-**Tech Stack:** ASP.Net 3.5 Web Forms, C#, Ado.Net, CSS, JavaScript, SQL
+- **B.Sc. Computer Science (4-Year Honours)** — Allama Iqbal Open University, Pakistan · 2002 – 2006
+- **F.Sc. Computer Science (Pre-Engineering)** — Govt. Murray College, Sialkot, Pakistan · 2000 – 2002
 
 ---
 
-### Interview Evaluation System (2013)
+## Certifications & Professional Development
 
-**Emaratech, Dubai**  
-**Tech Stack:** Windows Forms, C#, Local DB (SQL)
-
----
-
-## Professional Experience in IT/Application Support
-
-### eGates/Smart Gates (2007 – 2013)
-
-**Application/IT Support Engineer**  
-Emaratech, Sharjah  
-**Tech:** Windows Applications for eGates, Passport Verifiers, Eye Print Scanners
-
----
-
-## Professional Experience in Teaching
-
-### Islamia Public High School (2004 – 2007)
-
-Sialkot, Pakistan  
-Subjects: Mathematics, Physics, English
-
----
-
-## Academic Qualifications
-
-<p align="center">
-  <img src="media/image2.jpeg" alt="Allama Iqbal Open University" width="90" height="72" />
-</p>
-
-- **BS (Computer Science)**, Allama Iqbal Open University, Islamabad, Pakistan (2002 – 2006)
-- **FSc. (Computer Science)**, Govt. Murray College, Sialkot, Pakistan (2000 – 2002)
-
----
-
-## Certifications & Trainings
-
-- **Microsoft Certified:** MSTS Web Development (.Net 4.0 Web Applications), MCTS SharePoint 2010/2013
-- **AI/ML Technologies:** MCP (Model Context Protocol) Server Development, GitHub Copilot Integration, Prompt Engineering, Instruction Tuning, RAG Implementation
-- **Frontend Frameworks:** Angular 9-18 (Advanced), TypeScript, Progressive Web Apps (PWA)
-- **Backend Technologies:** .NET Framework 4.x, .NET Core 3.x/5/6/8, RESTful API Design
-- **Database Management:** Oracle 11g/19c (PL/SQL), SQL Server 2008-2022 (T-SQL), MySQL, Performance Tuning
-- **DevOps & Cloud:** Azure DevOps, Jenkins, Docker, Kubernetes, Git/GitHub, CI/CD Pipelines
-- **Development Tools:** OutSystems Platform Development (2018), Visual Studio, VS Code, SQL Server Management Studio
-- **Quality Assurance:** Selenium WebDriver, Test Automation Frameworks, HP LoadRunner Performance Testing
-- **Web Technologies:** JavaScript ES6+, CSS3/SCSS, Bootstrap 3-5, HTML5, Responsive Design
-- **Monitoring & Analytics:** Splunk (Big Data Analysis), Application Performance Monitoring
-- **Soft Skills:** LinkedIn Learning - Communication, Leadership, Project Management
-
----
-
-## Personal Details
-
-| Field                | Value                                  |
-|----------------------|----------------------------------------|
-| **Full Name**        | Shakoor Hussain Attari                 |
-| **Passport Number**  | DX6894103                              |
-| **Date of Birth**    | 23rd Sep 1983 (~37 years)              |
-| **Email**            | [binmushtaq@gmail.com](mailto:binmushtaq@gmail.com) |
-| **Teams**            | [shakoorattari@outlook.com](mailto:shakoorattari@outlook.com) |
-| **Cell phone**       | (+971) 050 - 8066 735                  |
-| **Address**          | Sharjah, UAE                           |
-| **Marital Status**   | Married                                |
-| **Country exposure** | Pakistan and UAE                       |
+- **MCTS — .NET 4.0 Web Applications** · Microsoft
+- **MCTS — SharePoint 2010 / 2013** · Microsoft
+- **Angular Development Training (v9–17)** · Professional Training
+- **OutSystems Web Application Development** · OutSystems
+- **Flutter — Cross-Platform App Development (iOS, Android, Web, Desktop)** · Professional Training
+- **Splunk — Searching, Monitoring & Analysing Machine-Generated Data** · Professional Training
 
 ---
 
 ## Languages
 
-- **English:** Excellent (Professional, Technical, and Business Communication)
-- **Urdu:** Native
-- **Arabic:** Fair
-- **Punjabi:** Good
-
----
-
-## Driving Skills
-
-- Holder of Light Vehicle License (Dubai - UAE)
-
----
-
-## Hobbies and Interests
-
-- **Technology Innovation:** Learning emerging AI/ML technologies, MCP server development, prompt engineering, and RAG implementations
-- **Modern Development:** Exploring AI-assisted development, GitHub Copilot optimization, and intelligent code generation techniques
-- **Software Architecture:** Developing challenging applications with scalable architectures and microservices patterns
-- **Knowledge Sharing:** Teaching, mentoring, and conducting technical sessions on software engineering, AI tools, and modern development practices
-- **Personal Development:** Reading technical books, contributing to technology debates, and staying current with industry trends
-- **Recreation:** Playing cricket and outdoor activities for work-life balance
+| Language | Proficiency |
+|----------|-------------|
+| **English** | Professional Proficiency |
+| **Urdu** | Native |
+| **Arabic** | Conversational |
+| **Punjabi** | Fluent |
