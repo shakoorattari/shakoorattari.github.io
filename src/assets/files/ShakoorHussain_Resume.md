@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="shakoor_pic.jpeg" alt="Profile Photo" width="140" height="140" />
+  <img src="shakoor-photo.png" alt="Profile Photo" width="140" height="140" />
 </p>
 
 # SHAKOOR HUSSAIN ATTARI
