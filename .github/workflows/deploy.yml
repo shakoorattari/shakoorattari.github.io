@@ -6,25 +6,25 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
 
 concurrency:
   group: pages
   cancel-in-progress: true
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        run: |
-          git clone --branch main --single-branch \
-            "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" .
+        uses: actions/checkout@v4
 
-      - name: Show environment
-        run: |
-          echo "Node: $(node --version)"
-          echo "npm:  $(npm --version)"
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
       - name: Install dependencies
         run: npm install
@@ -32,21 +32,23 @@ jobs:
       - name: Build Angular app
         run: npm run build -- --base-href=/
 
-      - name: Publish build output to docs/
+      - name: Add .nojekyll and 404 fallback
         run: |
-          rm -rf docs
-          cp -r dist/shakoor-portfolio/. docs/
-          touch docs/.nojekyll
-          cp docs/index.html docs/404.html
+          touch dist/shakoor-portfolio/.nojekyll
+          cp dist/shakoor-portfolio/index.html dist/shakoor-portfolio/404.html
 
-      - name: Commit and push docs/ to main
-        run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git add docs/
-          git diff --staged --quiet \
-            && echo "No changes – skipping commit" \
-            || (git commit -m "chore: deploy built app to docs/ [skip ci]" \
-                && git push \
-                     "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" \
-                     HEAD:main)
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/shakoor-portfolio/
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
