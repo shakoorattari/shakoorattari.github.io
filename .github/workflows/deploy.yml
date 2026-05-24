@@ -2,43 +2,60 @@ name: Build and Deploy Angular App to GitHub Pages
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
 
 jobs:
-  build-and-deploy:
-    runs-on: self-hosted
+  build:
+    runs-on: ubuntu-latest
     steps:
-      - name: Cleanup workspace
-        run: |
-          rm -rf dist node_modules
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Checkout code
-        run: |
-          git fetch origin main
-          git reset --hard origin/main
-          git clean -fd
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
-      - name: Check Node.js version
-        run: |
-          echo "Node.js version on runner:"
-          node --version
-          echo "NPM version on runner:"
-          npm --version
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Build Angular app
-        run: npm run build -- --base-href=/portfolio/
+        run: pnpm run build -- --base-href=/portfolio/
 
+      - name: Add SPA fallback (404.html)
+        run: cp dist/shakoor-portfolio/index.html dist/shakoor-portfolio/404.html
+
+      - name: Disable Jekyll
+        run: touch dist/shakoor-portfolio/.nojekyll
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/shakoor-portfolio
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - name: Deploy to GitHub Pages
-        run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "github-actions@github.com"
-          cd ./dist/shakoor-portfolio
-          git init
-          git checkout --orphan gh-pages
-          git add .
-          git commit -m "Deploy to GitHub Pages"
-          git push --force "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" HEAD:gh-pages
+        id: deployment
+        uses: actions/deploy-pages@v4

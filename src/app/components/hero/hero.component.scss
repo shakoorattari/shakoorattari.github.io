@@ -1,1 +1,267 @@
-.hero {  height: 100vh;  background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(20, 30, 48, 0.95));  position: relative;  color: white;  display: flex;  align-items: center;}.container {  position: relative;  z-index: 1;  width: 90%;  max-width: 1000px;  margin: 0 auto;  padding: 0 15px;}.hero-content {  max-width: 600px;  margin: 0 auto;  text-align: center;  animation: fadeInUp 1s ease-out;  h1 {    font-size: 42px;    font-weight: 700;    margin-bottom: 15px;    background: linear-gradient(45deg, #fff, #a3d8ff, #fff);    background-size: 200% auto;    -webkit-background-clip: text;    background-clip: text;    -webkit-text-fill-color: transparent;    animation: shine 3s linear infinite;  }  h2 {    font-size: 22px;    font-weight: 500;    margin-bottom: 20px;  }  p {    font-size: 16px;    margin-bottom: 25px;    color: rgba(255, 255, 255, 0.8);    line-height: 1.6;    max-width: 500px;    margin-left: auto;    margin-right: auto;  }}.profile-avatar {  width: 140px;  height: 140px;  margin: 0 auto 25px;  border-radius: 50%;  position: relative;  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);  transition: transform 0.5s ease;}.profile-avatar:hover {  transform: scale(1.05) rotate(3deg);}.profile-avatar img {  width: 100%;  height: 100%;  object-fit: cover;  border-radius: 50%;  border: 3px solid rgba(255, 255, 255, 0.2);}.social-icons {  margin-top: 20px;  display: flex;  justify-content: center;  gap: 15px;}.social-icons a {  width: 35px;  height: 35px;  border-radius: 50%;  background: rgba(255, 255, 255, 0.1);  color: white;  font-size: 16px;  display: flex;  align-items: center;  justify-content: center;  transition: all 0.3s ease;}.social-icons a:hover {  background: var(--primary-color);  transform: translateY(-3px);}.hero-buttons {  display: flex;  gap: 15px;  justify-content: center;  margin-bottom: 30px;}.btn {  display: inline-flex;  align-items: center;  gap: 8px;  padding: 10px 25px;  border-radius: 25px;  font-weight: 500;  cursor: pointer;  transition: all 0.3s ease;  border: 2px solid transparent;  font-size: 14px;  min-width: 150px;  justify-content: center;}.btn:hover {  transform: translateY(-3px);}.primary-btn {  background: var(--primary-color);  color: white;}.secondary-btn {  background: rgba(255, 255, 255, 0.1);  color: white;  border: 2px solid rgba(255, 255, 255, 0.2);}.secondary-btn:hover {  background: white;  color: var(--primary-color);}@keyframes shine {  to {    background-position: 200% center;  }}@keyframes fadeInUp {  from {    opacity: 0;    transform: translateY(30px);  }  to {    opacity: 1;    transform: translateY(0);  }}@media (max-width: 768px) {  .hero-content h1 {    font-size: 32px;  }  .hero-content h2 {    font-size: 18px;  }  .profile-avatar {    width: 120px;    height: 120px;  }  .hero-buttons {    flex-direction: column;    gap: 10px;  }}@media (max-width: 576px) {  .hero-content h1 {    font-size: 26px;  }  .profile-avatar {    width: 100px;    height: 100px;  }}
+.hero {
+  min-height: 100vh;
+  position: relative;
+  color: var(--gh-fg-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gh-canvas);
+  overflow: hidden;
+  padding: 120px 0 80px;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--gh-gradient-hero);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(48, 54, 61, 0.25) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(48, 54, 61, 0.25) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black 30%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black 30%, transparent 80%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.particles-container {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  width: 90%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.hero-content {
+  text-align: center;
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.profile-container {
+  margin-bottom: 32px;
+}
+
+.profile-avatar {
+  width: 128px;
+  height: 128px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  position: relative;
+  box-shadow: 0 0 0 1px var(--gh-border-default),
+    0 0 40px rgba(163, 113, 247, 0.35);
+  transition: transform 0.4s ease;
+}
+
+.profile-avatar:hover {
+  transform: scale(1.05);
+}
+
+.profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid var(--gh-canvas-subtle);
+}
+
+.avatar-border {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    var(--gh-purple),
+    var(--gh-accent-fg),
+    var(--gh-pink),
+    var(--gh-purple)
+  );
+  z-index: -1;
+  opacity: 0.7;
+  animation: rotateBorder 8s linear infinite;
+}
+
+.social-icons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.social-icons a {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--gh-canvas-overlay);
+  border: 1px solid var(--gh-border-default);
+  color: var(--gh-fg-default);
+  font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.social-icons a:hover {
+  background: var(--gh-canvas-elevated);
+  border-color: var(--gh-fg-subtle);
+  color: var(--gh-fg-default);
+  transform: translateY(-2px);
+}
+
+.hero-content h1 {
+  font-size: clamp(40px, 7vw, 72px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  margin-bottom: 16px;
+  line-height: 1.05;
+  background: var(--gh-gradient-text);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: shine 6s linear infinite;
+}
+
+.role-container h2 {
+  font-size: clamp(18px, 2.5vw, 24px);
+  font-weight: 500;
+  margin-bottom: 16px;
+  color: var(--gh-fg-default);
+}
+
+.role-container .static-text {
+  color: var(--gh-fg-muted);
+  margin-right: 6px;
+}
+
+.role-container .dynamic-text {
+  background: linear-gradient(90deg, var(--gh-purple), var(--gh-accent-fg));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  font-weight: 700;
+}
+
+.hero-content p {
+  font-size: 18px;
+  margin: 0 auto 24px;
+  color: var(--gh-fg-muted);
+  line-height: 1.6;
+  max-width: 640px;
+}
+
+.professional-badge {
+  display: inline-block;
+  margin-bottom: 32px;
+}
+
+.professional-badge a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--gh-canvas-subtle);
+  border: 1px solid var(--gh-border-default);
+  color: var(--gh-fg-default);
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.professional-badge a:hover {
+  border-color: var(--gh-accent-muted);
+  background: rgba(56, 139, 253, 0.1);
+}
+
+.professional-badge i {
+  color: #0a66c2;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+
+.scroll-indicator {
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: var(--gh-fg-subtle);
+  font-size: 12px;
+  cursor: pointer;
+  animation: bounce 2.5s infinite;
+}
+
+.scroll-indicator:hover {
+  color: var(--gh-fg-default);
+}
+
+@keyframes shine {
+  to {
+    background-position: 200% center;
+  }
+}
+
+@keyframes rotateBorder {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translate(-50%, 0);
+  }
+  50% {
+    transform: translate(-50%, 8px);
+  }
+}
+
+@media (max-width: 576px) {
+  .profile-avatar {
+    width: 104px;
+    height: 104px;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+  }
+}
