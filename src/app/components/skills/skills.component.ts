@@ -8,89 +8,103 @@ import { Component, OnInit } from '@angular/core';
 export class SkillsComponent implements OnInit {
   skillCategories = [
     {
-      title: 'Leadership & Management',
+      title: 'Leadership & Architecture',
       skills: [
-        'Technical Team Leadership (5+ years)',
-        'Engineering Best Practices Implementation',
-        'Architectural Decision Making',
-        'Cross-functional Team Coordination',
-        'Developer Mentoring & Growth Planning',
-        'Project Estimation & Resource Planning'
+        'Technical Team Leadership (team of 8)',
+        'End-to-End Solution Architecture',
+        'Organization-Wide Architectural Consultancy',
+        'G2G (Government-to-Government) Integration Design',
+        'Vendor Engagement & Technical Due-Diligence',
+        'Performance Reviews, Mentoring & Growth Planning'
       ]
     },
     {
-      title: 'Microservices Architecture',
+      title: '.NET & Backend',
       skills: [
-        'Distributed Systems Design',
-        'API Gateway Implementation',
-        'Service Discovery & Registry',
-        'Event-Driven Architecture',
-        'Message Brokers (RabbitMQ, Kafka)',
-        'Container Orchestration with Kubernetes',
-        'Docker Containerization'
+        'ASP.NET Core / .NET 8, 10',
+        'ASP.NET Web APIs & MVC, C#',
+        'Microservices & RESTful API Design',
+        'Windows Services & Background Workers',
+        'Entity Framework Core, LINQ',
+        'MS Graph APIs & Microsoft 365 Integration'
       ]
     },
     {
-      title: '.NET Development',
+      title: 'Frontend',
       skills: [
-        'ASP.NET Web APIs and MVC (.Net 3, 4, 6, 8)',
-        'REST APIs, Web Services, API Authentication',
-        'Azure SSO, UAE Pass Authentication',
-        'Windows Services, MS Exchange, Graph APIs',
-        'SignalR for live chat and notifications',
-        'Redis Distributed Cache and Session Management'
+        'Angular 7–18 (TypeScript)',
+        'SPA, Lazy-Loading Modules, Standalone APIs',
+        'RxJS, Reactive Forms, State Management',
+        'HTML5, CSS3 / SCSS, Responsive Design',
+        'Bootstrap, Material, PWA'
       ]
     },
     {
-      title: 'Web Development',
+      title: 'Identity, Security & IAM',
       skills: [
-        'Angular (7 to 17)',
-        'HTML5, CSS3',
-        'Responsive Design with Material and Bootstrap',
-        'JavaScript, jQuery, TypeScript'
+        'OAuth 2.0 / OIDC / JWT (PKCE, On-Behalf-Of, Client Credentials)',
+        'UAE PASS & Azure Entra ID SSO Federation',
+        'Multi-Tenant IAM Design',
+        'RBAC & Scoped Authorization',
+        'Threat Modelling & Security-by-Design',
+        'Secrets Management & Audit-Log Readiness'
       ]
     },
     {
-      title: 'Database Development',
+      title: 'Databases',
       skills: [
-        'Oracle and Microsoft SQL Database',
-        'Creating and debugging database objects',
-        'Tables, Triggers, Views, Functions, Packages, Procedures'
+        'Microsoft SQL Server (T-SQL)',
+        'Oracle DB & PL/SQL',
+        'Schema Design & Performance Tuning',
+        'Stored Procedures, Functions, Triggers, Views'
       ]
     },
     {
-      title: 'QA & Automation',
+      title: 'DevOps & CI/CD',
       skills: [
-        'Selenium Test Automation',
-        'Puppeteer, Power BI',
-        'HP Unified Functional Testing (UFT, QTP)',
-        'HP LoadRunner for Performance Testing'
+        'Azure DevOps Server 2022.2 (admin & owner)',
+        'YAML Pipeline Templates (build / test / deploy)',
+        'GitHub Actions, Jenkins',
+        'SonarQube Quality Gates',
+        'Self-Hosted Agents & Environment Promotion',
+        'Branch Policies & Release Governance'
       ]
     },
     {
-      title: 'Other Skills',
+      title: 'Real-Time, Caching & Integration',
       skills: [
-        'OutSystems (Service Studio, Integration Studio)',
-        'SonarQube, Jenkins, Azure DevOps',
-        'GIT, GitHub, TFS',
-        'CICD, Agile, Scrum, Kanban'
+        'SignalR for live chat, voting, and notifications',
+        'Redis Distributed Cache & Session Management',
+        'Event-Driven & Webhook Integration Patterns',
+        'MS Exchange / EWS, Active Directory / LDAP'
       ]
     },
     {
-      title: 'Certifications',
+      title: 'Testing & Quality',
       skills: [
-        'Microsoft Certified: Azure Developer Associate',
-        'Angular Developer Certification',
-        'Oracle Database SQL Certified Associate'
+        'Playwright Test Automation',
+        'Selenium (Parallel Frameworks)',
+        'HP LoadRunner Performance Testing',
+        'Unit & Integration Testing'
       ]
     },
     {
-      title: 'Soft Skills',
+      title: 'AI Tooling & Agentic Workflows',
       skills: [
-        'Team Leadership and Mentoring',
-        'Effective Communication',
-        'Problem Solving and Critical Thinking',
-        'Adaptability and Time Management'
+        'Model Context Protocol (MCP) Server Development',
+        'AIRIA Orchestration: agents, RAG, guardrails, intent routing',
+        'Retrieval-Augmented Generation (RAG) Pipelines',
+        'GitHub Copilot & Prompt Engineering',
+        'Engineering Workflow Automation'
+      ]
+    },
+    {
+      title: 'Methodology & Tooling',
+      skills: [
+        'Agile / Scrum / Kanban',
+        'Azure Boards, JIRA, TFS',
+        'OutSystems (Service & Integration Studio)',
+        'Splunk — Observability & Log Analysis'
       ]
     }
   ];

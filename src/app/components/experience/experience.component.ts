@@ -16,32 +16,32 @@ interface Job {
 export class ExperienceComponent implements OnInit {
   jobs: Job[] = [
     {
-      period: '2022 - Present',
-      title: 'Full Stack Senior Developer',
-      company: 'Department of eGovernment, Sharjah',
-      description: 'Developed multiple applications including Legal Department CMS, Meeting Rooms Booking System, Covid Portal, Sessions Management System, and Announcements Management.',
-      technologies: ['DotNet Core 6.0', 'Angular 12-14', 'MS SQL', 'SignalR']
+      period: 'Jan 2023 — Present',
+      title: 'Lead Software Engineer / Application Architect',
+      company: 'Sharjah Digital Department (SDD) — formerly Department of eGovernment',
+      description: 'Engineering lead for a team of 8 (2 front-end, 6 full-stack). Own end-to-end architecture across SDD\'s enterprise platform portfolio: OnePortal IAM (OAuth 2.0/OIDC, UAE PASS, Azure Entra ID), OnePortal digital workplace (MS Graph), SDD Announce, and an in-house AI tooling suite. Sole administrator of on-premises Azure DevOps Server 2022.2 — 20+ team projects, dozens of self-hosted agents, org-wide YAML pipeline templates. Primary engineering liaison with Sharjah\'s Cyber Security and IT Security departments.',
+      technologies: ['.NET 8/10', 'ASP.NET Core', 'Angular 14–18', 'OAuth 2.0 / OIDC', 'UAE PASS', 'Azure Entra ID', 'MS SQL', 'Azure DevOps', 'MCP / AIRIA']
     },
     {
-      period: '2018 - 2019',
-      title: 'Full Stack Software Engineer',
-      company: 'Emaratech, Dubai',
-      description: 'Worked on Smart Channels project for UAE Visas application system with features like user registration, document handling, payment integration, and workflow approvals.',
-      technologies: ['Outsystems', 'ASP.Net 4.5', 'C#', 'Oracle']
+      period: '2018 — Dec 2022',
+      title: 'Senior Full-Stack Developer',
+      company: 'Department of eGovernment (now Sharjah Digital Department)',
+      description: 'Delivered enterprise platforms across Sharjah government: Legal Department public portal & CMS, Announcements Management with OneSignal push, Meeting Rooms Booking with a custom Outlook add-in and Exchange EWS sync service, Sessions Management with SignalR real-time voting, and a government Event Management platform with native SignalR chat and a Selenium parallel-test framework.',
+      technologies: ['.NET Core 6 / .NET 4.8', 'Angular 9–14', 'Web APIs', 'SignalR', 'MS SQL', 'EWS / MS Exchange', 'OneSignal']
     },
     {
-      period: '2016 - 2018',
-      title: 'Full Stack Developer',
+      period: '2014 — 2019',
+      title: 'Full-Stack Software Engineer',
       company: 'Emaratech, Dubai',
-      description: 'Worked on Vision E-Form project for UAE visa applications, featuring document attachment, payment processing, and approval workflows.',
-      technologies: ['ASP.Net 4.5', 'C#', 'MVC', 'Redis', 'Oracle']
+      description: 'Built and shipped GDRFA Smart Channels (OutSystems + .NET) with EIDA biometric verification and OCR passport scanning; Vision eForm visa processing pipeline (.NET 4.5, Redis, Oracle) with SonarQube and Jenkins CI; and Vision Tracker, a BI dashboard giving operations real-time visibility into ETL pipeline failures across channels.',
+      technologies: ['.NET 4.5', 'C#', 'MVC / ASP.NET', 'OutSystems', 'Oracle DB', 'Redis', 'Selenium', 'Jenkins / SonarQube']
     },
     {
-      period: '2015 - 2016',
-      title: 'Software Engineer',
-      company: 'Emaratech, Dubai',
-      description: 'Handled production issues and provided enhancements for E-Channels applications including Fawri, eservices and eform.',
-      technologies: ['ASP.Net 4.5', 'C#', 'jQuery', 'Oracle']
+      period: '2007 — 2013',
+      title: 'Application & IT Support Engineer — eGates / Smart Gates',
+      company: 'Emaratech, Sharjah',
+      description: 'Application and field support for Emaratech\'s biometric eGate systems at Dubai and Sharjah airports, Ajman and UAQ immigration points — passport verifiers, facial-capture cameras, and iris scanners.',
+      technologies: ['Windows Apps', 'Biometric Devices', 'SQL', 'Field Operations']
     }
   ];
 

@@ -12,23 +12,21 @@ declare const AOS: any;
 export class AboutComponent implements OnInit {
   isAvailableForWork = true;
 
-  aboutSummary = `I'm a Senior Full Stack Developer with 15+ years of experience crafting robust, 
-  scalable applications using .NET and Angular. My expertise spans both front-end and back-end development, 
-  with a strong focus on delivering high-quality solutions that solve real business problems. 
-  I excel at translating complex requirements into elegant code while maintaining best practices.`;
+  aboutSummary = `Lead Software Engineer and Application Architect with 15+ years of enterprise software delivery across the UAE public sector. Deep expertise in .NET / ASP.NET Core, Angular, OAuth 2.0 / OIDC, multi-tenant IAM, and Azure DevOps CI/CD. I own end-to-end solution architecture — from requirements through production operations — for mission-critical government platforms serving multiple Sharjah entities, with a strong focus on clean code, developer experience, and AI tooling to accelerate engineering velocity.`;
 
   professionalHighlights = [
-    'Expert in Angular development with deep knowledge of RxJS, NgRx, and performance optimization',
-    'Comprehensive experience with .NET ecosystem including ASP.NET Core, EF Core, and Azure integration',
-    'Extensive background in building secure, scalable API architectures and microservices',
-    'Strong database design and optimization skills across SQL Server, Oracle, and NoSQL solutions',
-    'Proven ability to lead development teams and mentor junior developers'
+    'Engineering lead for a cross-functional team of 8 (2 front-end, 6 full-stack) at Sharjah Digital Department',
+    'Application Architect for OnePortal IAM — multi-tenant OAuth 2.0 / OIDC, UAE PASS & Azure Entra ID SSO federation',
+    'Architected a suite of MCP servers (Azure DevOps, Active Directory, TransLynk) integrating AI agents with internal systems',
+    'Sole administrator of on-premises Azure DevOps Server 2022.2 — 20+ team projects, dozens of self-hosted agents, org-wide YAML pipeline templates',
+    'Primary engineering liaison with Sharjah Cyber Security & IT Security — security-by-design across the application estate',
+    'Designed reusable, API-first integration patterns (REST, event-driven, webhook) adopted across SDD platforms'
   ];
 
   professionalStats = [
     { value: '15+', label: 'Years Experience' },
-    { value: '30+', label: 'Projects Completed' },
-    { value: '5+', label: 'Large Enterprise Solutions' }
+    { value: '8', label: 'Engineers Led' },
+    { value: '20+', label: 'Enterprise Projects' }
   ];
 
   personalInfo = [
@@ -48,7 +46,7 @@ export class AboutComponent implements OnInit {
     },
     {
       label: 'Phone',
-      value: '+971 50 8066 735',
+      value: '+971 50 806 6735',
       icon: 'fas fa-phone',
       isLink: true,
       linkPrefix: 'tel:+',
@@ -77,35 +75,56 @@ export class AboutComponent implements OnInit {
   ];
 
   endorsements = [
-    { skill: '.NET Development', count: 15 },
-    { skill: 'Angular', count: 12 },
-    { skill: 'Database Development', count: 10 },
-    { skill: 'Full Stack Development', count: 18 },
-    { skill: 'API Design', count: 14 },
-    { skill: 'Azure DevOps', count: 9 }
+    { skill: '.NET / ASP.NET Core', count: 18 },
+    { skill: 'Angular & TypeScript', count: 15 },
+    { skill: 'OAuth 2.0 / OIDC & IAM', count: 12 },
+    { skill: 'Azure DevOps & CI/CD', count: 14 },
+    { skill: 'Microservices & REST APIs', count: 13 },
+    { skill: 'AI Tooling & MCP Servers', count: 9 }
   ];
 
   certifications = [
     {
-      name: 'Microsoft Certified: Azure Developer Associate',
+      name: 'MCTS — .NET 4.0 Web Applications',
       issuer: 'Microsoft',
-      year: '2022',
+      year: 'Microsoft',
       icon: 'fab fa-microsoft',
-      link: 'https://www.microsoft.com/en-us/learning/certification-overview.aspx'
+      link: 'https://learn.microsoft.com/en-us/credentials/'
     },
     {
-      name: 'Angular Developer Certification',
-      issuer: 'Google',
-      year: '2021',
+      name: 'MCTS — SharePoint 2010 / 2013',
+      issuer: 'Microsoft',
+      year: 'Microsoft',
+      icon: 'fab fa-microsoft',
+      link: 'https://learn.microsoft.com/en-us/credentials/'
+    },
+    {
+      name: 'Angular Development Training (v9–17)',
+      issuer: 'Professional Training',
+      year: 'Angular',
       icon: 'fab fa-angular',
-      link: 'https://www.google.com'
+      link: 'https://angular.dev'
     },
     {
-      name: 'Oracle Database SQL Certified Associate',
-      issuer: 'Oracle',
-      year: '2020',
-      icon: 'fas fa-database',
-      link: 'https://education.oracle.com/oracle-database-sql-certified-associate/overview'
+      name: 'OutSystems Web Application Development',
+      issuer: 'OutSystems',
+      year: 'Low-Code',
+      icon: 'fas fa-cubes',
+      link: 'https://www.outsystems.com/'
+    },
+    {
+      name: 'Flutter — Cross-Platform App Development',
+      issuer: 'Professional Training',
+      year: 'iOS · Android · Web · Desktop',
+      icon: 'fas fa-mobile-screen',
+      link: 'https://flutter.dev'
+    },
+    {
+      name: 'Splunk — Searching, Monitoring & Analysing Machine Data',
+      issuer: 'Professional Training',
+      year: 'Observability',
+      icon: 'fas fa-chart-line',
+      link: 'https://www.splunk.com/'
     }
   ];
 
