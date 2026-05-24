@@ -33,10 +33,11 @@ export class ContactComponent implements OnInit {
     private contactService: ContactService
   ) {
     this.contactForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(2)]],
-      email: ['', [Validators.required, Validators.email]],
-      subject: ['', [Validators.required, Validators.minLength(4)]],
-      message: ['', [Validators.required, Validators.minLength(20), Validators.maxLength(500)]]
+      name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
+      email: ['', [Validators.required, Validators.email, Validators.maxLength(150)]],
+      subject: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(150)]],
+      message: ['', [Validators.required, Validators.minLength(20), Validators.maxLength(500)]],
+      botcheck: [''],
     });
   }
 
@@ -146,7 +147,7 @@ export class ContactComponent implements OnInit {
     this.submitted = true;
 
     if (this.contactForm.invalid) {
-      // Scroll to the first invalid element
+      this.contactForm.markAllAsTouched();
       const firstInvalidElement = document.querySelector('.form-group .invalid');
       if (firstInvalidElement) {
         firstInvalidElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -158,20 +159,23 @@ export class ContactComponent implements OnInit {
 
     this.contactService.sendMessage(this.contactForm.value)
       .subscribe({
-        next: () => {
+        next: (res) => {
           this.isSubmitting = false;
-          this.showToast('success', 'Your message has been sent successfully! I\'ll get back to you soon.');
+          this.showToast('success', res?.message || 'Your message has been sent! I\'ll get back to you soon.');
           this.resetForm();
         },
         error: (error) => {
           this.isSubmitting = false;
 
-          // Provide more specific error message if available
-          let errorMessage = 'Sorry, there was an error sending your message.';
-          if (error.status === 429) {
-            errorMessage = 'You\'ve sent too many messages. Please try again later.';
-          } else if (error.error?.message) {
+          let errorMessage = 'Sorry, there was an error sending your message. Please try again.';
+          if (error?.status === 429) {
+            errorMessage = error?.error?.message || 'Too many requests. Please try again later.';
+          } else if (error?.status === 400) {
+            errorMessage = error?.error?.message || 'Invalid submission.';
+          } else if (error?.error?.message) {
             errorMessage = error.error.message;
+          } else if (error?.status === 0) {
+            errorMessage = 'Network error. Please check your connection and try again.';
           }
 
           this.showToast('error', errorMessage);

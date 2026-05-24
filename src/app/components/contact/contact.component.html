@@ -105,7 +105,11 @@
                     </button>
                 </div>
 
-                <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" #formElement>
+                <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" #formElement novalidate>
+                    <!-- Honeypot field for spam protection (hidden from users) -->
+                    <input type="text" formControlName="botcheck" class="honeypot" tabindex="-1"
+                        autocomplete="off" aria-hidden="true">
+
                     <div class="form-row">
                         <div class="form-group" [ngClass]="{'focused': focusedField === 'name'}">
                             <label for="name">Your Name</label>

@@ -35,10 +35,12 @@
 .input-container{position:relative}
 .input-container>i{position:absolute;left:12px;top:11px;color:var(--gh-fg-muted);font-size:14px}
 .input-container.textarea-container>i{top:12px}
-.form-group input,.form-group textarea{width:100%;padding:11px 12px 11px 38px;background:var(--gh-canvas-inset);border:1px solid var(--gh-border-default);border-radius:8px;font-size:14px;transition:border .2s}
+.form-group input,.form-group textarea{width:100%;padding:11px 12px 11px 38px;background:var(--gh-canvas-inset);border:1px solid var(--gh-border-default);border-radius:8px;color:var(--gh-fg-default);font-family:inherit;font-size:14px;transition:border .2s}
+.form-group input::placeholder,.form-group textarea::placeholder{color:var(--gh-fg-subtle);opacity:1}
 .form-group input:focus,.form-group textarea:focus{outline:0;border-color:var(--gh-accent-fg);box-shadow:0 0 0 3px var(--gh-accent-subtle)}
 .form-group input.invalid,.form-group textarea.invalid{border-color:var(--gh-danger-fg)}
 .form-group textarea{resize:vertical;min-height:120px;padding-top:12px}
+.honeypot{position:absolute!important;left:-9999px!important;width:1px;height:1px;opacity:0;pointer-events:none}
 .error-message{display:flex;gap:6px;margin-top:6px;font-size:12px;color:var(--gh-danger-fg)}
 .char-count{margin-top:6px;font-size:12px;color:var(--gh-fg-muted);text-align:right}
 .char-count.warning{color:var(--gh-attention-fg);font-weight:600}
