@@ -107,8 +107,9 @@
 
                 <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" #formElement novalidate>
                     <!-- Honeypot field for spam protection (hidden from users) -->
-                    <input type="text" formControlName="botcheck" class="honeypot" tabindex="-1"
-                        autocomplete="off" aria-hidden="true">
+                    <input type="text" formControlName="botcheck" tabindex="-1"
+                        autocomplete="off" aria-hidden="true"
+                        style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
 
                     <div class="form-row">
                         <div class="form-group" [ngClass]="{'focused': focusedField === 'name'}">
@@ -171,8 +172,16 @@
                         </div>
                     </div>
 
+                    <div class="turnstile-wrap">
+                        <div #turnstileContainer class="turnstile-widget"></div>
+                        <small class="turnstile-hint" *ngIf="!turnstileToken">
+                            <i class="fas fa-shield-alt"></i> Bot protection by Cloudflare Turnstile
+                        </small>
+                    </div>
+
                     <div class="form-actions">
-                        <button type="submit" class="btn primary-btn submit-btn" [disabled]="isSubmitting"
+                        <button type="submit" class="btn primary-btn submit-btn"
+                            [disabled]="isSubmitting || !turnstileToken"
                             [class.loading]="isSubmitting">
                             <span *ngIf="!isSubmitting">Send Message</span>
                             <div class="spinner" *ngIf="isSubmitting">

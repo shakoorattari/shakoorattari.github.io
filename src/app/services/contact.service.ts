@@ -10,6 +10,7 @@ export interface ContactFormData {
   subject: string;
   message: string;
   botcheck?: string;
+  turnstileToken?: string;
 }
 
 export interface ContactSubmitResult {
