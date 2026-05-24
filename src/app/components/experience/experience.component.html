@@ -69,44 +69,40 @@
           <!-- Expandable section -->
           <div class="job-details" [class.expanded]="job.showDetails">
 
-            <!-- Responsibility categories -->
+            <!-- Responsibility categories — single-column blocks -->
             <div class="categories-section" *ngIf="job.categories.length > 0">
               <div class="detail-section-label">
                 <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
                 Key Responsibilities
               </div>
-              <div class="detail-grid">
-                <div class="detail-card" *ngFor="let cat of job.categories">
-                  <div class="category-title">
-                    <span class="cat-icon">{{cat.icon}}</span>
-                    <span>{{cat.title}}</span>
-                  </div>
-                  <ul class="bullet-list">
-                    <li *ngFor="let h of cat.highlights">{{h}}</li>
-                  </ul>
-                </div>
+              <div class="resp-block" *ngFor="let cat of job.categories">
+                <h5 class="resp-block-title">
+                  <span class="icon">{{cat.icon}}</span>
+                  <span>{{cat.title}}</span>
+                </h5>
+                <ul class="bullet-list">
+                  <li *ngFor="let h of cat.highlights">{{h}}</li>
+                </ul>
               </div>
             </div>
 
-            <!-- Projects -->
+            <!-- Projects — single-column blocks -->
             <div class="projects-section" *ngIf="job.projects.length > 0">
               <div class="detail-section-label">
                 <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
                 Notable Projects
               </div>
-              <div class="detail-grid">
-                <div class="detail-card" *ngFor="let project of job.projects">
-                  <div class="proj-header">
-                    <h6 class="project-name">{{project.name}}</h6>
-                    <span class="project-period">{{project.period}}</span>
-                  </div>
-                  <span class="proj-role">{{project.role}}</span>
-                  <ul class="bullet-list">
-                    <li *ngFor="let h of project.highlights">{{h}}</li>
-                  </ul>
-                  <div class="proj-stack">
-                    <span *ngFor="let tech of project.stack">{{tech}}</span>
-                  </div>
+              <div class="project-block" *ngFor="let project of job.projects">
+                <div class="proj-header">
+                  <h6 class="project-name">{{project.name}}</h6>
+                  <span class="project-period">{{project.period}}</span>
+                </div>
+                <span class="proj-role">{{project.role}}</span>
+                <ul class="bullet-list">
+                  <li *ngFor="let h of project.highlights">{{h}}</li>
+                </ul>
+                <div class="proj-stack">
+                  <span *ngFor="let tech of project.stack">{{tech}}</span>
                 </div>
               </div>
             </div>

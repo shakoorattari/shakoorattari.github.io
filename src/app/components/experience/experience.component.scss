@@ -75,10 +75,6 @@
 
 .job-details { max-height: 0; overflow: hidden; transition: max-height .5s cubic-bezier(.4,0,.2,1); &.expanded { max-height: 8000px } }
 
-.category-title {
-  display: flex; align-items: center; gap: 8px; font: 700 12.5px inherit; color: var(--gh-fg-default); margin: 0;
-}
-
 .proj-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px }
 
 .project-name { font: 700 13px/1.4 inherit; color: var(--gh-fg-default); margin: 0 }

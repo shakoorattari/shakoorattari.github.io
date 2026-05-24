@@ -473,36 +473,20 @@ section {
 
 .detail-section-label svg { flex-shrink: 0 }
 
-.detail-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-}
-
-.detail-card {
-  background: var(--gh-canvas-overlay);
-  border: 1px solid var(--gh-border-muted);
-  border-radius: 10px;
-  padding: 16px 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
 .bullet-list {
   list-style: none;
   padding: 0;
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .bullet-list li {
   position: relative;
-  padding-left: 14px;
-  font-size: 12.5px;
-  line-height: 1.65;
+  padding-left: 16px;
+  font-size: 13px;
+  line-height: 1.7;
   color: var(--gh-fg-muted);
 }
 
@@ -510,12 +494,12 @@ section {
   content: '';
   position: absolute;
   left: 0;
-  top: 7px;
+  top: 9px;
   width: 5px;
   height: 5px;
   border-radius: 50%;
   background: var(--gh-accent-fg);
-  opacity: .7;
+  opacity: .75;
 }
 
 .proj-role {
@@ -528,6 +512,44 @@ section {
   align-self: flex-start;
 }
 
-@media (max-width: 900px) {
-  .detail-grid { grid-template-columns: 1fr }
+/* Responsibility blocks — single-column, accent-bar layout */
+.resp-block {
+  position: relative;
+  padding: 4px 0 4px 18px;
+  margin-bottom: 24px;
+  border-left: 3px solid var(--gh-accent-fg);
+}
+
+.resp-block:last-child { margin-bottom: 0 }
+
+.resp-block-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font: 700 14.5px/1.4 inherit;
+  color: var(--gh-fg-default);
+  margin: 0 0 12px;
+  letter-spacing: -.01em;
+}
+
+.resp-block-title .icon { font-size: 17px; line-height: 1 }
+
+/* Project blocks — single-column premium cards */
+.project-block {
+  background: var(--gh-canvas-overlay);
+  border: 1px solid var(--gh-border-muted);
+  border-radius: 10px;
+  padding: 20px 22px;
+  margin-bottom: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: border-color .2s ease, background .2s ease;
+}
+
+.project-block:last-child { margin-bottom: 0 }
+
+.project-block:hover {
+  border-color: var(--gh-accent-muted);
+  background: var(--gh-canvas-elevated);
 }
