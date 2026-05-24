@@ -18,8 +18,8 @@ jobs:
     steps:
       - name: Checkout code
         run: |
-          git clone "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" .
-          git checkout ${{ github.sha }}
+          git clone --branch main --single-branch \
+            "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" .
 
       - name: Show environment
         run: |
@@ -32,20 +32,21 @@ jobs:
       - name: Build Angular app
         run: npm run build -- --base-href=/portfolio/
 
-      - name: Add SPA fallback and disable Jekyll
+      - name: Publish build output to docs/
         run: |
-          cp dist/shakoor-portfolio/index.html dist/shakoor-portfolio/404.html
-          touch dist/shakoor-portfolio/.nojekyll
+          rm -rf docs
+          cp -r dist/shakoor-portfolio/. docs/
+          touch docs/.nojekyll
+          cp docs/index.html docs/404.html
 
-      - name: Deploy to GitHub Pages
+      - name: Commit and push docs/ to main
         run: |
-          cd dist/shakoor-portfolio
-          git init
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git checkout --orphan gh-pages
-          git add -A
-          git commit -m "Deploy ${{ github.sha }}"
-          git push --force \
-            "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" \
-            HEAD:gh-pages
+          git add docs/
+          git diff --staged --quiet \
+            && echo "No changes – skipping commit" \
+            || (git commit -m "chore: deploy built app to docs/ [skip ci]" \
+                && git push \
+                     "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" \
+                     HEAD:main)
