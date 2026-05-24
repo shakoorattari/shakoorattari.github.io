@@ -74,6 +74,62 @@
   --box-shadow: 0 0 0 1px var(--gh-border-default);
   --box-shadow-hover: 0 0 0 1px var(--gh-accent-muted),
     0 10px 30px rgba(1, 4, 9, 0.6);
+
+  /* Reusable composites */
+  --gh-ring: conic-gradient(
+    from 0deg,
+    var(--gh-purple),
+    var(--gh-accent-fg),
+    var(--gh-pink),
+    var(--gh-purple)
+  );
+  --gh-grad-pb: linear-gradient(90deg, var(--gh-purple), var(--gh-accent-fg));
+}
+
+/* =====================================================
+   Shared surfaces & utilities
+   ===================================================== */
+.stat-item,
+.info-item,
+.endorsement-item,
+.certificate,
+.contact-item,
+.skill-category,
+.project-card,
+.timeline-content,
+.contact-profile,
+.contact-form,
+.highlights-list li,
+.social-buttons a {
+  background: var(--gh-canvas-subtle);
+  border: 1px solid var(--gh-border-default);
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.stat-item:hover,
+.info-item:hover,
+.certificate:hover,
+.contact-item:hover {
+  border-color: var(--gh-accent-muted);
+  transform: translateY(-2px);
+}
+
+.stat-value,
+.dynamic-text,
+.about-text .highlight {
+  background: var(--gh-grad-pb);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.image-container,
+.contact-profile-image {
+  position: relative;
+  border-radius: 50%;
+  background: var(--gh-ring);
 }
 
 /* =====================================================

@@ -9,7 +9,6 @@
   overflow: hidden;
   padding: 120px 0 80px;
 }
-
 .hero::before {
   content: '';
   position: absolute;
@@ -18,7 +17,6 @@
   pointer-events: none;
   z-index: 0;
 }
-
 .hero::after {
   content: '';
   position: absolute;
@@ -33,11 +31,7 @@
   z-index: 0;
 }
 
-.particles-container {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-}
+.particles-container { position: absolute; inset: 0; z-index: 0; }
 
 .container {
   position: relative;
@@ -48,14 +42,9 @@
   padding: 0 16px;
 }
 
-.hero-content {
-  text-align: center;
-  animation: fadeInUp 0.8s ease-out;
-}
+.hero-content { text-align: center; animation: fadeInUp 0.8s ease-out; }
 
-.profile-container {
-  margin-bottom: 32px;
-}
+.profile-container { margin-bottom: 32px; }
 
 .profile-avatar {
   width: 128px;
@@ -63,15 +52,10 @@
   margin: 0 auto 20px;
   border-radius: 50%;
   position: relative;
-  box-shadow: 0 0 0 1px var(--gh-border-default),
-    0 0 40px rgba(163, 113, 247, 0.35);
+  box-shadow: 0 0 0 1px var(--gh-border-default), 0 0 40px rgba(163, 113, 247, 0.35);
   transition: transform 0.4s ease;
 }
-
-.profile-avatar:hover {
-  transform: scale(1.05);
-}
-
+.profile-avatar:hover { transform: scale(1.05); }
 .profile-avatar img {
   width: 100%;
   height: 100%;
@@ -84,13 +68,7 @@
   position: absolute;
   inset: -4px;
   border-radius: 50%;
-  background: conic-gradient(
-    from 0deg,
-    var(--gh-purple),
-    var(--gh-accent-fg),
-    var(--gh-pink),
-    var(--gh-purple)
-  );
+  background: var(--gh-ring);
   z-index: -1;
   opacity: 0.7;
   animation: rotateBorder 8s linear infinite;
@@ -102,7 +80,6 @@
   gap: 12px;
   margin-top: 16px;
 }
-
 .social-icons a {
   width: 36px;
   height: 36px;
@@ -116,11 +93,9 @@
   justify-content: center;
   transition: all 0.2s ease;
 }
-
 .social-icons a:hover {
   background: var(--gh-canvas-elevated);
   border-color: var(--gh-fg-subtle);
-  color: var(--gh-fg-default);
   transform: translateY(-2px);
 }
 
@@ -145,20 +120,8 @@
   margin-bottom: 16px;
   color: var(--gh-fg-default);
 }
-
-.role-container .static-text {
-  color: var(--gh-fg-muted);
-  margin-right: 6px;
-}
-
-.role-container .dynamic-text {
-  background: linear-gradient(90deg, var(--gh-purple), var(--gh-accent-fg));
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-  font-weight: 700;
-}
+.role-container .static-text { color: var(--gh-fg-muted); margin-right: 6px; }
+.role-container .dynamic-text { font-weight: 700; }
 
 .hero-content p {
   font-size: 18px;
@@ -168,11 +131,7 @@
   max-width: 640px;
 }
 
-.professional-badge {
-  display: inline-block;
-  margin-bottom: 32px;
-}
-
+.professional-badge { display: inline-block; margin-bottom: 32px; }
 .professional-badge a {
   display: inline-flex;
   align-items: center;
@@ -186,15 +145,11 @@
   font-weight: 500;
   transition: all 0.2s ease;
 }
-
 .professional-badge a:hover {
   border-color: var(--gh-accent-muted);
   background: rgba(56, 139, 253, 0.1);
 }
-
-.professional-badge i {
-  color: #0a66c2;
-}
+.professional-badge i { color: #0a66c2; }
 
 .hero-buttons {
   display: flex;
@@ -218,50 +173,20 @@
   cursor: pointer;
   animation: bounce 2.5s infinite;
 }
+.scroll-indicator:hover { color: var(--gh-fg-default); }
 
-.scroll-indicator:hover {
-  color: var(--gh-fg-default);
-}
-
-@keyframes shine {
-  to {
-    background-position: 200% center;
-  }
-}
-
-@keyframes rotateBorder {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
+@keyframes shine { to { background-position: 200% center; } }
+@keyframes rotateBorder { to { transform: rotate(360deg); } }
 @keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
 }
-
 @keyframes bounce {
-  0%, 100% {
-    transform: translate(-50%, 0);
-  }
-  50% {
-    transform: translate(-50%, 8px);
-  }
+  0%, 100% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, 8px); }
 }
 
 @media (max-width: 576px) {
-  .profile-avatar {
-    width: 104px;
-    height: 104px;
-  }
-
-  .hero-buttons {
-    flex-direction: column;
-  }
+  .profile-avatar { width: 104px; height: 104px; }
+  .hero-buttons { flex-direction: column; }
 }
