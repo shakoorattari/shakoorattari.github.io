@@ -25,18 +25,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: pnpm
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10
-
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: npm install
 
       - name: Build prerendered site
-        run: pnpm prerender
+        run: npm run prerender
 
       - name: Add .nojekyll and 404 fallback
         run: |
