@@ -14,19 +14,19 @@
         </svg>
         <span class="logo-text"><span class="logo-bracket">&lt;</span><span class="logo-name">SHA</span><span class="logo-bracket">&nbsp;/&gt;</span></span>
       </div>
-      <ul class="nav-links" [ngClass]="{'active': menuOpen}">
-        <li><a (click)="scrollToSection('home')" [class.active]="currentSection === 'home'">Home</a></li>
-        <li><a (click)="scrollToSection('about')" [class.active]="currentSection === 'about'">About</a></li>
-        <li><a (click)="scrollToSection('skills')" [class.active]="currentSection === 'skills'">Skills</a></li>
-        <li><a (click)="scrollToSection('experience')" [class.active]="currentSection === 'experience'">Experience</a></li>
-        <li><a (click)="scrollToSection('projects')" [class.active]="currentSection === 'projects'">Projects</a></li>
-        <li><a (click)="scrollToSection('contact')" [class.active]="currentSection === 'contact'">Contact</a></li>
+      <ul class="nav-links" id="primary-navigation" [ngClass]="{'active': menuOpen}">
+        <li><a href="/" (click)="onNavLinkClick($event, 'home')" [class.active]="currentSection === 'home'">Home</a></li>
+        <li><a href="/about" (click)="onNavLinkClick($event, 'about')" [class.active]="currentSection === 'about'">About</a></li>
+        <li><a href="/skills" (click)="onNavLinkClick($event, 'skills')" [class.active]="currentSection === 'skills'">Skills</a></li>
+        <li><a href="/experience" (click)="onNavLinkClick($event, 'experience')" [class.active]="currentSection === 'experience'">Experience</a></li>
+        <li><a href="/projects" (click)="onNavLinkClick($event, 'projects')" [class.active]="currentSection === 'projects'">Projects</a></li>
+        <li><a href="/contact" (click)="onNavLinkClick($event, 'contact')" [class.active]="currentSection === 'contact'">Contact</a></li>
       </ul>
-      <div class="menu-toggle" [ngClass]="{'active': menuOpen}" (click)="toggleMenu()">
+      <button class="menu-toggle" [ngClass]="{'active': menuOpen}" (click)="toggleMenu()" type="button" aria-label="Toggle navigation menu" [attr.aria-expanded]="menuOpen" aria-controls="primary-navigation">
         <span></span>
         <span></span>
         <span></span>
-      </div>
+      </button>
     </nav>
   </div>
 </header>

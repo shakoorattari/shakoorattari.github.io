@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
+import { isPlatformBrowser } from '@angular/common';
 
 export interface ContactFormData {
   name: string;
@@ -23,15 +24,21 @@ export class ContactService {
   private readonly endpoint = 'https://api.web3forms.com/submit';
   private readonly rateLimitKey = 'contact_last_submit';
   private readonly rateLimitMs = 60_000;
+  private readonly isBrowser: boolean;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    @Inject(PLATFORM_ID) platformId: object,
+  ) {
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
 
   sendMessage(formData: ContactFormData): Observable<ContactSubmitResult> {
     if (formData.botcheck) {
       return throwError(() => ({ status: 400, error: { message: 'Invalid submission.' } }));
     }
 
-    const last = Number(localStorage.getItem(this.rateLimitKey) || 0);
+    const last = this.isBrowser ? Number(localStorage.getItem(this.rateLimitKey) || 0) : 0;
     const now = Date.now();
     if (last && now - last < this.rateLimitMs) {
       const wait = Math.ceil((this.rateLimitMs - (now - last)) / 1000);
@@ -56,7 +63,9 @@ export class ContactService {
       .pipe(
         map((res) => {
           if (res?.success) {
-            localStorage.setItem(this.rateLimitKey, String(Date.now()));
+            if (this.isBrowser) {
+              localStorage.setItem(this.rateLimitKey, String(Date.now()));
+            }
             return { success: true, message: res.message || 'Message sent successfully.' };
           }
           throw { status: 500, error: { message: res?.message || 'Submission failed.' } };

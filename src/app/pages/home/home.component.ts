@@ -1,6 +1,7 @@
-import { Component, OnInit, AfterViewInit, HostListener } from '@angular/core';
+import { Component, OnInit, AfterViewInit, HostListener, Inject, PLATFORM_ID } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { isPlatformBrowser } from '@angular/common';
 
 interface Section {
   id: string;
@@ -15,6 +16,8 @@ interface Section {
 export class HomeComponent implements OnInit, AfterViewInit {
   showScrollButton = false;
   currentSectionIndex = 0;
+  private readonly isBrowser: boolean;
+  private scrollRafPending = false;
   
   sections: Section[] = [
     { id: 'home', name: 'Home' },
@@ -25,7 +28,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
     { id: 'contact', name: 'Contact' }
   ];
 
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+    @Inject(PLATFORM_ID) platformId: object,
+  ) {
+    this.isBrowser = isPlatformBrowser(platformId);
+
     // Listen for route changes to scroll to the appropriate section
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
@@ -38,7 +46,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
           }, 100);
         } else {
           // If we're navigating to the home page, scroll to top
-          window.scrollTo(0, 0);
+          if (this.isBrowser) {
+            window.scrollTo(0, 0);
+          }
         }
       });
   }
@@ -49,6 +59,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
   
   ngAfterViewInit(): void {
+    if (!this.isBrowser) {
+      return;
+    }
+
     // After view is initialized, check if we have a hash in the URL to scroll to
     setTimeout(() => {
       const hash = window.location.hash.replace('#', '');
@@ -60,18 +74,34 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   @HostListener('window:scroll', [])
   checkScrollPosition(): void {
-    // Show/hide scroll button based on scroll position
-    this.showScrollButton = window.pageYOffset > 300;
-    
-    // Determine current section
-    this.updateCurrentSection();
+    if (!this.isBrowser) {
+      return;
+    }
+
+    if (this.scrollRafPending) {
+      return;
+    }
+
+    this.scrollRafPending = true;
+    window.requestAnimationFrame(() => {
+      this.runScrollComputations();
+      this.scrollRafPending = false;
+    });
   }
 
   scrollToTop(): void {
+    if (!this.isBrowser) {
+      return;
+    }
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   scrollToElement(elementId: string): void {
+    if (!this.isBrowser) {
+      return;
+    }
+
     const element = document.getElementById(elementId);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -83,6 +113,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   private updateCurrentSection(): void {
+    if (!this.isBrowser) {
+      return;
+    }
+
     // Find which section is currently in view
     const viewportHeight = window.innerHeight;
     const scrollPosition = window.scrollY + (viewportHeight / 3);
@@ -103,5 +137,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
         }
       }
     }
+  }
+
+  private runScrollComputations(): void {
+    this.showScrollButton = window.pageYOffset > 300;
+    this.updateCurrentSection();
   }
 }

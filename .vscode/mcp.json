@@ -22,17 +22,17 @@
             ]
         },
         // https://github.com/gpetraroli/mcp_pdf_reader
-        "mcp-gp-pdf-reader": {
-            "command": "node",
-            "args": [
-                "/Users/shakoorhussain/projects/github/mcp_pdf_reader/index.js"
-            ]
-        },
-        "mcp-pandoc": {
-            "command": "uvx",
-            "args": [
-                "mcp-pandoc"
-            ]
-        }
+        // "mcp-gp-pdf-reader": {
+        //     "command": "node",
+        //     "args": [
+        //         "/Users/shakoorhussain/projects/github/mcp_pdf_reader/index.js"
+        //     ]
+        // },
+        // "mcp-pandoc": {
+        //     "command": "uvx",
+        //     "args": [
+        //         "mcp-pandoc"
+        //     ]
+        // }
     }
 }

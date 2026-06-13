@@ -1,6 +1,7 @@
-import { Component, AfterViewInit, ElementRef } from '@angular/core';
+import { Component, AfterViewInit, ElementRef, Inject, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
 import { trigger, transition, style, animate } from '@angular/animations';
+import { isPlatformBrowser } from '@angular/common';
 
 declare var particlesJS: any;
 
@@ -18,11 +19,28 @@ declare var particlesJS: any;
   ]
 })
 export class HeroComponent implements AfterViewInit {
-  constructor(private router: Router, private elementRef: ElementRef) {}
+  private readonly isBrowser: boolean;
+
+  constructor(
+    private router: Router,
+    private elementRef: ElementRef,
+    @Inject(PLATFORM_ID) platformId: object,
+  ) {
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
 
   ngAfterViewInit(): void {
-    this.initParticles();
-    this.initTypingEffect();
+    if (!this.isBrowser) {
+      return;
+    }
+
+    setTimeout(() => this.initTypingEffect(), 120);
+
+    const canAnimate =
+      window.innerWidth >= 768 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (canAnimate) {
+      setTimeout(() => this.initParticles(), 300);
+    }
   }
 
   scrollToContact(): void {
@@ -30,8 +48,27 @@ export class HeroComponent implements AfterViewInit {
     this.router.navigate(['/contact']);
     
     // Smooth scroll if element exists on current page
+    if (!this.isBrowser) {
+      return;
+    }
+
     setTimeout(() => {
       const element = document.getElementById('contact');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
+  }
+
+  scrollToProjects(): void {
+    this.router.navigate(['/projects']);
+
+    if (!this.isBrowser) {
+      return;
+    }
+
+    setTimeout(() => {
+      const element = document.getElementById('projects');
       if (element) {
         element.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
@@ -43,6 +80,10 @@ export class HeroComponent implements AfterViewInit {
     this.router.navigate(['/about']);
     
     // Smooth scroll if element exists on current page
+    if (!this.isBrowser) {
+      return;
+    }
+
     setTimeout(() => {
       const element = document.getElementById('about');
       if (element) {
@@ -55,7 +96,7 @@ export class HeroComponent implements AfterViewInit {
     try {
       particlesJS('particles-js', {
         particles: {
-          number: { value: 80, density: { enable: true, value_area: 800 } },
+          number: { value: 36, density: { enable: true, value_area: 900 } },
           color: { value: '#ffffff' },
           shape: { type: 'circle' },
           opacity: { value: 0.5, random: true },
@@ -69,7 +110,7 @@ export class HeroComponent implements AfterViewInit {
           },
           move: {
             enable: true,
-            speed: 2,
+            speed: 1.2,
             direction: 'none',
             random: true,
             out_mode: 'out'

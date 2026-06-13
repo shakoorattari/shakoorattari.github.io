@@ -20,6 +20,7 @@ const routes: Routes = [
 const routerOptions: ExtraOptions = {
   scrollPositionRestoration: 'enabled',
   anchorScrolling: 'enabled',
+  initialNavigation: 'enabledBlocking',
   scrollOffset: [0, 60], // [x, y] - accounts for fixed header
   onSameUrlNavigation: 'reload' // Re-trigger component initialization on same URL
 };

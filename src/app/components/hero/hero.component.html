@@ -5,7 +5,7 @@
         <div class="hero-content" [@fadeInUp]>
             <div class="profile-container">
                 <div class="profile-avatar">
-                    <img src="assets/files/shakoor-photo.png" alt="Shakoor Hussain Attari">
+                    <img src="assets/files/shakoor_pic.jpeg" alt="Shakoor Hussain Attari" width="335" height="335" loading="eager" fetchpriority="high" decoding="async">
                     <div class="avatar-border"></div>
                 </div>
                 <div class="social-icons">
@@ -33,7 +33,7 @@
             <p>Lead Software Engineer, Full-Stack Developer &amp; Application Architect with 15+ years owning enterprise platforms across the UAE public sector — .NET, Angular, OAuth 2.0 / OIDC, multi-tenant IAM, and AI tooling.</p>
             
             <div class="professional-badge">
-                <a href="https://www.linkedin.com/in/shakoorattari/" target="_blank" rel="noopener noreferrer">
+                <a href="https://www.linkedin.com/in/shakoorattari/" target="_blank" rel="noopener noreferrer" aria-label="View LinkedIn verified profile">
                     <i class="fab fa-linkedin"></i> LinkedIn Verified Professional
                 </a>
             </div>
@@ -47,13 +47,17 @@
                     <span class="btn-text">Download CV</span>
                     <i class="fas fa-download"></i>
                 </a>
+                <button (click)="scrollToProjects()" class="btn secondary-btn" type="button">
+                    <span class="btn-text">View Case Studies</span>
+                    <i class="fas fa-diagram-project"></i>
+                </button>
             </div>
         </div>
         
         <!-- Moved the scroll indicator outside of hero-content -->
-        <div class="scroll-indicator" (click)="scrollToAbout()">
+        <button class="scroll-indicator" (click)="scrollToAbout()" type="button" aria-label="Scroll to About section">
             <span>Scroll Down</span>
             <i class="fas fa-chevron-down"></i>
-        </div>
+        </button>
     </div>
 </section>

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
 interface Project {
   name: string;
@@ -33,6 +34,11 @@ interface Job {
   styleUrls: ['./experience.component.scss']
 })
 export class ExperienceComponent implements OnInit {
+  private readonly isBrowser: boolean;
+
+  constructor(@Inject(PLATFORM_ID) platformId: object) {
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
 
   toggleDetails(job: Job): void {
     job.showDetails = !job.showDetails;
@@ -279,6 +285,8 @@ export class ExperienceComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    window.scrollTo(0, 0);
+    if (this.isBrowser) {
+      window.scrollTo(0, 0);
+    }
   }
 }

@@ -88,6 +88,22 @@
   line-height: 1.6;
 }
 
+.case-study-block {
+  margin-bottom: 12px;
+}
+
+.case-study-block h4 {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--gh-fg-subtle);
+  margin-bottom: 4px;
+}
+
+.case-study-block p {
+  margin-bottom: 0;
+}
+
 .tech-tags {
   display: flex;
   flex-wrap: wrap;

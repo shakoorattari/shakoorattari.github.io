@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
+import { isPlatformBrowser } from '@angular/common';
 
 // Declare AOS (Animate On Scroll) library if you're using it
 declare const AOS: any;
@@ -10,6 +11,7 @@ declare const AOS: any;
   styleUrls: ['./about.component.scss']
 })
 export class AboutComponent implements OnInit {
+  private readonly isBrowser: boolean;
   isAvailableForWork = true;
 
   aboutSummary = `Lead Software Engineer and Application Architect with 15+ years of enterprise software delivery across the UAE public sector. Deep expertise in .NET / ASP.NET Core, Angular, OAuth 2.0 / OIDC, multi-tenant IAM, and Azure DevOps CI/CD. I own end-to-end solution architecture — from requirements through production operations — for mission-critical government platforms serving multiple Sharjah entities, with a strong focus on clean code, developer experience, and AI tooling to accelerate engineering velocity.`;
@@ -128,9 +130,18 @@ export class AboutComponent implements OnInit {
     }
   ];
 
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    @Inject(PLATFORM_ID) platformId: object,
+  ) {
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
 
   ngOnInit(): void {
+    if (!this.isBrowser) {
+      return;
+    }
+
     // Initialize AOS animation library if available
     if (typeof AOS !== 'undefined') {
       AOS.init({
@@ -149,6 +160,10 @@ export class AboutComponent implements OnInit {
     this.router.navigate(['/contact']);
     
     // Scroll to contact section if it exists on the current page
+    if (!this.isBrowser) {
+      return;
+    }
+
     setTimeout(() => {
       const element = document.getElementById('contact');
       if (element) {

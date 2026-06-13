@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-skills',
@@ -6,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./skills.component.scss']
 })
 export class SkillsComponent implements OnInit {
+  private readonly isBrowser: boolean;
+
   skillCategories = [
     {
       title: 'Leadership & Architecture',
@@ -109,8 +112,14 @@ export class SkillsComponent implements OnInit {
     }
   ];
 
+  constructor(@Inject(PLATFORM_ID) platformId: object) {
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
+
   ngOnInit(): void {
     // Reset scroll position when navigating to this component
-    window.scrollTo(0, 0);
+    if (this.isBrowser) {
+      window.scrollTo(0, 0);
+    }
   }
 }

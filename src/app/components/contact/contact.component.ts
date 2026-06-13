@@ -1,7 +1,8 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, NgZone } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, NgZone, Inject, PLATFORM_ID } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ContactService } from '../../services/contact.service';
 import { environment } from '../../../environments/environment';
+import { isPlatformBrowser } from '@angular/common';
 
 declare const AOS: any;
 declare const turnstile: {
@@ -16,6 +17,9 @@ declare const turnstile: {
   styleUrls: ['./contact.component.scss']
 })
 export class ContactComponent implements OnInit, AfterViewInit, OnDestroy {
+  private static readonly TURNSTILE_SCRIPT_ID = 'cf-turnstile-script';
+  private static readonly TURNSTILE_SCRIPT_SRC = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+
   @ViewChild('formElement') formElement!: ElementRef;
   @ViewChild('turnstileContainer') turnstileContainer!: ElementRef<HTMLDivElement>;
 
@@ -35,12 +39,15 @@ export class ContactComponent implements OnInit, AfterViewInit, OnDestroy {
   private turnstileWidgetId: string | null = null;
   private turnstilePollHandle: any = null;
   turnstileToken: string | null = null;
+  private readonly isBrowser: boolean;
 
   constructor(
     private fb: FormBuilder,
     private contactService: ContactService,
     private zone: NgZone,
+    @Inject(PLATFORM_ID) platformId: object,
   ) {
+    this.isBrowser = isPlatformBrowser(platformId);
     this.contactForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
       email: ['', [Validators.required, Validators.email, Validators.maxLength(150)]],
@@ -51,6 +58,10 @@ export class ContactComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    if (!this.isBrowser) {
+      return;
+    }
+
     if (typeof AOS !== 'undefined') {
       AOS.init({ duration: 800, easing: 'ease-in-out', once: true });
     }
@@ -58,7 +69,19 @@ export class ContactComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.mountTurnstile();
+    if (!this.isBrowser) {
+      return;
+    }
+
+    this.ensureTurnstileScript()
+      .then((loaded) => {
+        if (loaded) {
+          this.mountTurnstile();
+        }
+      })
+      .catch(() => {
+        this.showToast('error', 'Could not load bot protection. Please refresh and try again.');
+      });
   }
 
   ngOnDestroy(): void {
@@ -72,7 +95,46 @@ export class ContactComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // Poll briefly for the Turnstile global (script loads async), then render
   // explicitly so the widget plays nicely with Angular's SPA lifecycle.
+  private ensureTurnstileScript(): Promise<boolean> {
+    if (!this.isBrowser) {
+      return Promise.resolve(false);
+    }
+
+    if (typeof turnstile !== 'undefined') {
+      return Promise.resolve(true);
+    }
+
+    const existingScript = document.getElementById(ContactComponent.TURNSTILE_SCRIPT_ID) as HTMLScriptElement | null;
+    if (existingScript) {
+      return new Promise((resolve) => {
+        const waitUntilLoaded = () => {
+          if (typeof turnstile !== 'undefined') {
+            resolve(true);
+            return;
+          }
+          setTimeout(waitUntilLoaded, 100);
+        };
+        waitUntilLoaded();
+      });
+    }
+
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.id = ContactComponent.TURNSTILE_SCRIPT_ID;
+      script.src = ContactComponent.TURNSTILE_SCRIPT_SRC;
+      script.async = true;
+      script.defer = true;
+      script.onload = () => resolve(true);
+      script.onerror = () => reject(new Error('Turnstile script failed to load'));
+      document.head.appendChild(script);
+    });
+  }
+
   private mountTurnstile(): void {
+    if (!this.isBrowser) {
+      return;
+    }
+
     this.turnstilePollHandle = setInterval(() => {
       if (typeof turnstile === 'undefined' || !this.turnstileContainer?.nativeElement) return;
       clearInterval(this.turnstilePollHandle);
@@ -116,6 +178,11 @@ export class ContactComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   copyToClipboard(text: string, type: string): void {
+    if (!this.isBrowser || !navigator?.clipboard) {
+      this.showToast('error', 'Clipboard is unavailable in this environment.');
+      return;
+    }
+
     navigator.clipboard.writeText(text).then(
       () => this.showToast('success', `${type} copied to clipboard!`),
       () => this.showToast('error', 'Failed to copy. Please try manually.'),
@@ -158,8 +225,10 @@ export class ContactComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if (this.contactForm.invalid) {
       this.contactForm.markAllAsTouched();
-      const firstInvalid = document.querySelector('.form-group .invalid');
-      if (firstInvalid) firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (this.isBrowser) {
+        const firstInvalid = document.querySelector('.form-group .invalid');
+        if (firstInvalid) firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
       return;
     }
 
