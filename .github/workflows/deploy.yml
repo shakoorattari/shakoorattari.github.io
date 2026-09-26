@@ -42,6 +42,14 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          # Optional, public values — set as repository *variables* (Settings → Secrets and variables → Actions).
+          PUBLIC_CF_ANALYTICS_TOKEN: ${{ vars.CF_ANALYTICS_TOKEN }}
+          PUBLIC_GOOGLE_SITE_VERIFICATION: ${{ vars.GOOGLE_SITE_VERIFICATION }}
+          PUBLIC_BING_SITE_VERIFICATION: ${{ vars.BING_SITE_VERIFICATION }}
+
+      - name: SEO checks
+        run: npm run check:seo
 
       - name: Upload Pages artifact
         if: github.event_name != 'pull_request'
