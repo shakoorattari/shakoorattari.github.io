@@ -80,7 +80,9 @@ tests/                       Playwright suite: health, navigation, mobile, conta
 playwright.config.ts  lighthouserc.json  .prettierrc.json  .nvmrc  .env.example
 .github/                     workflows (ci, lighthouse, deploy) and the PR template
 astro.config.mjs             Site URL, trailing slashes, legacy-URL redirects
-docs/                        CI/CD, roadmap, visibility playbook, migration notes, original audit
+docs/                        CI/CD, roadmap, visibility playbook, migration notes, project memory, original audit
+CLAUDE.md                    Project instructions (rules, architecture, workflow) for Claude Code and contributors
+.claude/launch.json          Dev / preview server configs for the Claude app
 ```
 
 ## Updating content
@@ -155,7 +157,7 @@ Modelled on the sibling `earthcone` project. Three workflows in `.github/workflo
 | `lighthouse.yml` | pull requests | Lighthouse CI (pinned `@lhci/cli@0.14.0`): performance ≥ 0.95, accessibility = 1, best practices ≥ 0.95, SEO = 1, plus LCP, CLS, TBT, JavaScript and page-weight budgets |
 | `deploy.yml` | push to `main` | **Calls both workflows above and deploys to GitHub Pages only if every job passed**, publishing the exact build that was tested |
 
-The gates are proven to fail: each one has been mutation-tested with a deliberate regression. Thresholds, what each check covers, how to run them locally and how to protect `main` (so a failing check actually blocks a merge) are in **[docs/ci-cd.md](docs/ci-cd.md)**.
+The gates are proven to fail: each one has been mutation-tested with a deliberate regression. Thresholds, what each check covers, how to run them locally and how to make the checks required on `main` (so a failing check actually blocks a merge) are in **[docs/ci-cd.md](docs/ci-cd.md)**.
 
 `deploy.yml` also runs manually on any branch as a dry run (gates run, deploy is skipped). It checks out full git history because the sitemap and JSON-LD `lastmod` come from `git log`. GitHub Pages can't set custom response headers, so the cache lifetime is fixed at 10 minutes.
 
@@ -188,6 +190,8 @@ Getting *found* is a separate job from being fast: see **[docs/visibility-playbo
 
 | Document | Contents |
 |---|---|
+| [CLAUDE.md](CLAUDE.md) | Project instructions for Claude Code and contributors: purpose, content rules, architecture, conventions, quality bar, workflow, known gaps |
+| [docs/project-memory.md](docs/project-memory.md) | Decision log, asset provenance and hard-won gotchas |
 | [docs/ci-cd.md](docs/ci-cd.md) | The quality gates, thresholds, running them locally, and branch protection |
 | [docs/seo-performance-roadmap.md](docs/seo-performance-roadmap.md) | Phased SEO / performance plan with status, measurements, known issues |
 | [docs/visibility-playbook.md](docs/visibility-playbook.md) | How to get indexed, earn links, publish articles and measure — the parts that need your accounts |

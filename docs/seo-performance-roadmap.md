@@ -124,7 +124,7 @@ GitHub Pages can't set headers, redirects or brotli. Cloudflare Pages is free, g
 - [x] Prettier check in CI (formatting verified not to change rendering: element geometry identical across 7 pages at 2 viewports)
 - [x] Playwright suite (79 tests) committed and run in CI: behaviour, contact form (mocked), mobile, SEO/social previews, redirects, health and performance guards
 - [x] Deploy waits for every gate and publishes the tested build
-- [ ] **You:** protect `main` with a ruleset requiring the three checks ([ci-cd.md](ci-cd.md#branch-protection-github-settings-not-code))
+- [ ] **You:** add a "Require status checks to pass" rule (the three checks) to the existing `main` ruleset — it currently requires a review but no checks ([ci-cd.md](ci-cd.md#branch-protection-github-settings-not-code))
 
 ## Phase 6 — Discovery 🟡
 

@@ -81,12 +81,23 @@ Tests in `navigation.spec.ts` pin all three. If you add markup like this, wrap i
 
 ## Branch protection (GitHub settings, not code)
 
-CI only *reports*; it blocks a merge only if the branch is protected. Earthcone does this with a ruleset, and this repo should too. In **Settings → Rules → Rulesets → New branch ruleset**, targeting `main`:
+CI only *reports*; a check blocks a merge only if the branch protection requires it.
 
-- **Require a pull request before merging.**
-- **Require status checks to pass**, adding these three: `Lint, type-check, build & SEO checks`, `End-to-end tests (Playwright)`, `Lighthouse budget check`.
-- **Block force pushes** and **restrict deletions**.
-- Approvals: GitHub never lets an author approve their own pull request, so *Require approvals ≥ 1* blocks a solo maintainer. Use 0 approvals, or a second account (earthcone's approach).
+**Current state** (read from the GitHub API on 2026-09-26): `main` has an active ruleset, **"Protect main — owner direct push only"**. It
+
+- blocks branch deletion and force-pushes;
+- requires a pull request with **1 approving review**, approval of the last push, and resolved review threads;
+- lets **repository admins bypass it always**, which is how the owner merges their own PRs (GitHub never lets an author approve their own PR) and pushes directly.
+
+**The gap:** it has **no required-status-checks rule**. A failing Lint / Playwright / Lighthouse job would show a red ✗ on the PR but would not stop anyone from merging.
+
+**To close it**, in **Settings → Rules → Rulesets**, edit the ruleset and add **Require status checks to pass** with these three checks:
+
+- `Lint, type-check, build & SEO checks`
+- `End-to-end tests (Playwright)`
+- `Lighthouse budget check`
+
+Earthcone works the same way (ruleset + required CI check). One design choice remains: with the admin bypass set to *always*, the owner can still merge past a failing check. Removing repository admins from the bypass list makes the checks binding for everyone, at the cost of also blocking direct pushes to `main`; setting the bypass to *pull requests only* keeps direct pushes blocked while letting the owner merge a PR deliberately.
 
 ## Optional configuration
 
