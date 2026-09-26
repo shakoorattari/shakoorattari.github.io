@@ -1,0 +1,146 @@
+---
+import { skillCategories } from '../data/skills';
+---
+
+<section id="skills" class="skills" aria-labelledby="skills-title">
+  <div class="container">
+    <div class="section-title">
+      <h2 id="skills-title">My Skills</h2>
+    </div>
+    <div class="skills-categories">
+      {skillCategories.map((category) => (
+        <div class="skill-category">
+          <h3>{category.title}</h3>
+          <ul class="skill-list">
+            {category.skills.map((skill) => <li>{skill}</li>)}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style lang="scss">
+  .skills {
+    background-color: var(--gh-canvas-subtle);
+    position: relative;
+  }
+
+  .skills::before,
+  .skills::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gh-border-default), transparent);
+  }
+
+  .skills::before {
+    top: 0;
+  }
+
+  .skills::after {
+    bottom: 0;
+  }
+
+  .skills-categories {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+
+  .skill-category {
+    position: relative;
+    background-color: var(--gh-canvas);
+    padding: 24px;
+    border-radius: 12px;
+    border: 1px solid var(--gh-border-default);
+    transition: all 0.25s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .skill-category::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 12px;
+    padding: 1px;
+    background: linear-gradient(135deg, var(--gh-purple), var(--gh-accent-fg));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+  }
+
+  .skill-category:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(1, 4, 9, 0.6);
+  }
+
+  .skill-category:hover::before {
+    opacity: 0.8;
+  }
+
+  .skill-category h3 {
+    font-size: 18px;
+    margin-bottom: 16px;
+    color: var(--gh-fg-default);
+    position: relative;
+    padding-bottom: 12px;
+    letter-spacing: -0.01em;
+  }
+
+  .skill-category h3::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 32px;
+    height: 2px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--gh-purple), var(--gh-accent-fg));
+  }
+
+  .skill-list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .skill-list li {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: var(--gh-canvas-subtle);
+    border: 1px solid var(--gh-border-default);
+    color: var(--gh-fg-default);
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+
+  .skill-list li::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--gh-success-fg);
+    box-shadow: 0 0 8px rgba(63, 185, 80, 0.6);
+  }
+
+  .skill-list li:hover {
+    border-color: var(--gh-accent-muted);
+    background: rgba(56, 139, 253, 0.08);
+    transform: translateY(-1px);
+  }
+</style>

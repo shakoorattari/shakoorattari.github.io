@@ -6,6 +6,26 @@
 
 ---
 
+> **Status update — 2026-09-26.** Sections 1–3 below are the **original audit, kept unchanged** as a historical baseline. Its scores (64 / 88 / 100 / 92) and the 15.0 s LCP were measured on the *client-rendered Angular* site, before prerendering shipped. The site has since been rebuilt with Astro; current numbers and the live plan are in [`seo-performance-roadmap.md`](seo-performance-roadmap.md).
+>
+> Latest measurement (Lighthouse 13.5, mobile, simulated throttling, local gzip server, median of 3): **Performance 100 · Accessibility 100 · Best practices 100 · SEO 100**, LCP 1.5 s, 2.4 KiB of JavaScript. These are lab numbers, not field data.
+>
+> | Recommendation | Status | Notes |
+> | --- | --- | --- |
+> | Static pre-rendering (SSG) | ✅ Done | The site is static HTML (Astro); all content is present with JavaScript disabled |
+> | Hero image optimisation | ✅ Done | AVIF / WebP via `<Picture>` with explicit dimensions and `fetchpriority="high"`; the 2 MB PNG is gone |
+> | Critical-path management | ✅ Done | CSS is inlined, the font is self-hosted and preloaded, and there are no third-party requests on load |
+> | Icon-link `aria-label`s and image `alt` text | ✅ Done | Verified across every template |
+> | Colour-contrast (WCAG AA) | ✅ Automated pass | Lighthouse accessibility 100. A manual screen-reader pass has not been done |
+> | Above-the-fold CTAs | ✅ Done | *Hire Me*, *Download CV*, *View Case Studies* in the hero |
+> | Case studies framed as Challenge → Architecture → Impact | ✅ Done | `src/data/projects.ts` |
+> | Social proof | 🟡 Partly | A "Recommendations & Trust Signals" section summarises themes and links to LinkedIn; it has no direct quotes |
+> | Architecture Decision Records / topology diagrams | ⬜ Open | Candidate content for indexable case-study pages (roadmap Phase 3) |
+>
+> References below to `shakoor-photo.png`, `assets/shakoor-photo.webp` and Angular are historical.
+
+---
+
 ## 1. Executive Summary & Performance Baseline
 
 Your portfolio establishes a solid foundation with a highly professional aesthetic, a distinct senior identity, and strong baseline metadata configuration. However, synthetic performance testing reveals significant architecture-driven bottlenecks—specifically a critical **15.0-second Largest Contentful Paint (LCP)** on mobile devices.

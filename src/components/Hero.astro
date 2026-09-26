@@ -1,0 +1,278 @@
+---
+import { Picture } from 'astro:assets';
+import Icon from './Icon.astro';
+import profile from '../assets/profile.jpg';
+import { site } from '../data/site';
+---
+
+<section id="home" class="hero" aria-labelledby="hero-title">
+  <div class="container">
+    <div class="hero-content">
+      <div class="profile-container">
+        <div class="profile-avatar">
+          <Picture
+            src={profile}
+            alt={site.name}
+            widths={[128, 256]}
+            sizes="(max-width: 576px) 104px, 128px"
+            formats={['avif', 'webp']}
+            width={128}
+            height={128}
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+          />
+          <div class="avatar-border"></div>
+        </div>
+        <div class="social-icons">
+          <a href={site.social.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn Profile">
+            <Icon name="fa6-brands:linkedin" />
+          </a>
+          <a href={site.social.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub Profile">
+            <Icon name="fa6-brands:github" />
+          </a>
+          <a href={`mailto:${site.email}`} aria-label="Email Me">
+            <Icon name="fa6-solid:envelope" />
+          </a>
+        </div>
+      </div>
+
+      <h1 id="hero-title">{site.name}</h1>
+
+      <div class="role-container">
+        <div class="role">
+          <span class="static-text">I'm a</span><span class="dynamic-text" data-roles={JSON.stringify(site.roles)}>{site.roles[0]}</span>
+        </div>
+      </div>
+
+      <p>{site.heroIntro}</p>
+
+      <div class="professional-badge">
+        <a href={site.social.linkedin} target="_blank" rel="noopener noreferrer" aria-label="View LinkedIn verified profile">
+          <Icon name="fa6-brands:linkedin" /> LinkedIn Verified Professional
+        </a>
+      </div>
+
+      <div class="hero-buttons">
+        <a href="#contact" class="btn primary-btn">
+          <span class="btn-text">Hire Me</span>
+          <Icon name="fa6-solid:arrow-right" />
+        </a>
+        <a href={site.resume} class="btn secondary-btn" download>
+          <span class="btn-text">Download CV</span>
+          <Icon name="fa6-solid:download" />
+        </a>
+        <a href="#projects" class="btn secondary-btn">
+          <span class="btn-text">View Case Studies</span>
+          <Icon name="fa6-solid:diagram-project" />
+        </a>
+      </div>
+    </div>
+
+    <a class="scroll-indicator" href="#about" aria-label="Scroll to About section">
+      <span>Scroll Down</span>
+      <Icon name="fa6-solid:chevron-down" />
+    </a>
+  </div>
+</section>
+
+<script>
+  import '../scripts/hero-roles';
+</script>
+
+<style lang="scss">
+  .hero {
+    min-height: 100vh;
+    position: relative;
+    color: var(--gh-fg-default);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--gh-canvas);
+    overflow: hidden;
+    padding: 120px 0 80px;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--gh-gradient-hero);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(48, 54, 61, 0.25) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(48, 54, 61, 0.25) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black 30%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black 30%, transparent 80%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    width: 90%;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 16px;
+  }
+
+  .hero-content { text-align: center; animation: fadeInUp 0.8s ease-out; }
+
+  .profile-container { margin-bottom: 32px; }
+
+  .profile-avatar {
+    width: 128px;
+    height: 128px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    position: relative;
+    box-shadow: 0 0 0 1px var(--gh-border-default), 0 0 40px rgba(163, 113, 247, 0.35);
+    transition: transform 0.4s ease;
+  }
+  .profile-avatar:hover { transform: scale(1.05); }
+  .profile-avatar :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid var(--gh-canvas-subtle);
+  }
+
+  .avatar-border {
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    background: var(--gh-ring);
+    z-index: -1;
+    opacity: 0.7;
+    animation: rotateBorder 8s linear infinite;
+  }
+
+  .social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .social-icons a {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: var(--gh-canvas-overlay);
+    border: 1px solid var(--gh-border-default);
+    color: var(--gh-fg-default);
+    font-size: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+  }
+  .social-icons a:hover {
+    background: var(--gh-canvas-elevated);
+    border-color: var(--gh-fg-subtle);
+    transform: translateY(-2px);
+  }
+
+  .hero-content h1 {
+    font-size: clamp(40px, 7vw, 72px);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    margin-bottom: 16px;
+    line-height: 1.05;
+    background: var(--gh-gradient-text);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    animation: shine 6s linear infinite;
+  }
+
+  .role-container .role {
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    font-size: clamp(18px, 2.5vw, 24px);
+    font-weight: 500;
+    margin-bottom: 16px;
+    color: var(--gh-fg-default);
+  }
+  .role-container .static-text { color: var(--gh-fg-muted); margin-right: 6px; }
+  .role-container .dynamic-text { font-weight: 700; }
+
+  .hero-content p {
+    font-size: 18px;
+    margin: 0 auto 24px;
+    color: var(--gh-fg-muted);
+    line-height: 1.6;
+    max-width: 640px;
+  }
+
+  .professional-badge { display: inline-block; margin-bottom: 32px; }
+  .professional-badge a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: var(--gh-canvas-subtle);
+    border: 1px solid var(--gh-border-default);
+    color: var(--gh-fg-default);
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  .professional-badge a:hover {
+    border-color: var(--gh-accent-muted);
+    background: rgba(56, 139, 253, 0.1);
+  }
+  .professional-badge :global(.icon) { color: #0a66c2; }
+
+  .hero-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+  }
+
+  .scroll-indicator {
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: transparent;
+    border: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: var(--gh-fg-subtle);
+    font-size: 12px;
+    cursor: pointer;
+    animation: bounce 2.5s infinite;
+  }
+  .scroll-indicator:hover { color: var(--gh-fg-default); }
+
+  @keyframes shine { to { background-position: 200% center; } }
+  @keyframes rotateBorder { to { transform: rotate(360deg); } }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translate(-50%, 0); }
+    50% { transform: translate(-50%, 8px); }
+  }
+
+  @media (max-width: 576px) {
+    .profile-avatar { width: 104px; height: 104px; }
+    .hero-buttons { flex-direction: column; }
+  }
+</style>

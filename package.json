@@ -1,48 +1,30 @@
 {
   "name": "shakoor-portfolio",
-  "version": "0.0.0",
-  "scripts": {
-    "ng": "ng",
-    "start": "ng serve --port 4272 --ssl --ssl-key ssl/server.key  --ssl-cert ssl/server.crt --poll=2000",
-    "build": "ng build",
-    "build:ssr": "ng build && ng run shakoor-portfolio:server",
-    "serve:ssr": "node dist/shakoor-portfolio/server/main.js",
-    "dev:ssr": "ng run shakoor-portfolio:serve-ssr",
-    "prerender": "ng run shakoor-portfolio:prerender",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test"
-  },
+  "version": "1.0.0",
   "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "check": "astro check"
+  },
   "dependencies": {
-    "@angular/animations": "^16.0.0",
-    "@angular/common": "^16.0.0",
-    "@angular/compiler": "^16.0.0",
-    "@angular/core": "^16.0.0",
-    "@angular/forms": "^16.0.0",
-    "@angular/platform-browser": "^16.0.0",
-    "@angular/platform-browser-dynamic": "^16.0.0",
-    "@angular/platform-server": "^16.0.0",
-    "@angular/router": "^16.0.0",
-    "@nguniversal/builders": "16.2.0",
-    "@nguniversal/express-engine": "16.2.0",
-    "express": "^4.18.2",
-    "rxjs": "~7.8.0",
-    "tslib": "^2.3.0",
-    "zone.js": "~0.13.0"
+    "astro": "^7.3.5"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^16.0.0",
-    "@angular/cli": "~16.0.0",
-    "@angular/compiler-cli": "^16.0.0",
-    "@types/express": "^4.17.23",
-    "@types/jasmine": "~4.3.0",
-    "@types/node": "^18.19.88",
-    "jasmine-core": "~4.6.0",
-    "karma": "~6.4.0",
-    "karma-chrome-launcher": "~3.2.0",
-    "karma-coverage": "~2.2.0",
-    "karma-jasmine": "~5.1.0",
-    "karma-jasmine-html-reporter": "~2.0.0",
-    "typescript": "~5.0.2"
+    "@astrojs/check": "^0.9.10",
+    "@fontsource-variable/inter": "^5.3.0",
+    "@iconify-json/fa6-brands": "^1.2.6",
+    "@iconify-json/fa6-regular": "^1.2.4",
+    "@iconify-json/fa6-solid": "^1.2.4",
+    "@types/node": "^22.20.4",
+    "sass": "^1.105.0",
+    "typescript": "^6.0.3"
   }
 }

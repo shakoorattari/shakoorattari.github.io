@@ -1,7 +1,10 @@
-name: Build and Deploy Angular App to GitHub Pages
+name: Build and Deploy Astro Site to GitHub Pages
 
 on:
   push:
+    branches: [main]
+  # Build (and type-check) pull requests too, but never deploy them.
+  pull_request:
     branches: [main]
   workflow_dispatch:
 
@@ -11,7 +14,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
+  group: pages-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -20,28 +23,34 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          # Full history: the sitemap / structured-data `lastmod` comes from `git log`.
+          fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          # Astro requires Node >= 22.12
+          node-version: 22
+          cache: npm
+
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
-      - name: Build prerendered site
-        run: npm run prerender
+      - name: Type-check
+        run: npm run check
 
-      - name: Add .nojekyll and 404 fallback
-        run: |
-          touch dist/shakoor-portfolio/.nojekyll
-          cp dist/shakoor-portfolio/index.html dist/shakoor-portfolio/404.html
+      - name: Build
+        run: npm run build
 
       - name: Upload Pages artifact
+        if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist/shakoor-portfolio/
+          path: dist/
 
   deploy:
+    if: github.event_name != 'pull_request'
     needs: build
     runs-on: ubuntu-latest
     environment:

@@ -1,0 +1,48 @@
+---
+/**
+ * Inline SVG icon from Font Awesome 6 (via Iconify JSON), resolved at build time.
+ * Usage: <Icon name="fa6-solid:envelope" />. Renders no JavaScript and no webfont.
+ */
+import solid from '@iconify-json/fa6-solid/icons.json';
+import brands from '@iconify-json/fa6-brands/icons.json';
+import regular from '@iconify-json/fa6-regular/icons.json';
+
+interface Props {
+  /** "<set>:<name>", e.g. "fa6-solid:check" */
+  name: string;
+  class?: string;
+}
+
+interface IconSet {
+  width?: number;
+  height?: number;
+  icons: Record<string, { body: string; width?: number; height?: number }>;
+  aliases?: Record<string, { parent: string }>;
+}
+
+const sets: Record<string, IconSet> = {
+  'fa6-solid': solid as IconSet,
+  'fa6-brands': brands as IconSet,
+  'fa6-regular': regular as IconSet,
+};
+
+const { name, class: className } = Astro.props;
+const [prefix, iconName] = name.split(':');
+const set = sets[prefix];
+const resolved = set?.icons[iconName] ?? (set?.aliases?.[iconName] && set.icons[set.aliases[iconName].parent]);
+if (!set || !resolved) {
+  throw new Error(`<Icon>: unknown icon "${name}"`);
+}
+const width = resolved.width ?? set.width ?? 512;
+const height = resolved.height ?? set.height ?? 512;
+---
+
+<svg
+  class:list={['icon', className]}
+  viewBox={`0 0 ${width} ${height}`}
+  width={`${(width / height).toFixed(3)}em`}
+  height="1em"
+  aria-hidden="true"
+  focusable="false"
+  set:html={resolved.body}
+/>
