@@ -60,7 +60,7 @@ Most of the page is visually identical. Share of pixels that changed (desktop / 
 
 ## How it was verified
 
-Ad-hoc scripts driving headless Chrome over the DevTools protocol; they are **not** committed to the repo.
+Originally ad-hoc scripts driving headless Chrome over the DevTools protocol. The behavioural checks have since been rewritten as a committed Playwright suite (`tests/`) that runs in CI — see [ci-cd.md](ci-cd.md).
 
 - **Visual:** both builds screenshotted per section at 1280px and 390px and compared side by side and by pixel difference.
 - **Behaviour (55 checks):** header state, scroll-spy for all six sections, anchor landing offset, mobile menu (open, close on link, Escape), `<details>`, typing effect and reduced motion, and the whole contact form against a mocked Turnstile / Web3Forms / clipboard (empty and invalid states, success, client rate limit, server 429, network failure, honeypot, reset, copy buttons), plus the legacy redirects and the 404 page.
@@ -69,7 +69,7 @@ Ad-hoc scripts driving headless Chrome over the DevTools protocol; they are **no
 - **Discrimination check:** the same probes run against the old build fail where they should (third-party requests on load, URL rewriting), which confirms the tests can fail.
 - **CI simulation:** clean `npm ci` → `npm run check` → `npm run build`.
 
-Not verified: the live Web3Forms and Turnstile services (mocked; the real Turnstile script *request* was observed), real-device Safari/Firefox, and a manual screen-reader pass. Adding a committed Playwright suite would make these checks repeatable.
+Not verified: the live Web3Forms and Turnstile services (mocked; the real Turnstile script *request* was observed), real-device Safari/Firefox, and a manual screen-reader pass. The Playwright suite now makes the behavioural checks repeatable.
 
 ## Adding things
 

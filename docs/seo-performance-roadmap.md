@@ -13,7 +13,7 @@ The working plan for making the portfolio as search-friendly and light as possib
 | 2 | Weight: icons, fonts, images, budgets | 🟡 Mostly done — budgets and résumé assets open |
 | 3 | SEO: structured data, semantic HTML, indexable pages | ✅ Done in code — see Phase 3 for the two items that need your accounts |
 | 4 | Hosting & headers (Cloudflare Pages) | ⬜ Optional, not started |
-| 5 | CI hygiene and quality gates | 🟡 Lockfile, type-check, PR builds, SEO guard done — Lighthouse CI open |
+| 5 | CI hygiene and quality gates | ✅ Done — formatting, types, SEO guard, Playwright and Lighthouse CI gate every PR and deploy (see [ci-cd.md](ci-cd.md)); branch protection is a GitHub setting to enable |
 | 6 | Discovery: indexing, links, articles, measurement | 🟡 Tooling built; **needs your accounts** — see [visibility-playbook.md](visibility-playbook.md) |
 
 ## Measurements
@@ -120,7 +120,11 @@ GitHub Pages can't set headers, redirects or brotli. Cloudflare Pages is free, g
 - [x] `npm run check:seo` in CI: title/description limits, canonicals, one `<h1>`, JSON-LD validity, alt text, broken links and anchors, sitemap ↔ pages, duplicate titles/descriptions (it already caught a redirect shadowing `/projects/` and an over-long article title)
 - [x] `ssl/` (Angular dev-server TLS files) removed from the tree
 - [x] Crawler check with JavaScript disabled: content, headings, JSON-LD all present
-- [ ] Lighthouse CI on every push with assertions (Performance ≥ 95, SEO 100, Accessibility ≥ 95, LCP < 2.0 s, CLS < 0.05)
+- [x] Lighthouse CI on every PR and before every deploy (pinned 0.14.0): performance ≥ 0.95, accessibility = 1, best practices ≥ 0.95, SEO = 1, LCP ≤ 2000 ms, CLS ≤ 0.05, TBT ≤ 150 ms, JS ≤ 20 KB, ≤ 2 third-party requests, page weight ≤ 200 KB
+- [x] Prettier check in CI (formatting verified not to change rendering: element geometry identical across 7 pages at 2 viewports)
+- [x] Playwright suite (79 tests) committed and run in CI: behaviour, contact form (mocked), mobile, SEO/social previews, redirects, health and performance guards
+- [x] Deploy waits for every gate and publishes the tested build
+- [ ] **You:** protect `main` with a ruleset requiring the three checks ([ci-cd.md](ci-cd.md#branch-protection-github-settings-not-code))
 
 ## Phase 6 — Discovery 🟡
 

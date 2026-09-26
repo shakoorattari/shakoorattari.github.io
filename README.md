@@ -17,12 +17,12 @@ A fast, static site built with [Astro](https://astro.build) and hosted on GitHub
 | Fonts | Inter (Latin, variable), self-hosted and preloaded via `@fontsource-variable/inter` |
 | Images | `astro:assets` `<Picture>` → AVIF / WebP with explicit dimensions |
 | Hosting | GitHub Pages, custom domain via `public/CNAME` |
-| CI/CD | GitHub Actions — `.github/workflows/deploy.yml` |
+| CI/CD | GitHub Actions: formatting, type-check, build, SEO checks, Playwright and Lighthouse CI gate every PR and every deploy — see [docs/ci-cd.md](docs/ci-cd.md) |
 | Contact form | [Web3Forms](https://web3forms.com) + [Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/) + honeypot + client-side rate limit |
 
 ## Getting started
 
-Requires **Node 22.12+** (Astro's minimum; CI uses 22).
+Requires **Node 22.12+** (Astro's minimum; `.nvmrc` pins 22, which CI uses).
 
 ```bash
 npm ci          # or: npm install
@@ -32,9 +32,13 @@ npm start       # dev server on http://localhost:4321
 | Script | What it does |
 |---|---|
 | `npm start` / `npm run dev` | Dev server with hot reload |
-| `npm run build` | Production build into `dist/` |
+| `npm run build` | Type-check (`astro check`) and production build into `dist/` |
 | `npm run preview` | Serve the production build locally |
-| `npm run check` | Type-check `.astro` and `.ts` files (`astro check`) — also runs in CI |
+| `npm run check` | Type-check only (`astro check`) |
+| `npm run lint` / `npm run format` | Check / fix formatting with Prettier |
+| `npm run test:e2e` | Playwright suite against the build (run `npm run build` first) |
+| `npm run lighthouse` | Lighthouse CI thresholds against the build (reports written locally, nothing uploaded) |
+| `npm run verify` | Formatting + type-check + build + SEO checks — what to run before pushing |
 | `npm run check:seo` | After a build, verify every page's title/description length, canonical, single `<h1>`, structured data, internal links and anchors, and that `sitemap.xml` matches the indexable pages — also runs in CI |
 
 ## Project structure
@@ -71,9 +75,12 @@ src/
 ├── styles/global.scss       Design tokens and shared utilities
 ├── assets/profile.jpg       Source photo that Astro resizes to AVIF/WebP
 └── lib/                     lastmod.ts (git date), blog.ts (published vs preview), schema.ts (Person/WebSite refs)
-scripts/check-seo.mjs        Post-build SEO guard (npm run check:seo)
+scripts/                     check-seo.mjs (post-build SEO guard) · serve-dist.mjs (static server for tests)
+tests/                       Playwright suite: health, navigation, mobile, contact form, SEO
+playwright.config.ts  lighthouserc.json  .prettierrc.json  .nvmrc  .env.example
+.github/                     workflows (ci, lighthouse, deploy) and the PR template
 astro.config.mjs             Site URL, trailing slashes, legacy-URL redirects
-docs/                        Roadmap, visibility playbook, migration notes, original audit
+docs/                        CI/CD, roadmap, visibility playbook, migration notes, original audit
 ```
 
 ## Updating content
@@ -138,16 +145,19 @@ Configured in `src/data/site.ts` (`contactConfig`). The Web3Forms access key and
 
 > **Known limitation:** the Turnstile token is not yet forwarded to Web3Forms for server-side verification, so the widget only gates the UI. See [the roadmap](docs/seo-performance-roadmap.md#known-issues).
 
-## Deployment
+## CI/CD and quality gates
 
-`.github/workflows/deploy.yml`:
+Modelled on the sibling `earthcone` project. Three workflows in `.github/workflows/`:
 
-- **Pull requests to `main`:** install (`npm ci`), type-check, build, SEO checks — nothing is deployed.
-- **Push to `main`:** the same, then upload `dist/` and deploy to GitHub Pages.
+| Workflow | When | What |
+|---|---|---|
+| `ci.yml` | pull requests | Prettier check · type-check + build · SEO checks · the Playwright suite |
+| `lighthouse.yml` | pull requests | Lighthouse CI (pinned `@lhci/cli@0.14.0`): performance ≥ 0.95, accessibility = 1, best practices ≥ 0.95, SEO = 1, plus LCP, CLS, TBT, JavaScript and page-weight budgets |
+| `deploy.yml` | push to `main` | **Calls both workflows above and deploys to GitHub Pages only if every job passed**, publishing the exact build that was tested |
 
-The build step passes the optional tracking variables above to Astro as `PUBLIC_*` environment variables.
+The gates are proven to fail: each one has been mutation-tested with a deliberate regression. Thresholds, what each check covers, how to run them locally and how to protect `main` (so a failing check actually blocks a merge) are in **[docs/ci-cd.md](docs/ci-cd.md)**.
 
-It checks out full git history because the sitemap and JSON-LD `lastmod` come from `git log`. GitHub Pages can't set custom response headers, so the cache lifetime is fixed at 10 minutes.
+`deploy.yml` also runs manually on any branch as a dry run (gates run, deploy is skipped). It checks out full git history because the sitemap and JSON-LD `lastmod` come from `git log`. GitHub Pages can't set custom response headers, so the cache lifetime is fixed at 10 minutes.
 
 ### Old URLs
 
@@ -178,6 +188,7 @@ Getting *found* is a separate job from being fast: see **[docs/visibility-playbo
 
 | Document | Contents |
 |---|---|
+| [docs/ci-cd.md](docs/ci-cd.md) | The quality gates, thresholds, running them locally, and branch protection |
 | [docs/seo-performance-roadmap.md](docs/seo-performance-roadmap.md) | Phased SEO / performance plan with status, measurements, known issues |
 | [docs/visibility-playbook.md](docs/visibility-playbook.md) | How to get indexed, earn links, publish articles and measure — the parts that need your accounts |
 | [docs/astro-migration-notes.md](docs/astro-migration-notes.md) | What changed in the Angular → Astro move, deliberate differences, how it was verified |
