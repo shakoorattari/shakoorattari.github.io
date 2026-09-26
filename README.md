@@ -4,127 +4,135 @@ Personal portfolio of **Shakoor Hussain Attari** — Lead Software Engineer, Ful
 
 **Live:** <https://shakoorattari.com>
 
-A single-page site (hero, about, skills, experience, case studies, contact) built with Angular and prerendered to static HTML at build time, hosted on GitHub Pages.
+A single-page site (hero, about, skills, experience, case studies, contact) built with [Astro](https://astro.build) as fully static HTML, with ~2 KB of JavaScript, hosted on GitHub Pages.
 
 ## Tech stack
 
 | Concern | Choice |
-| --- | --- |
-| Framework | Angular 16 (NgModules), SCSS |
-| Rendering | Build-time prerender (SSG) via `@nguniversal/builders:prerender` |
-| Hosting | GitHub Pages, custom domain via `src/CNAME` |
+|---|---|
+| Framework | Astro 7 — static output, components are plain `.astro` files |
+| Styling | SCSS, scoped per component (`scopedStyleStrategy: 'class'`) plus one global stylesheet |
+| Interactivity | Three small vanilla-TS scripts in `src/scripts/` (no UI framework) |
+| Icons | Font Awesome 6 glyphs inlined as SVG at build time (`<Icon />`, via Iconify JSON) — no webfont |
+| Fonts | Inter (Latin, variable), self-hosted and preloaded via `@fontsource-variable/inter` |
+| Images | `astro:assets` `<Picture>` → AVIF / WebP with explicit dimensions |
+| Hosting | GitHub Pages, custom domain via `public/CNAME` |
 | CI/CD | GitHub Actions — `.github/workflows/deploy.yml` |
 | Contact form | [Web3Forms](https://web3forms.com) + [Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/) + honeypot + client-side rate limit |
-| Icons / fonts | Font Awesome 6 and Inter (Google Fonts), both loaded from CDNs |
 
 ## Getting started
 
-Requirements: Node 20+ (CI uses 20). The repo has a `pnpm-lock.yaml`; `npm` works too.
+Requires **Node 22.12+** (Astro's minimum; CI uses 22).
 
 ```bash
-pnpm install        # or: npm install
-pnpm start          # https://localhost:4272 (self-signed cert from ./ssl)
+npm ci          # or: npm install
+npm start       # dev server on http://localhost:4321
 ```
-
-Your browser will warn about the self-signed certificate on first visit — that's expected for local dev.
-
-### Scripts
 
 | Script | What it does |
-| --- | --- |
-| `start` | Dev server on `https://localhost:4272` with live reload |
-| `build` | Production browser build into `dist/shakoor-portfolio`, then writes `sitemap.xml` |
-| `prerender` | Production build **plus** static prerender of every route, then writes `sitemap.xml`. This is what CI runs |
-| `build:ssr` / `serve:ssr` / `dev:ssr` | Express-based SSR variants (not used in production) |
-| `watch` | Development build in watch mode |
-
-To preview the production output locally:
-
-```bash
-npm run prerender
-python3 -m http.server 4321 --directory dist/shakoor-portfolio    # or any static file server
-```
+|---|---|
+| `npm start` / `npm run dev` | Dev server with hot reload |
+| `npm run build` | Production build into `dist/` |
+| `npm run preview` | Serve the production build locally |
+| `npm run check` | Type-check `.astro` and `.ts` files (`astro check`) — also runs in CI |
 
 ## Project structure
 
 ```
+public/                      Served as-is, at the same URLs as before
+├── CNAME  robots.txt  favicon.svg  apple-touch-icon.png
+└── assets/
+    ├── og-image.jpg         1200×630 social-sharing card
+    └── files/               Résumé PDFs / markdown, shakoor_pic.jpeg, shakoor-photo.jpg
 src/
-├── index.html                 Head metadata: SEO, Open Graph, Twitter, JSON-LD
-├── apple-touch-icon.png       180×180 iOS home-screen icon
-├── favicon.svg
-├── robots.txt
-├── CNAME                      Custom domain for GitHub Pages
-├── assets/
-│   ├── og-image.jpg           1200×630 social-sharing card
-│   └── files/                 Résumé PDFs / markdown, profile photo
-├── environments/              Contact-form and Turnstile keys (dev / prod)
-└── app/
-    ├── components/            hero, about, skills, experience, projects, contact, header, footer
-    ├── pages/home/            Composes every section into the single page
-    └── services/contact.service.ts   Posts the contact form to Web3Forms
-scripts/
-└── generate-sitemap.mjs       Writes dist/…/sitemap.xml with a real <lastmod>
-docs/                          Audit notes and the SEO / performance roadmap
+├── data/                    All content and site config (edit these)
+│   ├── site.ts              Identity, SEO copy, contact details, socials, contact-form keys
+│   ├── about.ts  skills.ts  experience.ts  projects.ts
+├── components/              Header, Hero, About, Skills, Experience, Projects,
+│                            Contact, SocialProof, Footer, Icon
+├── layouts/Base.astro       <head>: SEO, Open Graph, Twitter, JSON-LD, font preload
+├── pages/
+│   ├── index.astro          The single page
+│   ├── 404.astro            Not-found page (noindex)
+│   └── sitemap.xml.ts       Generates /sitemap.xml at build time
+├── scripts/                 nav.ts (menu, scroll-spy) · hero-roles.ts · contact.ts (form)
+├── styles/global.scss       Design tokens and shared utilities
+├── assets/profile.jpg       Source photo that Astro resizes to AVIF/WebP
+└── lib/lastmod.ts           Last-modified date from git, for sitemap + structured data
+astro.config.mjs             Site URL, trailing slashes, legacy-URL redirects
+docs/                        Roadmap, migration notes, original audit
 ```
 
 ## Updating content
 
-Most content is plain data inside the component classes:
+Content lives in `src/data/`, not in the components:
 
-| Section | File |
-| --- | --- |
-| Hero text and rotating job titles | `src/app/components/hero/hero.component.html` (`data-rotate`) |
-| About summary, highlights, stats, contact details | `src/app/components/about/about.component.ts` |
-| Skills | `src/app/components/skills/skills.component.ts` |
-| Work history | `src/app/components/experience/experience.component.ts` |
-| Architecture case studies | `src/app/components/projects/projects.component.ts` |
+| To change… | Edit |
+|---|---|
+| Name, title, meta description, keywords, socials, email/phone, rotating roles | `src/data/site.ts` |
+| About summary, highlights, stats, details, endorsements, certifications | `src/data/about.ts` |
+| Skills | `src/data/skills.ts` |
+| Work history and notable projects | `src/data/experience.ts` (`showDetails: true` starts a job expanded) |
+| Architecture case studies | `src/data/projects.ts` |
 
-Keep these in sync when something changes:
+Notes:
 
-- **Contact details** appear in `index.html` (JSON-LD), the hero, About and Contact components, and the résumé markdown. The public email is `binmushtaq@gmail.com`; the Outlook address is listed as a Teams ID only. The phone number is deliberately **not** in the JSON-LD.
-- **Title / description / job title** are duplicated in `index.html` across `<title>`, `description`, Open Graph, Twitter and JSON-LD.
-- **Social card:** to change it, replace `src/assets/og-image.jpg` with a 1200×630 JPEG (keep it under ~100 KB). The dimensions are declared in `index.html`.
-- **Sitemap:** generated at build time — don't edit it by hand. Routes are listed in `scripts/generate-sitemap.mjs`.
+- **Structured data is generated** from `site.ts` (Person + WebSite + ProfilePage in `Base.astro`), so the title, description, email and profile links can't drift from the visible page. The phone number is deliberately **not** in the structured data.
+- **Contact details:** the public email is `binmushtaq@gmail.com`; the Outlook address is listed as a Teams ID only.
+- **Icons:** use `<Icon name="fa6-solid:envelope" />` (`fa6-solid`, `fa6-brands` or `fa6-regular`). An unknown name fails the build.
+- **Social card:** replace `public/assets/og-image.jpg` with a 1200×630 JPEG (keep it under ~100 KB); the dimensions are declared in `Base.astro`.
+- **Profile photo:** replace `src/assets/profile.jpg`; Astro generates the sizes and formats.
+- **Sitemap:** generated — add new indexable routes to the `routes` array in `src/pages/sitemap.xml.ts`.
 
-## Contact form configuration
+## Contact form
 
-Keys live in `src/environments/environment.ts` (dev) and `environment.prod.ts` (prod). Both the Web3Forms access key and the Turnstile **site** key are designed to be public.
+Configured in `src/data/site.ts` (`contactConfig`). The Web3Forms access key and the Turnstile **site** key are designed to be public. `npm start` uses Cloudflare's always-pass Turnstile test key and the development Web3Forms key; production builds use the production keys.
 
-- Development uses Cloudflare's always-pass test site key.
-- Turnstile's script is **lazy-loaded**: it is requested only when the form is within ~400px of the viewport or a field receives focus, not on page load.
-- Spam controls: a hidden honeypot field (`botcheck`), a 60 s client-side rate limit, and the Turnstile widget gating the submit button.
+- The Turnstile script is **lazy-loaded**: only when the form is within ~400px of the viewport or a field receives focus.
+- Spam controls: a hidden honeypot field, a 60 s client-side rate limit, and Turnstile gating the submit button.
+- The form needs JavaScript; a `<noscript>` note points visitors to email instead.
 
-> **Known limitation:** the Turnstile token is not yet forwarded to Web3Forms for server-side verification, so the widget currently only gates the UI. See [the roadmap](docs/seo-performance-roadmap.md#known-issues).
+> **Known limitation:** the Turnstile token is not yet forwarded to Web3Forms for server-side verification, so the widget only gates the UI. See [the roadmap](docs/seo-performance-roadmap.md#known-issues).
 
 ## Deployment
 
-Pushing to `main` runs `.github/workflows/deploy.yml`:
+`.github/workflows/deploy.yml`:
 
-1. Check out the full history (needed so the sitemap's `lastmod` reflects the last real change to `src/`).
-2. `npm install`, then `npm run prerender`.
-3. Add `.nojekyll` and copy `index.html` to `404.html`.
-4. Upload `dist/shakoor-portfolio/` and deploy to GitHub Pages.
+- **Pull requests to `main`:** install (`npm ci`), type-check, build — nothing is deployed.
+- **Push to `main`:** the same, then upload `dist/` and deploy to GitHub Pages.
 
-The site is served at the domain in `src/CNAME`. GitHub Pages does not allow custom response headers, so cache lifetime is fixed at 10 minutes.
+It checks out full git history because the sitemap and JSON-LD `lastmod` come from `git log`. GitHub Pages can't set custom response headers, so the cache lifetime is fixed at 10 minutes.
+
+### Old URLs
+
+The Angular version served `/about`, `/skills`, `/experience`, `/projects` and `/contact` as separate pages. They now redirect to the matching anchor (e.g. `/about/` → `/#about`) via `redirects` in `astro.config.mjs`, so existing links keep working.
 
 ## SEO and performance
 
-In place today:
+Measured with Lighthouse 13.5 (mobile profile, simulated throttling, gzip-enabled local server, median of 3 runs):
 
-- Fully prerendered HTML — crawlers and link-preview bots see real content without running JavaScript.
-- Canonical URL, meta description, Open Graph and Twitter Card tags with a 1200×630 image.
-- JSON-LD `Person` structured data.
-- `robots.txt` and a build-generated `sitemap.xml`.
-- Non-blocking fonts and icon CSS, preloaded hero image with `fetchpriority="high"`, and a lazy-loaded Turnstile script.
+| | Angular (Phase 0 build) | Astro (now) |
+|---|---|---|
+| Performance | 87 | **100** |
+| Accessibility | 92 | **100** |
+| Best practices / SEO | 100 / 100 | 100 / 100 |
+| LCP | 3.75 s | 1.50 s |
+| Total blocking time | 12 ms | 0 ms |
+| JavaScript transferred | 116 KiB | 2.4 KiB |
+| Total transfer / requests | 509 KiB / 19 | 90 KiB / 6 |
+| Third-party hosts on load | 3 (cdnjs, Google Fonts ×2) | 0 |
 
-The largest remaining cost is the Angular runtime (~105 KB gzipped JS for a mostly static page). The plan to remove it — including a migration to Astro — is in **[docs/seo-performance-roadmap.md](docs/seo-performance-roadmap.md)**.
+These are local lab numbers, not field data; treat them as relative. Details and remaining work: **[docs/seo-performance-roadmap.md](docs/seo-performance-roadmap.md)**.
+
+In place: full HTML content with JavaScript disabled, one `<h1>` with no skipped heading levels, canonical URL, Open Graph / Twitter tags with a 1200×630 image, linked JSON-LD, `robots.txt`, a generated sitemap, self-hosted preloaded font, inlined CSS, and no render-blocking third-party requests.
 
 ## Documentation
 
 | Document | Contents |
-| --- | --- |
+|---|---|
 | [docs/seo-performance-roadmap.md](docs/seo-performance-roadmap.md) | Phased SEO / performance plan with status, measurements, known issues |
-| [docs/performance-enhancement-v001.md](docs/performance-enhancement-v001.md) | Original Lighthouse-based audit, annotated with current status |
+| [docs/astro-migration-notes.md](docs/astro-migration-notes.md) | What changed in the Angular → Astro move, deliberate differences, how it was verified |
+| [docs/performance-enhancement-v001.md](docs/performance-enhancement-v001.md) | Original Lighthouse audit, annotated with current status |
 
 ## License
 

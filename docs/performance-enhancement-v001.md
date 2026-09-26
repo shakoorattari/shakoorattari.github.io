@@ -6,21 +6,23 @@
 
 ---
 
-> **Status update — 2026-09-26.** Sections 1–3 below are the **original audit, kept unchanged** as a historical baseline. Its scores (64 / 88 / 100 / 92) and the 15.0 s LCP were measured on the client-rendered site, *before* prerendering shipped, and **have not been re-measured**. The current plan lives in [`seo-performance-roadmap.md`](seo-performance-roadmap.md).
+> **Status update — 2026-09-26.** Sections 1–3 below are the **original audit, kept unchanged** as a historical baseline. Its scores (64 / 88 / 100 / 92) and the 15.0 s LCP were measured on the *client-rendered Angular* site, before prerendering shipped. The site has since been rebuilt with Astro; current numbers and the live plan are in [`seo-performance-roadmap.md`](seo-performance-roadmap.md).
+>
+> Latest measurement (Lighthouse 13.5, mobile, simulated throttling, local gzip server, median of 3): **Performance 100 · Accessibility 100 · Best practices 100 · SEO 100**, LCP 1.5 s, 2.4 KiB of JavaScript. These are lab numbers, not field data.
 >
 > | Recommendation | Status | Notes |
 > | --- | --- | --- |
-> | Static pre-rendering (SSG) | ✅ Done | CI runs `npm run prerender`; the live HTML contains the full content |
-> | Hero image optimisation | 🟡 Partly | Hero uses a 19 KB JPEG with `width`/`height`, `fetchpriority="high"` and a `<link rel="preload">`. The 2 MB `shakoor-photo.png` was deleted. WebP/AVIF not adopted — planned for Phase 2 |
-> | Critical-path management | 🟡 Partly | Angular's build inlines critical CSS and loads scripts as deferred modules; fonts and Font Awesome load non-blocking. They are still third-party requests — planned for Phase 2 |
-> | Icon-link `aria-label`s and image `alt` text | ✅ Done | |
-> | Colour-contrast (WCAG AA) | ❓ Not re-audited | Re-check after the Astro migration |
+> | Static pre-rendering (SSG) | ✅ Done | The site is static HTML (Astro); all content is present with JavaScript disabled |
+> | Hero image optimisation | ✅ Done | AVIF / WebP via `<Picture>` with explicit dimensions and `fetchpriority="high"`; the 2 MB PNG is gone |
+> | Critical-path management | ✅ Done | CSS is inlined, the font is self-hosted and preloaded, and there are no third-party requests on load |
+> | Icon-link `aria-label`s and image `alt` text | ✅ Done | Verified across every template |
+> | Colour-contrast (WCAG AA) | ✅ Automated pass | Lighthouse accessibility 100. A manual screen-reader pass has not been done |
 > | Above-the-fold CTAs | ✅ Done | *Hire Me*, *Download CV*, *View Case Studies* in the hero |
-> | Case studies framed as Challenge → Architecture → Impact | ✅ Done | `projects.component.ts` |
+> | Case studies framed as Challenge → Architecture → Impact | ✅ Done | `src/data/projects.ts` |
 > | Social proof | 🟡 Partly | A "Recommendations & Trust Signals" section summarises themes and links to LinkedIn; it has no direct quotes |
-> | Architecture Decision Records / topology diagrams | ⬜ Open | Candidate content for indexable case-study pages (Phase 3) |
+> | Architecture Decision Records / topology diagrams | ⬜ Open | Candidate content for indexable case-study pages (roadmap Phase 3) |
 >
-> References below to `shakoor-photo.png` and `assets/shakoor-photo.webp` are historical: the PNG no longer exists.
+> References below to `shakoor-photo.png`, `assets/shakoor-photo.webp` and Angular are historical.
 
 ---
 
