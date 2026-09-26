@@ -11,9 +11,10 @@ The working plan for making the portfolio as search-friendly and light as possib
 | 0 | Quick wins on the Angular site | ✅ Done |
 | 1 | Migrate to Astro | ✅ Done |
 | 2 | Weight: icons, fonts, images, budgets | 🟡 Mostly done — budgets and résumé assets open |
-| 3 | SEO: structured data, semantic HTML, indexable case studies | 🟡 Foundations done — copy lengths, case-study pages, `llms.txt` open |
+| 3 | SEO: structured data, semantic HTML, indexable pages | ✅ Done in code — see Phase 3 for the two items that need your accounts |
 | 4 | Hosting & headers (Cloudflare Pages) | ⬜ Optional, not started |
-| 5 | CI hygiene and quality gates | 🟡 Lockfile, type-check, PR builds done — Lighthouse CI open |
+| 5 | CI hygiene and quality gates | 🟡 Lockfile, type-check, PR builds, SEO guard done — Lighthouse CI open |
+| 6 | Discovery: indexing, links, articles, measurement | 🟡 Tooling built; **needs your accounts** — see [visibility-playbook.md](visibility-playbook.md) |
 
 ## Measurements
 
@@ -32,7 +33,9 @@ Lighthouse 13.5.0, mobile profile with simulated throttling, served from a local
 | Total transferred / requests | 509 KiB / 19 | 90 KiB / 6 |
 | Third-party hosts on page load | 3 (cdnjs, fonts.googleapis.com, fonts.gstatic.com) | 0 |
 
-Build output (Astro): one 2.3 KB-gzipped script chunk (contact form); the nav and role-rotator scripts are small enough that Astro inlines them. The prerendered HTML is ~155 KB raw / ~31 KB gzipped, including all CSS and inline SVG icons.
+The new page types measure the same: `/`, `/services/`, `/services/identity-sso-oauth/` and `/projects/oneportal-iam/` each scored **100 / 100 / 100 / 100** (2 runs each), with LCP 1.0–1.5 s and no layout shift.
+
+Build output (Astro, before the content pages were added): one 2.3 KB-gzipped script chunk (contact form); the nav and role-rotator scripts are small enough that Astro inlines them. The prerendered HTML is ~155 KB raw / ~31 KB gzipped, including all CSS and inline SVG icons.
 
 Accessibility findings the migration removed: near-invisible copy buttons (1.37:1 contrast — black button text on a dark surface), skipped heading levels (`h3 → h5/h6`), and a missing `<main>` landmark. Lighthouse is automated only; it does not replace a manual screen-reader pass.
 
@@ -52,7 +55,8 @@ Accessibility findings the migration removed: near-invisible copy buttons (1.37:
 | `#about` was defined twice (host element and inner section) | ✅ No duplicate IDs |
 | No CI lockfile — both `pnpm-lock.yaml` and `package-lock.json` were gitignored | ✅ `package-lock.json` committed; CI uses `npm ci` |
 | GitHub Pages fixes `cache-control: max-age=600`, no headers, no brotli | ⬜ Phase 4 |
-| Title is 70 chars, description 243 chars (both longer than search results show) | ⬜ Phase 3 |
+| Title was 70 chars, description 243 chars (both longer than search results show) | ✅ 58 / 154 on the home page; ≤ 60 / ≤ 160 enforced on every page in CI |
+| **The site was not in the search index** (`site:` query returned nothing; not even the owner's name found it) and had no analytics | 🟡 Phase 6: Search Console / analytics hooks added; you need to verify and submit — see the playbook |
 
 ## Phase 0 — Quick wins ✅
 
@@ -85,16 +89,21 @@ Accessibility findings the migration removed: near-invisible copy buttons (1.37:
 - [ ] Keep one résumé PDF and stop publishing the `.md` résumé (both PDFs and the `.md` are still in `public/assets/files/`)
 - [ ] Size budgets in CI (e.g. JS ≤ 20 KB gzip, images ≤ 150 KB)
 
-## Phase 3 — SEO 🟡
+## Phase 3 — SEO ✅ (code) / 🟡 (accounts)
 
-- [x] Structured data generated from `src/data/site.ts`: `Person` + `WebSite` + `ProfilePage`, linked by `@id`, no dangling references
+- [x] Structured data generated from `src/data/site.ts`: `Person` + `WebSite` + `ProfilePage`; `Service`, `WebPage`, `BlogPosting`, `CollectionPage` and `BreadcrumbList` on the new pages; references carry type + name + url so each page stands alone
 - [x] Semantic HTML: `<header>` / `<main>` / `<nav aria-label>` / `<section aria-labelledby>`; one `<h1>`; no skipped levels; skip link
-- [ ] Trim the title to ≤ 60 chars and the description to ≤ 160 (current: 70 / 243 — carried over from the original copy, so it's a wording decision)
-- [ ] Indexable case-study pages, e.g. `/projects/<case-study>/`, each with its own `<h1>`, description and self-canonical
-- [ ] `rel="me"` on profile links; `BreadcrumbList` once sub-pages exist
-- [ ] `llms.txt`
-- [ ] Search Console: verify the domain, submit `sitemap.xml`, watch coverage and Core Web Vitals
-- [ ] Validate structured data with Google's Rich Results Test (locally verified: valid JSON, all `@id` references resolve)
+- [x] Home title 58 chars, description 154 (was 70 / 243); every page ≤ 60 / ≤ 160, enforced by `npm run check:seo`
+- [x] **Six service pages** (`/services/<slug>/`) and a "Work with me" hub for both employers and clients, each with substantive, résumé-derived content
+- [x] **Three case-study pages** (`/projects/<slug>/`) and a hub, built from the existing case-study text plus the detailed project bullets
+- [x] **Blog** with draft-by-default posts, RSS, `BlogPosting` data, a full draft article and three outlines to complete
+- [x] "How I can help" section and case-study links on the home page; footer links; breadcrumbs
+- [x] Sitemap lists every indexable page with its own `lastmod`; `llms.txt` generated from the same data
+- [x] Search Console / Bing verification meta tags and Cloudflare Web Analytics supported (off until configured)
+- [ ] **You:** verify the domain in Search Console, submit the sitemap, request indexing — [playbook §3](visibility-playbook.md#3-do-these-first-about-30-minutes)
+- [ ] **You:** add the analytics token — [playbook §3.3](visibility-playbook.md#33-analytics-cloudflare-web-analytics)
+- [ ] `rel="me"` on profile links (after the extra profiles exist)
+- [ ] Validate structured data with Google's Rich Results Test (locally verified: valid JSON, no dangling `@id` references)
 
 ## Phase 4 — Hosting & headers (optional)
 
@@ -108,9 +117,20 @@ GitHub Pages can't set headers, redirects or brotli. Cloudflare Pages is free, g
 
 - [x] One package manager (npm) with a committed `package-lock.json`; CI runs `npm ci`
 - [x] `astro check` (type-check) in CI; pull requests are built but not deployed
+- [x] `npm run check:seo` in CI: title/description limits, canonicals, one `<h1>`, JSON-LD validity, alt text, broken links and anchors, sitemap ↔ pages, duplicate titles/descriptions (it already caught a redirect shadowing `/projects/` and an over-long article title)
 - [x] `ssl/` (Angular dev-server TLS files) removed from the tree
 - [x] Crawler check with JavaScript disabled: content, headings, JSON-LD all present
 - [ ] Lighthouse CI on every push with assertions (Performance ≥ 95, SEO 100, Accessibility ≥ 95, LCP < 2.0 s, CLS < 0.05)
+
+## Phase 6 — Discovery 🟡
+
+The site was fast and crawlable but invisible. This phase is mostly off-site work; the checklist, target-query map, expectations and measurement routine are in **[visibility-playbook.md](visibility-playbook.md)**.
+
+- [ ] Search Console and Bing Webmaster set up; sitemap submitted; indexing requested for the new pages
+- [ ] Analytics token set
+- [ ] LinkedIn / GitHub / Medium profiles link to the site, with consistent name and location (GitHub currently says Dubai)
+- [ ] First article published (a full draft and three outlines are ready in `src/content/blog/`)
+- [ ] Monthly review of Search Console queries and Cloudflare referrers
 
 ## Known issues
 
@@ -118,3 +138,5 @@ GitHub Pages can't set headers, redirects or brotli. Cloudflare Pages is free, g
 2. **`ssl/server.key` remains in git history.** It was a localhost development certificate for the Angular dev server and is no longer used, so there is nothing to rotate — but it can't be removed from history without a rewrite.
 3. **Résumé files are public.** `public/assets/files/ShakoorHussain_Resume.md` contains the phone number and email in plain text and is downloadable (unchanged from before).
 4. **Lighthouse results are lab-only.** Confirm with field data once the site has been live for a few weeks.
+5. **Search visibility is unproven.** As of 2026-09-26 the site wasn't findable even by name; the fixes above address the causes I could identify, but rankings take weeks to months and can't be guaranteed.
+6. **Blog launches empty.** The Blog link, RSS feed and sitemap entries appear only after the first post is published (`draft: false`).

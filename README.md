@@ -4,7 +4,7 @@ Personal portfolio of **Shakoor Hussain Attari** — Lead Software Engineer, Ful
 
 **Live:** <https://shakoorattari.com>
 
-A single-page site (hero, about, skills, experience, case studies, contact) built with [Astro](https://astro.build) as fully static HTML, with ~2 KB of JavaScript, hosted on GitHub Pages.
+A fast, static site built with [Astro](https://astro.build) and hosted on GitHub Pages, with ~2 KB of JavaScript. It has a single-page home (hero, about, services, skills, experience, case studies, contact) plus indexable pages for [services](https://shakoorattari.com/services/), [case studies](https://shakoorattari.com/projects/) and an articles section, all written to be found by people searching for a software engineer or for specific skills.
 
 ## Tech stack
 
@@ -35,6 +35,7 @@ npm start       # dev server on http://localhost:4321
 | `npm run build` | Production build into `dist/` |
 | `npm run preview` | Serve the production build locally |
 | `npm run check` | Type-check `.astro` and `.ts` files (`astro check`) — also runs in CI |
+| `npm run check:seo` | After a build, verify every page's title/description length, canonical, single `<h1>`, structured data, internal links and anchors, and that `sitemap.xml` matches the indexable pages — also runs in CI |
 
 ## Project structure
 
@@ -46,21 +47,33 @@ public/                      Served as-is, at the same URLs as before
     └── files/               Résumé PDFs / markdown, shakoor_pic.jpeg, shakoor-photo.jpg
 src/
 ├── data/                    All content and site config (edit these)
-│   ├── site.ts              Identity, SEO copy, contact details, socials, contact-form keys
+│   ├── site.ts              Identity, SEO copy, contact details, socials, form keys, tracking config
 │   ├── about.ts  skills.ts  experience.ts  projects.ts
-├── components/              Header, Hero, About, Skills, Experience, Projects,
-│                            Contact, SocialProof, Footer, Icon
-├── layouts/Base.astro       <head>: SEO, Open Graph, Twitter, JSON-LD, font preload
+│   ├── services.ts          The six service pages
+│   └── caseStudies.ts       Case-study pages (projects.ts joined with experience.ts)
+├── content/blog/            Articles and outlines (Markdown, unpublished until `draft: false`)
+├── content.config.ts        Blog schema (title/description limits, `draft` defaults to true)
+├── components/              Header, Hero, About, Services, Skills, Experience, Projects,
+│                            Contact, SocialProof, Footer, Icon, Breadcrumbs, CtaPanel
+├── layouts/
+│   ├── Base.astro           <head>: SEO, Open Graph, Twitter, JSON-LD, verification, analytics
+│   └── Page.astro           Layout for services / case studies / blog (breadcrumbs, shared styles)
 ├── pages/
-│   ├── index.astro          The single page
+│   ├── index.astro          The home page
+│   ├── services/            /services/ hub + /services/<slug>/
+│   ├── projects/            /projects/ hub + /projects/<slug>/
+│   ├── blog/                /blog/ + /blog/<slug>/ (dev previews drafts)
 │   ├── 404.astro            Not-found page (noindex)
-│   └── sitemap.xml.ts       Generates /sitemap.xml at build time
+│   ├── sitemap.xml.ts       /sitemap.xml — every indexable page, with its own lastmod
+│   ├── rss.xml.ts           /rss.xml (published posts)
+│   └── llms.txt.ts          /llms.txt — plain-text site map for AI assistants
 ├── scripts/                 nav.ts (menu, scroll-spy) · hero-roles.ts · contact.ts (form)
 ├── styles/global.scss       Design tokens and shared utilities
 ├── assets/profile.jpg       Source photo that Astro resizes to AVIF/WebP
-└── lib/lastmod.ts           Last-modified date from git, for sitemap + structured data
+└── lib/                     lastmod.ts (git date), blog.ts (published vs preview), schema.ts (Person/WebSite refs)
+scripts/check-seo.mjs        Post-build SEO guard (npm run check:seo)
 astro.config.mjs             Site URL, trailing slashes, legacy-URL redirects
-docs/                        Roadmap, migration notes, original audit
+docs/                        Roadmap, visibility playbook, migration notes, original audit
 ```
 
 ## Updating content
@@ -73,7 +86,10 @@ Content lives in `src/data/`, not in the components:
 | About summary, highlights, stats, details, endorsements, certifications | `src/data/about.ts` |
 | Skills | `src/data/skills.ts` |
 | Work history and notable projects | `src/data/experience.ts` (`showDetails: true` starts a job expanded) |
-| Architecture case studies | `src/data/projects.ts` |
+| Architecture case-study cards | `src/data/projects.ts` (challenge / architecture / impact) |
+| Case-study pages | `src/data/caseStudies.ts` — titles, descriptions and related services; the detailed bullets are pulled from `experience.ts` |
+| Service pages | `src/data/services.ts` — copy, deliverables, selected work; `metaTitle` ≤ 60 and `metaDescription` ≤ 155 characters |
+| Articles | Markdown files in `src/content/blog/` |
 
 Notes:
 
@@ -82,7 +98,35 @@ Notes:
 - **Icons:** use `<Icon name="fa6-solid:envelope" />` (`fa6-solid`, `fa6-brands` or `fa6-regular`). An unknown name fails the build.
 - **Social card:** replace `public/assets/og-image.jpg` with a 1200×630 JPEG (keep it under ~100 KB); the dimensions are declared in `Base.astro`.
 - **Profile photo:** replace `src/assets/profile.jpg`; Astro generates the sizes and formats.
-- **Sitemap:** generated — add new indexable routes to the `routes` array in `src/pages/sitemap.xml.ts`.
+- **Sitemap:** generated from the data files and published posts — a new hand-written page must be added to the list in `src/pages/sitemap.xml.ts` (`npm run check:seo` fails if the sitemap and the pages disagree).
+- **Writing rule for the service and case-study pages:** every claim must come from the résumé or the existing site data. Don't add numbers, clients or testimonials that aren't real.
+
+## Articles
+
+Posts live in `src/content/blog/*.md`. **A post is a draft unless it sets `draft: false`**, and outlines (`outline: true`) never render. In `npm start` drafts are previewable at `/blog/`; the production build includes only published posts, and the Blog link, RSS feed and sitemap entries appear once there is at least one.
+
+```md
+---
+title: 'Headline (max 70 characters)'
+seoTitle: 'Optional shorter <title> (max 60)'
+description: '70–160 characters: becomes the meta description'
+date: 2026-10-01
+tags: ['OAuth 2.0', '.NET']
+draft: false
+---
+```
+
+## Analytics and search-engine verification
+
+All optional and off by default. Set them as GitHub repository **variables** (Settings → Secrets and variables → Actions → Variables) and re-run the workflow, or edit `tracking` in `src/data/site.ts`:
+
+| Variable | Purpose |
+|---|---|
+| `CF_ANALYTICS_TOKEN` | Cloudflare Web Analytics (cookieless) beacon token |
+| `GOOGLE_SITE_VERIFICATION` | Search Console "URL prefix" verification meta tag |
+| `BING_SITE_VERIFICATION` | Bing Webmaster Tools verification meta tag |
+
+The step-by-step setup is in [docs/visibility-playbook.md](docs/visibility-playbook.md).
 
 ## Contact form
 
@@ -98,14 +142,16 @@ Configured in `src/data/site.ts` (`contactConfig`). The Web3Forms access key and
 
 `.github/workflows/deploy.yml`:
 
-- **Pull requests to `main`:** install (`npm ci`), type-check, build — nothing is deployed.
+- **Pull requests to `main`:** install (`npm ci`), type-check, build, SEO checks — nothing is deployed.
 - **Push to `main`:** the same, then upload `dist/` and deploy to GitHub Pages.
+
+The build step passes the optional tracking variables above to Astro as `PUBLIC_*` environment variables.
 
 It checks out full git history because the sitemap and JSON-LD `lastmod` come from `git log`. GitHub Pages can't set custom response headers, so the cache lifetime is fixed at 10 minutes.
 
 ### Old URLs
 
-The Angular version served `/about`, `/skills`, `/experience`, `/projects` and `/contact` as separate pages. They now redirect to the matching anchor (e.g. `/about/` → `/#about`) via `redirects` in `astro.config.mjs`, so existing links keep working.
+The Angular version served `/about`, `/skills`, `/experience`, `/projects` and `/contact` as separate pages. `/about/`, `/skills/`, `/experience/` and `/contact/` now redirect to the matching anchor (e.g. `/about/` → `/#about`) via `redirects` in `astro.config.mjs`, so existing links keep working. `/projects/` is now a real page (the case-study hub), so it is intentionally not redirected.
 
 ## SEO and performance
 
@@ -124,13 +170,16 @@ Measured with Lighthouse 13.5 (mobile profile, simulated throttling, gzip-enable
 
 These are local lab numbers, not field data; treat them as relative. Details and remaining work: **[docs/seo-performance-roadmap.md](docs/seo-performance-roadmap.md)**.
 
-In place: full HTML content with JavaScript disabled, one `<h1>` with no skipped heading levels, canonical URL, Open Graph / Twitter tags with a 1200×630 image, linked JSON-LD, `robots.txt`, a generated sitemap, self-hosted preloaded font, inlined CSS, and no render-blocking third-party requests.
+In place: full HTML content with JavaScript disabled; unique titles (≤ 60 chars) and descriptions (≤ 160) on every page; one `<h1>` per page with no skipped levels; self-canonical URLs; Open Graph / Twitter tags with a 1200×630 image; linked JSON-LD (`Person`, `WebSite`, `ProfilePage`, `Service`, `BlogPosting`, `BreadcrumbList`); breadcrumbs; `robots.txt`, a generated sitemap, an RSS feed and `llms.txt`; a self-hosted preloaded font, inlined CSS and no render-blocking third-party requests. `npm run check:seo` guards these in CI.
+
+Getting *found* is a separate job from being fast: see **[docs/visibility-playbook.md](docs/visibility-playbook.md)** for indexing, links, articles and measurement.
 
 ## Documentation
 
 | Document | Contents |
 |---|---|
 | [docs/seo-performance-roadmap.md](docs/seo-performance-roadmap.md) | Phased SEO / performance plan with status, measurements, known issues |
+| [docs/visibility-playbook.md](docs/visibility-playbook.md) | How to get indexed, earn links, publish articles and measure — the parts that need your accounts |
 | [docs/astro-migration-notes.md](docs/astro-migration-notes.md) | What changed in the Angular → Astro move, deliberate differences, how it was verified |
 | [docs/performance-enhancement-v001.md](docs/performance-enhancement-v001.md) | Original Lighthouse audit, annotated with current status |
 

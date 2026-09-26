@@ -24,7 +24,7 @@ The site is static content plus one form. Angular shipped ~117 KB of gzipped Jav
 | Typing effect in `HeroComponent` | `src/scripts/hero-roles.ts` |
 | Font Awesome webfont | `<Icon />` — inline SVG resolved at build time |
 | `src/sitemap.xml` + build script | `src/pages/sitemap.xml.ts` endpoint (keeps the `/sitemap.xml` URL stable) |
-| Angular routes `/about`, `/skills`, … | Redirects to `/#about`, … (`astro.config.mjs`) |
+| Angular routes `/about`, `/skills`, `/experience`, `/contact` | Redirects to `/#about`, … (`astro.config.mjs`). `/projects` is now a real page (the case-study hub) and is not redirected |
 | `server.ts`, Express SSR, `ssl/` | Removed |
 | pnpm / untracked lockfiles | npm with a committed `package-lock.json` |
 
