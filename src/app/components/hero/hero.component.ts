@@ -3,8 +3,6 @@ import { Router } from '@angular/router';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { isPlatformBrowser } from '@angular/common';
 
-declare var particlesJS: any;
-
 @Component({
   selector: 'app-hero',
   templateUrl: './hero.component.html',
@@ -35,12 +33,6 @@ export class HeroComponent implements AfterViewInit {
     }
 
     setTimeout(() => this.initTypingEffect(), 120);
-
-    const canAnimate =
-      window.innerWidth >= 768 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (canAnimate) {
-      setTimeout(() => this.initParticles(), 300);
-    }
   }
 
   scrollToContact(): void {
@@ -90,36 +82,6 @@ export class HeroComponent implements AfterViewInit {
         element.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     }, 100);
-  }
-
-  private initParticles(): void {
-    try {
-      particlesJS('particles-js', {
-        particles: {
-          number: { value: 36, density: { enable: true, value_area: 900 } },
-          color: { value: '#ffffff' },
-          shape: { type: 'circle' },
-          opacity: { value: 0.5, random: true },
-          size: { value: 3, random: true },
-          line_linked: {
-            enable: true,
-            distance: 150,
-            color: '#ffffff',
-            opacity: 0.4,
-            width: 1
-          },
-          move: {
-            enable: true,
-            speed: 1.2,
-            direction: 'none',
-            random: true,
-            out_mode: 'out'
-          }
-        }
-      });
-    } catch (e) {
-      console.warn('particlesJS not loaded');
-    }
   }
 
   private initTypingEffect(): void {

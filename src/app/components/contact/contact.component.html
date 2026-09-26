@@ -1,13 +1,13 @@
 <section class="contact">
     <div class="container">
-        <div class="section-title" data-aos="fade-down">
+        <div class="section-title">
             <h2>Contact Me</h2>
             <p>Get in touch for opportunities or just to say hello!</p>
         </div>
 
         <div class="contact-content">
             <!-- Contact Information -->
-            <div class="contact-info" data-aos="fade-right" data-aos-delay="100">
+            <div class="contact-info">
                 <div class="contact-item contact-profile">
                     <div class="contact-profile-image">
                         <img src="assets/files/shakoor_pic.jpeg" alt="Shakoor Hussain Attari" width="335" height="335" loading="lazy" decoding="async">
@@ -85,7 +85,7 @@
             </div>
 
             <!-- Contact Form -->
-            <div class="contact-form" data-aos="fade-left" data-aos-delay="200">
+            <div class="contact-form">
                 <div class="form-header">
                     <h3>Send Me a Message</h3>
                     <p>I'll get back to you as soon as possible</p>
@@ -100,8 +100,8 @@
                     <div class="toast-content">
                         <p>{{ toastMessage }}</p>
                     </div>
-                    <button class="toast-close" (click)="hideToast()">
-                        <i class="fas fa-times"></i>
+                    <button class="toast-close" type="button" (click)="hideToast()" aria-label="Dismiss notification">
+                        <i class="fas fa-times" aria-hidden="true"></i>
                     </button>
                 </div>
 

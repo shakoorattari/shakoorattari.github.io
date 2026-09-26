@@ -4,7 +4,6 @@ import { ContactService } from '../../services/contact.service';
 import { environment } from '../../../environments/environment';
 import { isPlatformBrowser } from '@angular/common';
 
-declare const AOS: any;
 declare const turnstile: {
   render: (el: HTMLElement, opts: Record<string, any>) => string;
   reset: (widgetId?: string) => void;
@@ -38,6 +37,9 @@ export class ContactComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private turnstileWidgetId: string | null = null;
   private turnstilePollHandle: any = null;
+  private turnstileObserver: IntersectionObserver | null = null;
+  private disarmFocusListener: (() => void) | null = null;
+  private destroyed = false;
   turnstileToken: string | null = null;
   private readonly isBrowser: boolean;
 
@@ -62,9 +64,6 @@ export class ContactComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-    if (typeof AOS !== 'undefined') {
-      AOS.init({ duration: 800, easing: 'ease-in-out', once: true });
-    }
     window.scrollTo(0, 0);
   }
 
@@ -73,24 +72,65 @@ export class ContactComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-    this.ensureTurnstileScript()
-      .then((loaded) => {
-        if (loaded) {
-          this.mountTurnstile();
-        }
-      })
-      .catch(() => {
-        this.showToast('error', 'Could not load bot protection. Please refresh and try again.');
-      });
+    this.armTurnstileLoader();
   }
 
   ngOnDestroy(): void {
+    this.destroyed = true;
+    this.disarmTurnstileLoader();
     if (this.turnstilePollHandle) {
       clearInterval(this.turnstilePollHandle);
     }
     if (typeof turnstile !== 'undefined' && this.turnstileWidgetId) {
       try { turnstile.remove(this.turnstileWidgetId); } catch { /* noop */ }
     }
+  }
+
+  // Turnstile's script is heavy and only matters once someone is about to use the
+  // form, so load it when the form nears the viewport or takes focus — not on page load.
+  private armTurnstileLoader(): void {
+    const form = this.formElement?.nativeElement as HTMLElement | undefined;
+    if (!form || typeof IntersectionObserver === 'undefined') {
+      this.loadTurnstile();
+      return;
+    }
+
+    const load = () => {
+      this.disarmTurnstileLoader();
+      this.loadTurnstile();
+    };
+
+    this.turnstileObserver = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          load();
+        }
+      },
+      { rootMargin: '400px 0px' },
+    );
+    this.turnstileObserver.observe(form);
+
+    form.addEventListener('focusin', load);
+    this.disarmFocusListener = () => form.removeEventListener('focusin', load);
+  }
+
+  private disarmTurnstileLoader(): void {
+    this.turnstileObserver?.disconnect();
+    this.turnstileObserver = null;
+    this.disarmFocusListener?.();
+    this.disarmFocusListener = null;
+  }
+
+  private loadTurnstile(): void {
+    this.ensureTurnstileScript()
+      .then((loaded) => {
+        if (loaded && !this.destroyed) {
+          this.mountTurnstile();
+        }
+      })
+      .catch(() => {
+        this.showToast('error', 'Could not load bot protection. Please refresh and try again.');
+      });
   }
 
   // Poll briefly for the Turnstile global (script loads async), then render

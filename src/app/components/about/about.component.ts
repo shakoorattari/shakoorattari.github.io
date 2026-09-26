@@ -2,9 +2,6 @@ import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 
-// Declare AOS (Animate On Scroll) library if you're using it
-declare const AOS: any;
-
 @Component({
   selector: 'app-about',
   templateUrl: './about.component.html',
@@ -142,15 +139,6 @@ export class AboutComponent implements OnInit {
       return;
     }
 
-    // Initialize AOS animation library if available
-    if (typeof AOS !== 'undefined') {
-      AOS.init({
-        duration: 800,
-        easing: 'ease-in-out',
-        once: true
-      });
-    }
-    
     // Reset scroll position when navigating to this component
     window.scrollTo(0, 0);
   }
