@@ -8,12 +8,10 @@ const all = [{ name: 'Home', href: '/' }, ...crumbs];
 
 <nav class="crumbs" aria-label="Breadcrumb">
   <ol>
-    {
-      all.map((crumb, i) => (
-        <li>
-          {i < all.length - 1 ? <a href={crumb.href}>{crumb.name}</a> : <span aria-current="page">{crumb.name}</span>}
-        </li>
-      ))
-    }
+    {all.map((crumb, i) => (
+      <li>
+        {i < all.length - 1 ? <a href={crumb.href}>{crumb.name}</a> : <span aria-current="page">{crumb.name}</span>}
+      </li>
+    ))}
   </ol>
 </nav>

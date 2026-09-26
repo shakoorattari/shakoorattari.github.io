@@ -14,22 +14,24 @@ import { services } from '../data/services';
     </div>
 
     <ul class="services-grid">
-      {
-        services.map((service) => (
-          <li>
-            <a class="service-card" href={`/services/${service.slug}/`}>
-              <Icon name={service.icon} />
-              <h3>{service.name}</h3>
-              <p>{service.blurb}</p>
-              <span class="more">Learn more <Icon name="fa6-solid:arrow-right" /></span>
-            </a>
-          </li>
-        ))
-      }
+      {services.map((service) => (
+        <li>
+          <a class="service-card" href={`/services/${service.slug}/`}>
+            <Icon name={service.icon} />
+            <h3>{service.name}</h3>
+            <p>{service.blurb}</p>
+            <span class="more">
+              Learn more <Icon name="fa6-solid:arrow-right" />
+            </span>
+          </a>
+        </li>
+      ))}
     </ul>
 
     <p class="services-cta">
-      <a class="btn primary-btn" href="/services/">Work with me <Icon name="fa6-solid:arrow-right" /></a>
+      <a class="btn primary-btn" href="/services/">
+        Work with me <Icon name="fa6-solid:arrow-right" />
+      </a>
     </p>
   </div>
 </section>

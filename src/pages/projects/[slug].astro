@@ -49,14 +49,21 @@ const jsonLd = [
   title={study.metaTitle}
   description={study.metaDescription}
   path={path}
-  crumbs={[{ name: 'Case studies', href: '/projects/' }, { name: study.title, href: path }]}
+  crumbs={[
+    { name: 'Case studies', href: '/projects/' },
+    { name: study.title, href: path },
+  ]}
   current="projects"
   jsonLd={jsonLd}
 >
   <h1 class="page-title">{study.title}</h1>
   <p class="page-meta">
-    <span><strong>Role:</strong> {study.role}</span>
-    <span><strong>Period:</strong> {study.period}</span>
+    <span>
+      <strong>Role:</strong> {study.role}
+    </span>
+    <span>
+      <strong>Period:</strong> {study.period}
+    </span>
   </p>
 
   <section class="page-section" aria-labelledby="challenge-title" style="margin-top:0">
@@ -72,7 +79,11 @@ const jsonLd = [
   <section class="page-section" aria-labelledby="did-title">
     <h2 id="did-title">What I did</h2>
     <ul class="work-list">
-      {study.highlights.map((item) => <li><p>{item}</p></li>)}
+      {study.highlights.map((item) => (
+        <li>
+          <p>{item}</p>
+        </li>
+      ))}
     </ul>
   </section>
 
@@ -84,26 +95,34 @@ const jsonLd = [
   <section class="page-section" aria-labelledby="stack-title">
     <h2 id="stack-title">Technologies</h2>
     <ul class="chips">
-      {study.stack.map((tech) => <li>{tech}</li>)}
+      {study.stack.map((tech) => (
+        <li>{tech}</li>
+      ))}
     </ul>
   </section>
 
-  {
-    services.length > 0 && (
-      <section class="page-section" aria-labelledby="services-title">
-        <h2 id="services-title">Related services</h2>
-        <ul class="link-list">
-          {services.map((service) => <li><a href={`/services/${service!.slug}/`}>{service!.name}</a></li>)}
-        </ul>
-      </section>
-    )
-  }
+  {services.length > 0 && (
+    <section class="page-section" aria-labelledby="services-title">
+      <h2 id="services-title">Related services</h2>
+      <ul class="link-list">
+        {services.map((service) => (
+          <li>
+            <a href={`/services/${service!.slug}/`}>{service!.name}</a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
 
   <section class="page-section" aria-labelledby="more-title">
     <h2 id="more-title">More case studies</h2>
     <ul class="link-list">
-      <li><a href={`/projects/${previous.slug}/`}>← {previous.title}</a></li>
-      <li><a href={`/projects/${next.slug}/`}>{next.title} →</a></li>
+      <li>
+        <a href={`/projects/${previous.slug}/`}>← {previous.title}</a>
+      </li>
+      <li>
+        <a href={`/projects/${next.slug}/`}>{next.title} →</a>
+      </li>
     </ul>
   </section>
 

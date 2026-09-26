@@ -40,6 +40,8 @@ import { site } from '../data/site';
       <h1 id="hero-title">{site.name}</h1>
 
       <div class="role-container">
+        <!-- The two spans must stay adjacent: the gap comes from CSS margin, not whitespace. -->
+        <!-- prettier-ignore -->
         <div class="role">
           <span class="static-text">I'm a</span><span class="dynamic-text" data-roles={JSON.stringify(site.roles)}>{site.roles[0]}</span>
         </div>
@@ -48,7 +50,12 @@ import { site } from '../data/site';
       <p>{site.heroIntro}</p>
 
       <div class="professional-badge">
-        <a href={site.social.linkedin} target="_blank" rel="noopener noreferrer" aria-label="View LinkedIn verified profile">
+        <a
+          href={site.social.linkedin}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="View LinkedIn verified profile"
+        >
           <Icon name="fa6-brands:linkedin" /> LinkedIn Verified Professional
         </a>
       </div>
@@ -123,9 +130,14 @@ import { site } from '../data/site';
     padding: 0 16px;
   }
 
-  .hero-content { text-align: center; animation: fadeInUp 0.8s ease-out; }
+  .hero-content {
+    text-align: center;
+    animation: fadeInUp 0.8s ease-out;
+  }
 
-  .profile-container { margin-bottom: 32px; }
+  .profile-container {
+    margin-bottom: 32px;
+  }
 
   .profile-avatar {
     width: 128px;
@@ -133,10 +145,14 @@ import { site } from '../data/site';
     margin: 0 auto 20px;
     border-radius: 50%;
     position: relative;
-    box-shadow: 0 0 0 1px var(--gh-border-default), 0 0 40px rgba(163, 113, 247, 0.35);
+    box-shadow:
+      0 0 0 1px var(--gh-border-default),
+      0 0 40px rgba(163, 113, 247, 0.35);
     transition: transform 0.4s ease;
   }
-  .profile-avatar:hover { transform: scale(1.05); }
+  .profile-avatar:hover {
+    transform: scale(1.05);
+  }
   .profile-avatar :global(img) {
     width: 100%;
     height: 100%;
@@ -203,8 +219,13 @@ import { site } from '../data/site';
     margin-bottom: 16px;
     color: var(--gh-fg-default);
   }
-  .role-container .static-text { color: var(--gh-fg-muted); margin-right: 6px; }
-  .role-container .dynamic-text { font-weight: 700; }
+  .role-container .static-text {
+    color: var(--gh-fg-muted);
+    margin-right: 6px;
+  }
+  .role-container .dynamic-text {
+    font-weight: 700;
+  }
 
   .hero-content p {
     font-size: 18px;
@@ -214,7 +235,10 @@ import { site } from '../data/site';
     max-width: 640px;
   }
 
-  .professional-badge { display: inline-block; margin-bottom: 32px; }
+  .professional-badge {
+    display: inline-block;
+    margin-bottom: 32px;
+  }
   .professional-badge a {
     display: inline-flex;
     align-items: center;
@@ -232,7 +256,9 @@ import { site } from '../data/site';
     border-color: var(--gh-accent-muted);
     background: rgba(56, 139, 253, 0.1);
   }
-  .professional-badge :global(.icon) { color: #0a66c2; }
+  .professional-badge :global(.icon) {
+    color: #0a66c2;
+  }
 
   .hero-buttons {
     display: flex;
@@ -258,21 +284,47 @@ import { site } from '../data/site';
     cursor: pointer;
     animation: bounce 2.5s infinite;
   }
-  .scroll-indicator:hover { color: var(--gh-fg-default); }
+  .scroll-indicator:hover {
+    color: var(--gh-fg-default);
+  }
 
-  @keyframes shine { to { background-position: 200% center; } }
-  @keyframes rotateBorder { to { transform: rotate(360deg); } }
+  @keyframes shine {
+    to {
+      background-position: 200% center;
+    }
+  }
+  @keyframes rotateBorder {
+    to {
+      transform: rotate(360deg);
+    }
+  }
   @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
   @keyframes bounce {
-    0%, 100% { transform: translate(-50%, 0); }
-    50% { transform: translate(-50%, 8px); }
+    0%,
+    100% {
+      transform: translate(-50%, 0);
+    }
+    50% {
+      transform: translate(-50%, 8px);
+    }
   }
 
   @media (max-width: 576px) {
-    .profile-avatar { width: 104px; height: 104px; }
-    .hero-buttons { flex-direction: column; }
+    .profile-avatar {
+      width: 104px;
+      height: 104px;
+    }
+    .hero-buttons {
+      flex-direction: column;
+    }
   }
 </style>

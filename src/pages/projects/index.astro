@@ -33,7 +33,14 @@ const jsonLd = [
 ];
 ---
 
-<Page title={title} description={description} path={path} crumbs={[{ name: 'Case studies', href: path }]} current="projects" jsonLd={jsonLd}>
+<Page
+  title={title}
+  description={description}
+  path={path}
+  crumbs={[{ name: 'Case studies', href: path }]}
+  current="projects"
+  jsonLd={jsonLd}
+>
   <h1 class="page-title">Architecture case studies</h1>
   <div class="page-lead">
     <p>
@@ -43,17 +50,15 @@ const jsonLd = [
   </div>
 
   <ul class="card-grid" style="margin-top:40px">
-    {
-      caseStudies.map((study) => (
-        <li>
-          <a class="info-card" href={`/projects/${study.slug}/`}>
-            <h3>{study.title}</h3>
-            <p>{study.challenge}</p>
-            <span class="more">Read the case study →</span>
-          </a>
-        </li>
-      ))
-    }
+    {caseStudies.map((study) => (
+      <li>
+        <a class="info-card" href={`/projects/${study.slug}/`}>
+          <h2>{study.title}</h2>
+          <p>{study.challenge}</p>
+          <span class="more">Read the case study →</span>
+        </a>
+      </li>
+    ))}
   </ul>
 
   <CtaPanel />

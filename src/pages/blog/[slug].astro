@@ -25,7 +25,8 @@ const url = new URL(path, site.url).href;
 const published = post.data.date.toISOString();
 const modified = (post.data.updated ?? post.data.date).toISOString();
 const unpublished = post.data.draft || post.data.outline;
-const fmt = (d: Date) => d.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
 
 const jsonLd = [
   {
@@ -49,7 +50,10 @@ const jsonLd = [
   title={pageTitle}
   description={post.data.description}
   path={path}
-  crumbs={[{ name: 'Articles', href: '/blog/' }, { name: post.data.title, href: path }]}
+  crumbs={[
+    { name: 'Articles', href: '/blog/' },
+    { name: post.data.title, href: path },
+  ]}
   current="blog"
   jsonLd={jsonLd}
   ogType="article"
@@ -60,7 +64,9 @@ const jsonLd = [
   <article>
     <h1 class="page-title">{post.data.title}</h1>
     <p class="page-meta">
-      <span><strong>By</strong> {site.name}</span>
+      <span>
+        <strong>By</strong> {site.name}
+      </span>
       <span>Published {fmt(post.data.date)}</span>
       {post.data.updated && <span>Updated {fmt(post.data.updated)}</span>}
       {post.data.tags.length > 0 && <span>{post.data.tags.join(' · ')}</span>}
@@ -70,5 +76,8 @@ const jsonLd = [
     </div>
   </article>
 
-  <CtaPanel heading="Working on something similar?" text="If this is relevant to a role or a project you have in mind, get in touch." />
+  <CtaPanel
+    heading="Working on something similar?"
+    text="If this is relevant to a role or a project you have in mind, get in touch."
+  />
 </Page>

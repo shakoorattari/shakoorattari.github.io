@@ -9,11 +9,16 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
+    "build": "astro check && astro build",
     "preview": "astro preview",
     "astro": "astro",
     "check": "astro check",
-    "check:seo": "node scripts/check-seo.mjs"
+    "check:seo": "node scripts/check-seo.mjs",
+    "format": "prettier --write \"src/**/*.{astro,ts,js,scss,css}\" \"scripts/**/*.mjs\" \"tests/**/*.ts\" astro.config.mjs playwright.config.ts",
+    "lint": "prettier --check \"src/**/*.{astro,ts,js,scss,css}\" \"scripts/**/*.mjs\" \"tests/**/*.ts\" astro.config.mjs playwright.config.ts",
+    "test:e2e": "playwright test",
+    "lighthouse": "npx --yes @lhci/cli@0.14.0 autorun --config=./lighthouserc.json --upload.target=filesystem --upload.outputDir=.lighthouseci/reports",
+    "verify": "npm run lint && npm run build && npm run check:seo"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.19",
@@ -25,7 +30,10 @@
     "@iconify-json/fa6-brands": "^1.2.6",
     "@iconify-json/fa6-regular": "^1.2.4",
     "@iconify-json/fa6-solid": "^1.2.4",
+    "@playwright/test": "^1.63.0",
     "@types/node": "^22.20.4",
+    "prettier": "^3.9.9",
+    "prettier-plugin-astro": "^1.1.0",
     "sass": "^1.105.0",
     "typescript": "^6.0.3"
   }

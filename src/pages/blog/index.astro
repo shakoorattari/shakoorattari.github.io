@@ -25,34 +25,43 @@ const jsonLd = [
     isPartOf: websiteRef,
   },
 ];
-const fmt = (d: Date) => d.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
 ---
 
-<Page title={title} description={description} path={path} crumbs={[{ name: 'Articles', href: path }]} current="blog" jsonLd={jsonLd} noindex={empty}>
+<Page
+  title={title}
+  description={description}
+  path={path}
+  crumbs={[{ name: 'Articles', href: path }]}
+  current="blog"
+  jsonLd={jsonLd}
+  noindex={empty}
+>
   <h1 class="page-title">Articles</h1>
   <div class="page-lead">
     <p>Notes from building enterprise platforms: identity and SSO, integration, web performance and AI tooling.</p>
   </div>
 
-  {
-    posts.length === 0 ? (
-      <p style="margin-top:40px">Articles are on the way.</p>
-    ) : (
-      <ul class="card-grid" style="margin-top:40px">
-        {posts.map((post) => (
-          <li>
-            <a class="info-card" href={`/blog/${post.id}/`}>
-              {(post.data.draft || post.data.outline) && (
-                <p><strong>{post.data.outline ? 'OUTLINE — dev preview only' : 'DRAFT — dev preview only'}</strong></p>
-              )}
-              <h3>{post.data.title}</h3>
-              <p>{post.data.description}</p>
-              <p style="margin-top:10px;font-size:12px">{fmt(post.data.date)}</p>
-              <span class="more">Read →</span>
-            </a>
-          </li>
-        ))}
-      </ul>
-    )
-  }
+  {posts.length === 0 ? (
+    <p style="margin-top:40px">Articles are on the way.</p>
+  ) : (
+    <ul class="card-grid" style="margin-top:40px">
+      {posts.map((post) => (
+        <li>
+          <a class="info-card" href={`/blog/${post.id}/`}>
+            {(post.data.draft || post.data.outline) && (
+              <p>
+                <strong>{post.data.outline ? 'OUTLINE — dev preview only' : 'DRAFT — dev preview only'}</strong>
+              </p>
+            )}
+            <h2>{post.data.title}</h2>
+            <p>{post.data.description}</p>
+            <p style="margin-top:10px;font-size:12px">{fmt(post.data.date)}</p>
+            <span class="more">Read →</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  )}
 </Page>

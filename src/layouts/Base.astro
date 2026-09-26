@@ -133,22 +133,24 @@ const graph = {
     <style set:html={fontCss}></style>
 
     {structuredData && <script type="application/ld+json" set:html={JSON.stringify(graph)} />}
-    {jsonLd.map((node) => <script type="application/ld+json" set:html={JSON.stringify(withContext(node))} />)}
+    {jsonLd.map((node) => (
+      <script type="application/ld+json" set:html={JSON.stringify(withContext(node))} />
+    ))}
   </head>
   <body>
-    <a class="skip-link" href="#main">Skip to content</a>
+    <a class="skip-link" href="#main">
+      Skip to content
+    </a>
     <div class="app">
       <slot />
     </div>
-    {
-      import.meta.env.PROD && tracking.cloudflareToken && (
-        <script
-          is:inline
-          defer
-          src="https://static.cloudflareinsights.com/beacon.min.js"
-          data-cf-beacon={JSON.stringify({ token: tracking.cloudflareToken })}
-        />
-      )
-    }
+    {import.meta.env.PROD && tracking.cloudflareToken && (
+      <script
+        is:inline
+        defer
+        src="https://static.cloudflareinsights.com/beacon.min.js"
+        data-cf-beacon={JSON.stringify({ token: tracking.cloudflareToken })}
+      />
+    )}
   </body>
 </html>

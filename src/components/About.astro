@@ -52,7 +52,9 @@ const maxEndorsements = Math.max(...endorsements.map((e) => e.count));
         </div>
 
         <div class="profile-badge">
-          <span><Icon name="fa6-solid:code" /> Lead Software Engineer</span>
+          <span>
+            <Icon name="fa6-solid:code" /> Lead Software Engineer
+          </span>
         </div>
 
         <div class="quick-stats">
@@ -73,7 +75,10 @@ const maxEndorsements = Math.max(...endorsements.map((e) => e.count));
       <!-- Text side -->
       <div class="about-text">
         <div class="about-intro">
-          <h3><span class="highlight">Lead Software Engineer, Full-Stack Developer &amp; Application Architect</span> with 15+ years owning enterprise platforms</h3>
+          <h3>
+            <span class="highlight">Lead Software Engineer, Full-Stack Developer &amp; Application Architect</span> with
+            15+ years owning enterprise platforms
+          </h3>
           <p class="summary">{aboutSummary}</p>
         </div>
 
@@ -104,7 +109,9 @@ const maxEndorsements = Math.max(...endorsements.map((e) => e.count));
                       href={`${info.linkPrefix}${info.value}`}
                       target={info.isExternal ? '_blank' : undefined}
                       rel="noopener noreferrer"
-                    >{info.value}</a>
+                    >
+                      {info.value}
+                    </a>
                   ) : (
                     <span>{info.value}</span>
                   )}
@@ -153,7 +160,9 @@ const maxEndorsements = Math.max(...endorsements.map((e) => e.count));
                 </div>
                 <div class="certificate-info">
                   <h4>{cert.name}</h4>
-                  <p>{cert.issuer} • {cert.year}</p>
+                  <p>
+                    {cert.issuer} • {cert.year}
+                  </p>
                   {cert.link && (
                     <a href={cert.link} target="_blank" rel="noopener noreferrer">
                       <Icon name="fa6-solid:arrow-up-right-from-square" /> Verify
@@ -232,9 +241,13 @@ const maxEndorsements = Math.max(...endorsements.map((e) => e.count));
     color: var(--gh-fg-default);
     font-size: 13px;
   }
-  .social-overlay a:hover { color: var(--gh-accent-fg); }
+  .social-overlay a:hover {
+    color: var(--gh-accent-fg);
+  }
 
-  .profile-badge { margin-top: 20px; }
+  .profile-badge {
+    margin-top: 20px;
+  }
   .profile-badge span {
     display: inline-flex;
     align-items: center;
@@ -255,8 +268,14 @@ const maxEndorsements = Math.max(...endorsements.map((e) => e.count));
     gap: 10px;
     width: 100%;
   }
-  .stat-item { text-align: center; padding: 14px 10px; }
-  .stat-value { font-size: 22px; font-weight: 700; }
+  .stat-item {
+    text-align: center;
+    padding: 14px 10px;
+  }
+  .stat-value {
+    font-size: 22px;
+    font-weight: 700;
+  }
   .stat-label {
     font-size: 11px;
     color: var(--gh-fg-muted);
@@ -298,7 +317,9 @@ const maxEndorsements = Math.max(...endorsements.map((e) => e.count));
     line-height: 1.7;
     color: var(--gh-fg-muted);
   }
-  .summary { font-size: 16px; }
+  .summary {
+    font-size: 16px;
+  }
 
   .highlights-list {
     list-style: none;
@@ -326,7 +347,9 @@ const maxEndorsements = Math.max(...endorsements.map((e) => e.count));
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 12px;
   }
-  .info-item { padding: 12px 14px; }
+  .info-item {
+    padding: 12px 14px;
+  }
   .info-label {
     display: flex;
     align-items: center;
@@ -337,20 +360,36 @@ const maxEndorsements = Math.max(...endorsements.map((e) => e.count));
     color: var(--gh-fg-muted);
     margin-bottom: 4px;
   }
-  .info-label :global(.icon) { color: var(--gh-accent-fg); }
-  .info-value { font-size: 14px; font-weight: 500; }
-  .info-value a { color: var(--gh-accent-fg); }
+  .info-label :global(.icon) {
+    color: var(--gh-accent-fg);
+  }
+  .info-value {
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .info-value a {
+    color: var(--gh-accent-fg);
+  }
 
-  .call-to-action { display: flex; gap: 12px; flex-wrap: wrap; }
+  .call-to-action {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
 
-  .endorsement-item { padding: 14px; }
+  .endorsement-item {
+    padding: 14px;
+  }
   .endorsement-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 8px;
   }
-  .endorsement-skill { font-weight: 600; font-size: 14px; }
+  .endorsement-skill {
+    font-weight: 600;
+    font-size: 14px;
+  }
   .endorsement-count {
     display: inline-flex;
     align-items: center;
@@ -358,7 +397,9 @@ const maxEndorsements = Math.max(...endorsements.map((e) => e.count));
     font-size: 12px;
     color: var(--gh-fg-muted);
   }
-  .endorsement-count :global(.icon) { color: var(--gh-accent-fg); }
+  .endorsement-count :global(.icon) {
+    color: var(--gh-accent-fg);
+  }
 
   .skill-bar {
     height: 6px;
@@ -373,7 +414,11 @@ const maxEndorsements = Math.max(...endorsements.map((e) => e.count));
     transition: width 0.5s ease;
   }
 
-  .certificate { display: flex; gap: 12px; padding: 14px; }
+  .certificate {
+    display: flex;
+    gap: 12px;
+    padding: 14px;
+  }
   .certificate-logo {
     width: 40px;
     height: 40px;
@@ -386,8 +431,15 @@ const maxEndorsements = Math.max(...endorsements.map((e) => e.count));
     font-size: 18px;
     flex-shrink: 0;
   }
-  .certificate-info h4 { font-size: 14px; margin-bottom: 2px; }
-  .certificate-info p { font-size: 12px; color: var(--gh-fg-muted); margin: 0; }
+  .certificate-info h4 {
+    font-size: 14px;
+    margin-bottom: 2px;
+  }
+  .certificate-info p {
+    font-size: 12px;
+    color: var(--gh-fg-muted);
+    margin: 0;
+  }
   .certificate-info a {
     font-size: 12px;
     display: inline-flex;
@@ -397,7 +449,12 @@ const maxEndorsements = Math.max(...endorsements.map((e) => e.count));
   }
 
   @media (max-width: 992px) {
-    .about-content { grid-template-columns: 1fr; gap: 32px; }
-    .profile-image { position: static; }
+    .about-content {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+    .profile-image {
+      position: static;
+    }
   }
 </style>

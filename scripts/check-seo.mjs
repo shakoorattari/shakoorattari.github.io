@@ -23,7 +23,12 @@ const walk = (dir) =>
   });
 
 const decode = (s) =>
-  s.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;|&#x27;/g, "'");
+  s
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;|&#x27;/g, "'");
 
 const parseAttrs = (tag) => {
   const attrs = {};
@@ -50,7 +55,9 @@ for (const file of htmlFiles) pages.set(pathOf(file), { html: readFileSync(file,
 
 const isRedirect = (html) => /http-equiv="refresh"/i.test(html);
 const robotsOf = (html) => meta(html, 'name', 'robots') ?? '';
-const indexable = [...pages].filter(([p, { html }]) => !isRedirect(html) && !/noindex/i.test(robotsOf(html)) && p !== '/404.html');
+const indexable = [...pages].filter(
+  ([p, { html }]) => !isRedirect(html) && !/noindex/i.test(robotsOf(html)) && p !== '/404.html',
+);
 
 const errors = [];
 const warnings = [];
@@ -76,11 +83,17 @@ for (const [path, { html }] of indexable) {
   const h1s = (html.match(/<h1[\s>]/gi) ?? []).length;
 
   if (!title) err(path, 'missing <title>');
-  else if (title.length > LIMITS.titleMax) err(path, `title is ${title.length} chars (max ${LIMITS.titleMax}): "${title}"`);
+  else if (title.length > LIMITS.titleMax)
+    err(path, `title is ${title.length} chars (max ${LIMITS.titleMax}): "${title}"`);
   if (!desc) err(path, 'missing meta description');
   else if (desc.length < LIMITS.descMin || desc.length > LIMITS.descMax)
     err(path, `description is ${desc.length} chars (want ${LIMITS.descMin}-${LIMITS.descMax}): "${desc}"`);
   if (h1s !== 1) err(path, `expected exactly one <h1>, found ${h1s}`);
+  const levels = [...html.matchAll(/<h([1-6])[\s>]/gi)].map((m) => Number(m[1]));
+  levels.forEach((level, i) => {
+    if (i === 0 && level !== 1) err(path, `first heading is an <h${level}>, expected <h1>`);
+    if (i > 0 && level > levels[i - 1] + 1) err(path, `heading level skips from <h${levels[i - 1]}> to <h${level}>`);
+  });
   if (canonical !== `${SITE}${path}`) err(path, `canonical should be ${SITE}${path}, got ${canonical}`);
   if (!/<html[^>]*\slang="[a-z-]+"/i.test(html)) err(path, 'missing <html lang>');
   if (!meta(html, 'name', 'viewport')) err(path, 'missing viewport meta');
@@ -89,7 +102,8 @@ for (const [path, { html }] of indexable) {
     if (!meta(html, 'property', key)) err(path, `missing ${key}`);
   if (meta(html, 'property', 'og:url') !== canonical) err(path, 'og:url differs from canonical');
   const ogImage = meta(html, 'property', 'og:image');
-  if (ogImage?.startsWith(SITE) && !existsSync(join(DIST, ogImage.slice(SITE.length)))) err(path, `og:image not found in dist: ${ogImage}`);
+  if (ogImage?.startsWith(SITE) && !existsSync(join(DIST, ogImage.slice(SITE.length))))
+    err(path, `og:image not found in dist: ${ogImage}`);
 
   if (seenTitles.has(title)) err(path, `duplicate title also used on ${seenTitles.get(title)}`);
   seenTitles.set(title, path);
@@ -110,7 +124,8 @@ for (const [path, { html }] of indexable) {
         if (Array.isArray(v)) return v.forEach(walkRefs);
         if (v && typeof v === 'object') {
           const keys = Object.keys(v);
-          if (keys.length === 1 && keys[0] === '@id' && !defined.has(v['@id'])) err(path, `JSON-LD has a dangling @id-only reference: ${v['@id']}`);
+          if (keys.length === 1 && keys[0] === '@id' && !defined.has(v['@id']))
+            err(path, `JSON-LD has a dangling @id-only reference: ${v['@id']}`);
           Object.values(v).forEach(walkRefs);
         }
       };
@@ -130,7 +145,8 @@ for (const [path, { html }] of indexable) {
   for (const a of tags(html, 'a')) {
     const href = a.href;
     if (!href || /^(mailto:|tel:|https?:|data:|javascript:)/i.test(href)) {
-      if (a.target === '_blank' && !/noopener/.test(a.rel ?? '')) err(path, `target=_blank without rel=noopener: ${href}`);
+      if (a.target === '_blank' && !/noopener/.test(a.rel ?? ''))
+        err(path, `target=_blank without rel=noopener: ${href}`);
       continue;
     }
     if (href.startsWith('#')) {
@@ -141,7 +157,11 @@ for (const [path, { html }] of indexable) {
     const [target, hash] = href.split('#');
     const clean = target.split('?')[0];
     if (!targetExists(clean)) err(path, `broken internal link ${href}`);
-    else if (hash && !pageIds.get(clean.endsWith('/') ? clean : `${clean}/`)?.has(hash) && !pageIds.get(clean)?.has(hash))
+    else if (
+      hash &&
+      !pageIds.get(clean.endsWith('/') ? clean : `${clean}/`)?.has(hash) &&
+      !pageIds.get(clean)?.has(hash)
+    )
       err(path, `link ${href} points to a missing #${hash}`);
   }
 }
@@ -157,14 +177,18 @@ if (!existsSync(sitemapFile)) {
   for (const loc of locs) if (!want.has(loc)) err('/sitemap.xml', `lists a non-indexable or unknown URL: ${loc}`);
   for (const w of want) if (!locs.includes(w)) err('/sitemap.xml', `is missing indexable page ${w}`);
   if (new Set(locs).size !== locs.length) err('/sitemap.xml', 'contains duplicate URLs');
-  for (const m of xml.matchAll(/<lastmod>([^<]+)<\/lastmod>/g)) if (!/^\d{4}-\d{2}-\d{2}$/.test(m[1])) err('/sitemap.xml', `bad lastmod ${m[1]}`);
+  for (const m of xml.matchAll(/<lastmod>([^<]+)<\/lastmod>/g))
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(m[1])) err('/sitemap.xml', `bad lastmod ${m[1]}`);
 }
 
 const robotsFile = join(DIST, 'robots.txt');
-if (!existsSync(robotsFile) || !readFileSync(robotsFile, 'utf8').includes(`Sitemap: ${SITE}/sitemap.xml`)) err('/robots.txt', 'must reference the sitemap');
+if (!existsSync(robotsFile) || !readFileSync(robotsFile, 'utf8').includes(`Sitemap: ${SITE}/sitemap.xml`))
+  err('/robots.txt', 'must reference the sitemap');
 
 // ------------------------------------------------------------------ report
-console.log(`check-seo: ${indexable.length} indexable page(s), ${pages.size - indexable.length} other HTML file(s) (redirects / noindex / 404)`);
+console.log(
+  `check-seo: ${indexable.length} indexable page(s), ${pages.size - indexable.length} other HTML file(s) (redirects / noindex / 404)`,
+);
 for (const [p] of indexable) console.log(`  ✓ ${p}`);
 if (warnings.length) console.log(`\n${warnings.length} warning(s):\n${warnings.map((w) => `  ! ${w}`).join('\n')}`);
 if (errors.length) {

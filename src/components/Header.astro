@@ -36,8 +36,20 @@ const items: { label: string; href: string; page?: string }[] = [
             </linearGradient>
           </defs>
           <polygon points="18,2 32,10 32,26 18,34 4,26 4,10" stroke="url(#sha-grad)" stroke-width="1.5" fill="none" />
-          <text x="18" y="24.5" text-anchor="middle" fill="url(#sha-grad)" font-size="18" font-weight="700" font-family="-apple-system,system-ui,sans-serif">S</text>
+          <text
+            x="18"
+            y="24.5"
+            text-anchor="middle"
+            fill="url(#sha-grad)"
+            font-size="18"
+            font-weight="700"
+            font-family="-apple-system,system-ui,sans-serif"
+          >
+            S
+          </text>
         </svg>
+        <!-- Inline spans must stay adjacent: whitespace between them would widen the logo. -->
+        <!-- prettier-ignore -->
         <span class="logo-text"><span class="logo-bracket">&lt;</span><span class="logo-name">SHA</span><span class="logo-bracket">&nbsp;/&gt;</span></span>
       </a>
       <ul class="nav-links" id="primary-navigation">
@@ -47,11 +59,19 @@ const items: { label: string; href: string; page?: string }[] = [
               href={item.href}
               class:list={{ active: !!item.page && item.page === current }}
               aria-current={item.page && item.page === current ? 'page' : undefined}
-            >{item.label}</a>
+            >
+              {item.label}
+            </a>
           </li>
         ))}
       </ul>
-      <button class="menu-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="primary-navigation">
+      <button
+        class="menu-toggle"
+        type="button"
+        aria-label="Toggle navigation menu"
+        aria-expanded="false"
+        aria-controls="primary-navigation"
+      >
         <span></span>
         <span></span>
         <span></span>
@@ -73,7 +93,9 @@ const items: { label: string; href: string; page?: string }[] = [
     width: 100%;
     z-index: 1000;
     padding: 12px 0;
-    transition: background-color 0.25s ease, border-color 0.25s ease,
+    transition:
+      background-color 0.25s ease,
+      border-color 0.25s ease,
       backdrop-filter 0.25s ease;
     background-color: rgba(13, 17, 23, 0.7);
     backdrop-filter: saturate(180%) blur(12px);
@@ -107,7 +129,9 @@ const items: { label: string; href: string; page?: string }[] = [
     height: 30px;
     flex-shrink: 0;
     filter: drop-shadow(0 0 5px rgba(163, 113, 247, 0.35));
-    transition: filter 0.3s ease, transform 0.35s ease;
+    transition:
+      filter 0.3s ease,
+      transform 0.35s ease;
   }
 
   .logo:hover .logo-icon {
@@ -153,7 +177,9 @@ const items: { label: string; href: string; page?: string }[] = [
     border-radius: 6px;
     position: relative;
     cursor: pointer;
-    transition: color 0.2s ease, background-color 0.2s ease;
+    transition:
+      color 0.2s ease,
+      background-color 0.2s ease;
   }
 
   .nav-links li a:hover {

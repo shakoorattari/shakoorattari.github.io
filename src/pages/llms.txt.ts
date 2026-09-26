@@ -27,7 +27,11 @@ export const GET: APIRoute = async () => {
     ...caseStudies.map((c) => `- [${c.title}](${abs(`/projects/${c.slug}/`)}): ${c.metaDescription}`),
   ];
   if (posts.length) {
-    lines.push('', '## Articles', ...posts.map((p) => `- [${p.data.title}](${abs(`/blog/${p.id}/`)}): ${p.data.description}`));
+    lines.push(
+      '',
+      '## Articles',
+      ...posts.map((p) => `- [${p.data.title}](${abs(`/blog/${p.id}/`)}): ${p.data.description}`),
+    );
   }
   lines.push(
     '',

@@ -22,11 +22,19 @@ const social = [
         <a href="/#contact">Contact</a>
       </nav>
       <div class="copyright">
-        <p>&copy; <span id="year">{new Date().getFullYear()}</span> {site.name}. All Rights Reserved.</p>
+        <p>
+          &copy; <span id="year">{new Date().getFullYear()}</span> {site.name}. All Rights Reserved.
+        </p>
       </div>
       <div class="social-links">
         {social.map((item) => (
-          <a href={item.url} target="_blank" rel="noopener noreferrer" aria-label={`Follow me on ${item.label}`} title={`Follow me on ${item.label}`}>
+          <a
+            href={item.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Follow me on ${item.label}`}
+            title={`Follow me on ${item.label}`}
+          >
             <Icon name={item.icon} />
           </a>
         ))}

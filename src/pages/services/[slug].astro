@@ -38,66 +38,77 @@ const jsonLd = [
   title={service.metaTitle}
   description={service.metaDescription}
   path={path}
-  crumbs={[{ name: 'Services', href: '/services/' }, { name: service.name, href: path }]}
+  crumbs={[
+    { name: 'Services', href: '/services/' },
+    { name: service.name, href: path },
+  ]}
   current="services"
   jsonLd={jsonLd}
 >
   <h1 class="page-title">{service.h1}</h1>
   <div class="page-lead">
-    {service.intro.map((paragraph) => <p>{paragraph}</p>)}
+    {service.intro.map((paragraph) => (
+      <p>{paragraph}</p>
+    ))}
   </div>
 
   <section class="page-section" aria-labelledby="deliver-title">
     <h2 id="deliver-title">What I deliver</h2>
     <ul class="card-grid">
-      {
-        service.deliver.map((item) => (
-          <li class="info-card">
-            <h3>{item.title}</h3>
-            <p>{item.text}</p>
-          </li>
-        ))
-      }
+      {service.deliver.map((item) => (
+        <li class="info-card">
+          <h3>{item.title}</h3>
+          <p>{item.text}</p>
+        </li>
+      ))}
     </ul>
   </section>
 
   <section class="page-section" aria-labelledby="work-title">
     <h2 id="work-title">Selected work</h2>
     <ul class="work-list">
-      {
-        service.selectedWork.map((work) => (
-          <li>
-            <h3>{work.href ? <a href={work.href}>{work.name}</a> : work.name}</h3>
-            <p>{work.text}</p>
-          </li>
-        ))
-      }
+      {service.selectedWork.map((work) => (
+        <li>
+          <h3>{work.href ? <a href={work.href}>{work.name}</a> : work.name}</h3>
+          <p>{work.text}</p>
+        </li>
+      ))}
     </ul>
   </section>
 
   <section class="page-section" aria-labelledby="stack-title">
     <h2 id="stack-title">Technologies</h2>
     <ul class="chips">
-      {service.stack.map((tech) => <li>{tech}</li>)}
+      {service.stack.map((tech) => (
+        <li>{tech}</li>
+      ))}
     </ul>
   </section>
 
-  {
-    studies.length > 0 && (
-      <section class="page-section" aria-labelledby="studies-title">
-        <h2 id="studies-title">Case studies</h2>
-        <ul class="link-list">
-          {studies.map((study) => <li><a href={`/projects/${study!.slug}/`}>{study!.title}</a></li>)}
-        </ul>
-      </section>
-    )
-  }
+  {studies.length > 0 && (
+    <section class="page-section" aria-labelledby="studies-title">
+      <h2 id="studies-title">Case studies</h2>
+      <ul class="link-list">
+        {studies.map((study) => (
+          <li>
+            <a href={`/projects/${study!.slug}/`}>{study!.title}</a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
 
   <section class="page-section" aria-labelledby="related-title">
     <h2 id="related-title">Related services</h2>
     <ul class="link-list">
-      {related.map((item) => <li><a href={`/services/${item!.slug}/`}>{item!.name}</a></li>)}
-      <li><a href="/services/">All services</a></li>
+      {related.map((item) => (
+        <li>
+          <a href={`/services/${item!.slug}/`}>{item!.name}</a>
+        </li>
+      ))}
+      <li>
+        <a href="/services/">All services</a>
+      </li>
     </ul>
   </section>
 

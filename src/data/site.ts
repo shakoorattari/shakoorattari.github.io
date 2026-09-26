@@ -35,9 +35,18 @@ export const site = {
     x: 'https://x.com/shakoorHA',
   },
   knowsAbout: [
-    '.NET', 'C#', 'Angular', 'TypeScript', 'OAuth 2.0', 'OIDC',
-    'Identity & Access Management', 'Microservices', 'Azure',
-    'Full-Stack Development', 'Enterprise Architecture', 'AI Tooling',
+    '.NET',
+    'C#',
+    'Angular',
+    'TypeScript',
+    'OAuth 2.0',
+    'OIDC',
+    'Identity & Access Management',
+    'Microservices',
+    'Azure',
+    'Full-Stack Development',
+    'Enterprise Architecture',
+    'AI Tooling',
   ],
   /** Rotating roles shown under the name; the first one is rendered statically. */
   roles: [
