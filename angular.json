@@ -26,9 +26,9 @@
             "assets": [
               "src/favicon.ico",
               "src/favicon.svg",
+              "src/apple-touch-icon.png",
               "src/CNAME",
               "src/robots.txt",
-              "src/sitemap.xml",
               "src/assets"
             ],
             "styles": [
@@ -164,9 +164,9 @@
             "assets": [
               "src/favicon.ico",
               "src/favicon.svg",
+              "src/apple-touch-icon.png",
               "src/CNAME",
               "src/robots.txt",
-              "src/sitemap.xml",
               "src/assets"
             ],
             "styles": [

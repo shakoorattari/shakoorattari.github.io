@@ -4,11 +4,11 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --port 4272 --ssl --ssl-key ssl/server.key  --ssl-cert ssl/server.crt --poll=2000",
-    "build": "ng build",
+    "build": "ng build && node scripts/generate-sitemap.mjs",
     "build:ssr": "ng build && ng run shakoor-portfolio:server",
     "serve:ssr": "node dist/shakoor-portfolio/server/main.js",
     "dev:ssr": "ng run shakoor-portfolio:serve-ssr",
-    "prerender": "ng run shakoor-portfolio:prerender",
+    "prerender": "ng run shakoor-portfolio:prerender && node scripts/generate-sitemap.mjs",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
