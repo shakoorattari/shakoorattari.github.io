@@ -4,16 +4,16 @@ export const site = {
   url: 'https://shakoorattari.com',
   name: 'Shakoor Hussain Attari',
   siteName: 'Shakoor Hussain Attari — Portfolio',
-  title: 'Shakoor Hussain Attari | Lead Software Engineer & Full-Stack Developer',
+  title: 'Shakoor Hussain Attari — Full-Stack Software Engineer, UAE',
   jobTitle: 'Lead Software Engineer, Full-Stack Developer & Application Architect',
   description:
-    'Shakoor Hussain Attari — Lead Software Engineer, Full-Stack Developer & Application Architect with 15+ years building enterprise platforms across the UAE public sector. Expert in .NET, Angular, OAuth 2.0/OIDC, multi-tenant IAM, and AI tooling.',
+    'Software engineer and architect in Sharjah, UAE. 15+ years building web and enterprise apps with .NET, Angular and OAuth/OIDC. Open to roles and projects.',
   shortDescription:
-    'Lead Software Engineer, Full-Stack Developer & Application Architect with 15+ years building enterprise platforms across the UAE public sector. Expert in .NET, Angular, OAuth 2.0/OIDC, and AI tooling.',
+    'Full-stack software engineer and application architect in Sharjah, UAE. 15+ years of enterprise web and application development: .NET, Angular, OAuth 2.0 / OIDC, multi-tenant IAM and AI tooling.',
   schemaDescription:
     'Lead Software Engineer, Full-Stack Developer & Application Architect with 15+ years building enterprise platforms across the UAE public sector. Specializing in .NET, Angular, OAuth 2.0/OIDC, multi-tenant IAM, and AI tooling.',
   heroIntro:
-    'Lead Software Engineer, Full-Stack Developer & Application Architect with 15+ years owning enterprise platforms across the UAE public sector — .NET, Angular, OAuth 2.0 / OIDC, multi-tenant IAM, and AI tooling.',
+    'Full-stack software engineer and application architect in Sharjah, UAE. 15+ years building web and enterprise applications for the UAE public sector — .NET, Angular, OAuth 2.0 / OIDC, multi-tenant IAM and AI tooling. Open to senior roles and select projects, in the UAE and remotely worldwide.',
   keywords:
     'Shakoor Hussain Attari, Lead Software Engineer, Full-Stack Developer, Application Architect, .NET Developer, Angular Developer, OAuth 2.0, OIDC, IAM, UAE, Enterprise Software, Software Architect',
   /** Public contact email (also shown on the page). The Outlook address is a Teams ID only. */
@@ -47,6 +47,9 @@ export const site = {
     '.NET / Angular Specialist',
     'IAM & AI Tooling Engineer',
   ],
+  /** Short pitch reused on the Services pages. */
+  availability:
+    'Open to senior engineering and architecture roles, and to select project work — based in Sharjah, working with teams across the UAE and GCC and remotely worldwide.',
   resume: '/assets/files/ShakoorHussain_Resume_V2.pdf',
   resumeMarkdown: '/assets/files/ShakoorHussain_Resume.md',
 } as const;
@@ -61,4 +64,19 @@ export const contactConfig = {
   accessKey: import.meta.env.DEV ? '29ad9670-c951-4a6e-9139-59f867564769' : '0bd977b0-237c-45e6-81eb-6330c3c179cc',
   turnstileSiteKey: import.meta.env.DEV ? '1x00000000000000000000AA' : '0x4AAAAAADVjdm_ulnG-5yBk',
   rateLimitMs: 60_000,
+} as const;
+
+/**
+ * Measurement + search-engine verification. All optional: nothing is emitted while a value is empty.
+ * Set them here, or as GitHub Actions *variables* (Settings → Secrets and variables → Actions → Variables):
+ *   CF_ANALYTICS_TOKEN, GOOGLE_SITE_VERIFICATION, BING_SITE_VERIFICATION
+ * (the workflow exposes them to the build as PUBLIC_* env vars). These values are public by design.
+ */
+export const tracking = {
+  /** Cloudflare Web Analytics token (cookieless, no consent banner needed). */
+  cloudflareToken: import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN ?? '',
+  /** <meta name="google-site-verification"> content, for a Search Console "URL prefix" property. */
+  googleVerification: import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION ?? '',
+  /** <meta name="msvalidate.01"> content, for Bing Webmaster Tools. */
+  bingVerification: import.meta.env.PUBLIC_BING_SITE_VERIFICATION ?? '',
 } as const;

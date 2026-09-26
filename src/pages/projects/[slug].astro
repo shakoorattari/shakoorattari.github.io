@@ -1,0 +1,111 @@
+---
+import Page from '../../layouts/Page.astro';
+import CtaPanel from '../../components/CtaPanel.astro';
+import { caseStudies, type CaseStudyPage } from '../../data/caseStudies';
+import { getService } from '../../data/services';
+import { site } from '../../data/site';
+import { personRef, websiteRef } from '../../lib/schema';
+import { lastModified } from '../../lib/lastmod';
+
+export function getStaticPaths() {
+  return caseStudies.map((study, i) => ({
+    params: { slug: study.slug },
+    props: {
+      study,
+      previous: caseStudies[(i - 1 + caseStudies.length) % caseStudies.length],
+      next: caseStudies[(i + 1) % caseStudies.length],
+    },
+  }));
+}
+
+interface Props {
+  study: CaseStudyPage;
+  previous: CaseStudyPage;
+  next: CaseStudyPage;
+}
+const { study, previous, next } = Astro.props;
+
+const path = `/projects/${study.slug}/`;
+const url = new URL(path, site.url).href;
+const services = study.services.map((slug) => getService(slug)).filter((s) => !!s);
+
+const jsonLd = [
+  {
+    '@type': 'WebPage',
+    '@id': `${url}#page`,
+    url,
+    name: study.title,
+    description: study.metaDescription,
+    isPartOf: websiteRef,
+    author: personRef,
+    about: study.stack.map((name) => ({ '@type': 'Thing', name })),
+    dateModified: lastModified(),
+    inLanguage: 'en',
+  },
+];
+---
+
+<Page
+  title={study.metaTitle}
+  description={study.metaDescription}
+  path={path}
+  crumbs={[{ name: 'Case studies', href: '/projects/' }, { name: study.title, href: path }]}
+  current="projects"
+  jsonLd={jsonLd}
+>
+  <h1 class="page-title">{study.title}</h1>
+  <p class="page-meta">
+    <span><strong>Role:</strong> {study.role}</span>
+    <span><strong>Period:</strong> {study.period}</span>
+  </p>
+
+  <section class="page-section" aria-labelledby="challenge-title" style="margin-top:0">
+    <h2 id="challenge-title">The challenge</h2>
+    <p class="page-lead">{study.challenge}</p>
+  </section>
+
+  <section class="page-section" aria-labelledby="architecture-title">
+    <h2 id="architecture-title">The architecture</h2>
+    <p class="page-lead">{study.architecture}</p>
+  </section>
+
+  <section class="page-section" aria-labelledby="did-title">
+    <h2 id="did-title">What I did</h2>
+    <ul class="work-list">
+      {study.highlights.map((item) => <li><p>{item}</p></li>)}
+    </ul>
+  </section>
+
+  <section class="page-section" aria-labelledby="impact-title">
+    <h2 id="impact-title">The impact</h2>
+    <p class="page-lead">{study.impact}</p>
+  </section>
+
+  <section class="page-section" aria-labelledby="stack-title">
+    <h2 id="stack-title">Technologies</h2>
+    <ul class="chips">
+      {study.stack.map((tech) => <li>{tech}</li>)}
+    </ul>
+  </section>
+
+  {
+    services.length > 0 && (
+      <section class="page-section" aria-labelledby="services-title">
+        <h2 id="services-title">Related services</h2>
+        <ul class="link-list">
+          {services.map((service) => <li><a href={`/services/${service!.slug}/`}>{service!.name}</a></li>)}
+        </ul>
+      </section>
+    )
+  }
+
+  <section class="page-section" aria-labelledby="more-title">
+    <h2 id="more-title">More case studies</h2>
+    <ul class="link-list">
+      <li><a href={`/projects/${previous.slug}/`}>← {previous.title}</a></li>
+      <li><a href={`/projects/${next.slug}/`}>{next.title} →</a></li>
+    </ul>
+  </section>
+
+  <CtaPanel />
+</Page>

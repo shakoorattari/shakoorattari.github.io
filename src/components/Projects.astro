@@ -12,7 +12,7 @@ import { projects } from '../data/projects';
       {projects.map((project) => (
         <article class="project-card">
           <div class="project-info">
-            <h3>{project.title}</h3>
+            <h3><a href={`/projects/${project.slug}/`}>{project.title}</a></h3>
             <div class="case-study-block">
               <h4>Challenge</h4>
               <p>{project.challenge}</p>
@@ -28,10 +28,12 @@ import { projects } from '../data/projects';
             <div class="tech-tags">
               {project.technologies.map((tech) => <span>{tech}</span>)}
             </div>
+            <a class="read-more" href={`/projects/${project.slug}/`}>Read the case study →</a>
           </div>
         </article>
       ))}
     </div>
+    <p class="all-cases"><a href="/projects/">Browse all case studies →</a></p>
   </div>
 </section>
 
@@ -156,5 +158,24 @@ import { projects } from '../data/projects';
     color: #79c0ff;
     border-radius: 999px;
     font-weight: 500;
+  }
+
+  .project-info h3 a {
+    color: inherit;
+  }
+  .project-info h3 a:hover {
+    color: var(--gh-accent-fg);
+  }
+  .read-more {
+    display: inline-block;
+    margin-top: 16px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .all-cases {
+    text-align: center;
+    margin-top: 32px;
+    font-size: 14px;
+    font-weight: 600;
   }
 </style>

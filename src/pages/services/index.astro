@@ -1,0 +1,97 @@
+---
+import Page from '../../layouts/Page.astro';
+import Icon from '../../components/Icon.astro';
+import CtaPanel from '../../components/CtaPanel.astro';
+import { services } from '../../data/services';
+import { caseStudies } from '../../data/caseStudies';
+import { site } from '../../data/site';
+import { personRef, websiteRef } from '../../lib/schema';
+
+const title = 'Hire Shakoor Attari: Software Engineering Services';
+const description =
+  'Hire Shakoor Attari for senior engineering roles or projects: web and application development, OAuth/OIDC identity, integration, DevOps and AI tooling.';
+const path = '/services/';
+const url = new URL(path, site.url).href;
+
+const jsonLd = [
+  {
+    '@type': 'CollectionPage',
+    '@id': `${url}#page`,
+    url,
+    name: 'Services',
+    description,
+    isPartOf: websiteRef,
+    about: personRef,
+    mainEntity: {
+      '@type': 'ItemList',
+      itemListElement: services.map((service, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: service.name,
+        url: new URL(`/services/${service.slug}/`, site.url).href,
+      })),
+    },
+  },
+];
+---
+
+<Page title={title} description={description} path={path} crumbs={[{ name: 'Services', href: path }]} current="services" jsonLd={jsonLd}>
+  <h1 class="page-title">Work with me</h1>
+  <div class="page-lead">
+    <p>{site.availability}</p>
+    <p>
+      I'm a full-stack software engineer and application architect with 15+ years of experience delivering enterprise
+      web platforms. Whether you're hiring for a senior role or need a specialist for a project, this page shows what I
+      can help with and how to reach me.
+    </p>
+  </div>
+
+  <section class="page-section" aria-labelledby="paths-title">
+    <h2 id="paths-title">Two ways to work together</h2>
+    <ul class="card-grid">
+      <li class="info-card">
+        <h3>Hiring for a senior role</h3>
+        <p>
+          Lead software engineer, application architect or full-stack developer roles. I currently lead a team of eight
+          engineers and own the architecture behind several government platforms.
+        </p>
+        <a class="more" href="/#experience">See my experience →</a>
+      </li>
+      <li class="info-card">
+        <h3>Need a specialist for a project</h3>
+        <p>
+          Web or application development, an identity / SSO integration, an API or integration design, a CI/CD setup, or
+          an AI tooling proof of concept. Send me the goals, timeline and constraints.
+        </p>
+        <a class="more" href="/#contact">Contact me →</a>
+      </li>
+    </ul>
+  </section>
+
+  <section class="page-section" aria-labelledby="services-title">
+    <h2 id="services-title">What I can help with</h2>
+    <ul class="card-grid">
+      {
+        services.map((service) => (
+          <li>
+            <a class="info-card" href={`/services/${service.slug}/`}>
+              <Icon name={service.icon} />
+              <h3>{service.name}</h3>
+              <p>{service.blurb}</p>
+              <span class="more">Learn more →</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="page-section" aria-labelledby="work-title">
+    <h2 id="work-title">Evidence: case studies</h2>
+    <ul class="link-list">
+      {caseStudies.map((study) => <li><a href={`/projects/${study.slug}/`}>{study.title}</a></li>)}
+    </ul>
+  </section>
+
+  <CtaPanel />
+</Page>

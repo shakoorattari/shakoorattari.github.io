@@ -1,0 +1,58 @@
+---
+import Page from '../../layouts/Page.astro';
+import { getPublishedPosts, getRenderablePosts } from '../../lib/blog';
+import { site } from '../../data/site';
+import { personRef, websiteRef } from '../../lib/schema';
+
+const posts = await getRenderablePosts();
+// Nothing published yet: keep the page out of search results until there is something to index.
+const empty = (await getPublishedPosts()).length === 0;
+
+const title = 'Articles: .NET, OAuth/OIDC & AI Tooling | Shakoor Attari';
+const description =
+  'Practical articles from a lead software engineer on .NET, identity and SSO, integration, web performance and AI tooling.';
+const path = '/blog/';
+const url = new URL(path, site.url).href;
+
+const jsonLd = [
+  {
+    '@type': 'Blog',
+    '@id': `${url}#blog`,
+    url,
+    name: `${site.name} — Articles`,
+    description,
+    author: personRef,
+    isPartOf: websiteRef,
+  },
+];
+const fmt = (d: Date) => d.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
+---
+
+<Page title={title} description={description} path={path} crumbs={[{ name: 'Articles', href: path }]} current="blog" jsonLd={jsonLd} noindex={empty}>
+  <h1 class="page-title">Articles</h1>
+  <div class="page-lead">
+    <p>Notes from building enterprise platforms: identity and SSO, integration, web performance and AI tooling.</p>
+  </div>
+
+  {
+    posts.length === 0 ? (
+      <p style="margin-top:40px">Articles are on the way.</p>
+    ) : (
+      <ul class="card-grid" style="margin-top:40px">
+        {posts.map((post) => (
+          <li>
+            <a class="info-card" href={`/blog/${post.id}/`}>
+              {(post.data.draft || post.data.outline) && (
+                <p><strong>{post.data.outline ? 'OUTLINE — dev preview only' : 'DRAFT — dev preview only'}</strong></p>
+              )}
+              <h3>{post.data.title}</h3>
+              <p>{post.data.description}</p>
+              <p style="margin-top:10px;font-size:12px">{fmt(post.data.date)}</p>
+              <span class="more">Read →</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</Page>

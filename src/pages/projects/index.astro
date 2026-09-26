@@ -1,0 +1,60 @@
+---
+import Page from '../../layouts/Page.astro';
+import CtaPanel from '../../components/CtaPanel.astro';
+import { caseStudies } from '../../data/caseStudies';
+import { site } from '../../data/site';
+import { personRef, websiteRef } from '../../lib/schema';
+
+const title = 'Architecture Case Studies | Shakoor Hussain Attari';
+const description =
+  'Case studies from a lead software engineer: multi-tenant OAuth 2.0 / OIDC identity, a unified digital workplace and MCP-based AI tooling for UAE government.';
+const path = '/projects/';
+const url = new URL(path, site.url).href;
+
+const jsonLd = [
+  {
+    '@type': 'CollectionPage',
+    '@id': `${url}#page`,
+    url,
+    name: 'Architecture case studies',
+    description,
+    isPartOf: websiteRef,
+    about: personRef,
+    mainEntity: {
+      '@type': 'ItemList',
+      itemListElement: caseStudies.map((study, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: study.title,
+        url: new URL(`/projects/${study.slug}/`, site.url).href,
+      })),
+    },
+  },
+];
+---
+
+<Page title={title} description={description} path={path} crumbs={[{ name: 'Case studies', href: path }]} current="projects" jsonLd={jsonLd}>
+  <h1 class="page-title">Architecture case studies</h1>
+  <div class="page-lead">
+    <p>
+      Each case study covers the challenge, the constraints, the architecture choices and the delivery impact, drawn
+      from enterprise platforms I've architected and led for UAE government entities.
+    </p>
+  </div>
+
+  <ul class="card-grid" style="margin-top:40px">
+    {
+      caseStudies.map((study) => (
+        <li>
+          <a class="info-card" href={`/projects/${study.slug}/`}>
+            <h3>{study.title}</h3>
+            <p>{study.challenge}</p>
+            <span class="more">Read the case study →</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+
+  <CtaPanel />
+</Page>

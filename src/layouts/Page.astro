@@ -1,0 +1,208 @@
+---
+/**
+ * Layout for content pages (services, case studies, blog): header, breadcrumbs, footer,
+ * BreadcrumbList structured data and the shared page styles.
+ */
+import Base from './Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { site } from '../data/site';
+import { getPublishedPosts } from '../lib/blog';
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+  crumbs: { name: string; href: string }[];
+  current?: 'services' | 'projects' | 'blog';
+  jsonLd?: object[];
+  ogType?: 'website' | 'article';
+  publishedTime?: string;
+  modifiedTime?: string;
+  noindex?: boolean;
+}
+
+const { crumbs, current, jsonLd = [], ...base } = Astro.props;
+
+const breadcrumbLd = {
+  '@type': 'BreadcrumbList',
+  itemListElement: [{ name: 'Home', href: '/' }, ...crumbs].map((crumb, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: crumb.name,
+    item: new URL(crumb.href, site.url).href,
+  })),
+};
+const hasPosts = (await getPublishedPosts()).length > 0;
+---
+
+<Base {...base} jsonLd={[breadcrumbLd, ...jsonLd]} rss={hasPosts}>
+  <Header current={current} />
+  <main id="main" class="page">
+    <div class="container page-container">
+      <Breadcrumbs crumbs={crumbs} />
+      <slot />
+    </div>
+  </main>
+  <Footer />
+</Base>
+
+<style is:global lang="scss">
+  .page {
+    padding: 112px 0 88px;
+    min-height: 80vh;
+  }
+  .page-container.container {
+    max-width: 960px;
+  }
+
+  /* breadcrumbs */
+  .crumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    list-style: none;
+    font-size: 13px;
+    color: var(--gh-fg-subtle);
+    margin-bottom: 28px;
+  }
+  .crumbs li + li::before {
+    content: '/';
+    margin-right: 6px;
+    color: var(--gh-border-default);
+  }
+  .crumbs a { color: var(--gh-fg-muted); }
+  .crumbs a:hover { color: var(--gh-accent-fg); }
+  .crumbs [aria-current] { color: var(--gh-fg-default); }
+
+  /* headings + lead */
+  .page-title {
+    font-size: clamp(32px, 5vw, 48px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 20px;
+    background: var(--gh-gradient-text);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+  .page-lead p,
+  .page-lead {
+    font-size: 17px;
+    line-height: 1.75;
+    color: var(--gh-fg-muted);
+  }
+  .page-lead p + p { margin-top: 14px; }
+  .page-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    margin: 0 0 24px;
+    font-size: 13px;
+    color: var(--gh-fg-subtle);
+  }
+  .page-meta strong { color: var(--gh-fg-muted); font-weight: 600; }
+
+  /* the global `section { padding: 96px 0 }` is for full-width home sections, not these */
+  .page-section {
+    margin-top: 48px;
+    padding: 0;
+  }
+  .page-section > h2 {
+    font-size: 24px;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+  }
+  .page-section > p { line-height: 1.75; }
+
+  /* card grids */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    list-style: none;
+  }
+  .info-card {
+    background: var(--gh-canvas-subtle);
+    border: 1px solid var(--gh-border-default);
+    border-radius: 12px;
+    padding: 22px;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+  }
+  .info-card h3 { font-size: 17px; margin-bottom: 8px; }
+  .info-card p { font-size: 14px; line-height: 1.65; }
+  .card-grid > li > a.info-card { height: 100%; }
+  a.info-card { display: block; color: inherit; }
+  a.info-card:hover { border-color: var(--gh-accent-muted); transform: translateY(-2px); color: inherit; }
+  .info-card .more { display: inline-block; margin-top: 12px; font-size: 13px; font-weight: 600; color: var(--gh-accent-fg); }
+  .info-card .icon { font-size: 22px; color: var(--gh-accent-fg); margin-bottom: 12px; }
+
+  /* chips + link lists */
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; }
+  .chips li {
+    padding: 3px 10px;
+    background: rgba(56, 139, 253, 0.1);
+    border: 1px solid rgba(56, 139, 253, 0.28);
+    color: #79c0ff;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .work-list { list-style: none; display: grid; gap: 12px; }
+  .work-list li {
+    background: var(--gh-canvas-subtle);
+    border: 1px solid var(--gh-border-default);
+    border-radius: 10px;
+    padding: 16px 18px;
+  }
+  .work-list h3 { font-size: 15px; margin-bottom: 4px; }
+  .work-list p { font-size: 14px; line-height: 1.6; }
+  .link-list { list-style: none; display: flex; flex-wrap: wrap; gap: 8px 18px; }
+  .link-list a { font-weight: 600; font-size: 14px; }
+
+  /* call to action */
+  .cta-panel {
+    margin-top: 64px;
+    padding: 32px;
+    border: 1px solid var(--gh-accent-muted);
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(163, 113, 247, 0.1), rgba(47, 129, 247, 0.08));
+  }
+  .cta-panel h2 { font-size: 22px; margin-bottom: 8px; }
+  .cta-panel p { margin-bottom: 20px; line-height: 1.7; }
+  .cta-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+
+  /* long-form text (blog posts) */
+  .prose { font-size: 16px; line-height: 1.8; color: var(--gh-fg-muted); }
+  .prose > * + * { margin-top: 18px; }
+  .prose h2 { font-size: 26px; margin-top: 44px; color: var(--gh-fg-default); }
+  .prose h3 { font-size: 20px; margin-top: 32px; color: var(--gh-fg-default); }
+  .prose strong { color: var(--gh-fg-default); }
+  .prose a { text-decoration: underline; text-underline-offset: 3px; }
+  .prose ul, .prose ol { padding-left: 22px; }
+  .prose li + li { margin-top: 6px; }
+  .prose blockquote {
+    border-left: 3px solid var(--gh-purple);
+    padding: 4px 0 4px 16px;
+    color: var(--gh-fg-muted);
+  }
+  .prose code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.9em;
+    background: var(--gh-canvas-overlay);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--gh-fg-default);
+  }
+  .prose table { border-collapse: collapse; width: 100%; font-size: 14px; display: block; overflow-x: auto; }
+  .prose th, .prose td { border: 1px solid var(--gh-border-default); padding: 8px 12px; text-align: left; }
+  .prose th { background: var(--gh-canvas-subtle); color: var(--gh-fg-default); }
+
+  @media (max-width: 576px) {
+    .page { padding-top: 96px; }
+    .cta-panel { padding: 22px; }
+  }
+</style>

@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import Header from '../components/Header.astro';
 import Hero from '../components/Hero.astro';
 import About from '../components/About.astro';
+import Services from '../components/Services.astro';
 import Skills from '../components/Skills.astro';
 import Experience from '../components/Experience.astro';
 import Projects from '../components/Projects.astro';
@@ -12,10 +13,11 @@ import Footer from '../components/Footer.astro';
 ---
 
 <Base structuredData>
-  <Header />
+  <Header home />
   <main id="main" class="home-container">
     <Hero />
     <About />
+    <Services />
     <Skills />
     <Experience />
     <Projects />

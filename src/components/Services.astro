@@ -1,0 +1,106 @@
+---
+import Icon from './Icon.astro';
+import { services } from '../data/services';
+---
+
+<section id="services" class="services" aria-labelledby="services-title">
+  <div class="container">
+    <div class="section-title">
+      <h2 id="services-title">How I Can Help</h2>
+      <p>
+        Web and application development, identity and integration, architecture and DevOps — for teams in the UAE and
+        remotely worldwide.
+      </p>
+    </div>
+
+    <ul class="services-grid">
+      {
+        services.map((service) => (
+          <li>
+            <a class="service-card" href={`/services/${service.slug}/`}>
+              <Icon name={service.icon} />
+              <h3>{service.name}</h3>
+              <p>{service.blurb}</p>
+              <span class="more">Learn more <Icon name="fa6-solid:arrow-right" /></span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <p class="services-cta">
+      <a class="btn primary-btn" href="/services/">Work with me <Icon name="fa6-solid:arrow-right" /></a>
+    </p>
+  </div>
+</section>
+
+<style lang="scss">
+  .services {
+    background: var(--gh-canvas);
+    position: relative;
+  }
+  .services::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gh-border-default), transparent);
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    list-style: none;
+  }
+
+  .service-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 24px;
+    background: var(--gh-canvas-subtle);
+    border: 1px solid var(--gh-border-default);
+    border-radius: 12px;
+    color: inherit;
+    transition: all 0.25s ease;
+  }
+  .service-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--gh-accent-muted);
+    box-shadow: 0 12px 32px rgba(1, 4, 9, 0.6);
+    color: inherit;
+  }
+  .service-card > :global(.icon) {
+    font-size: 24px;
+    color: var(--gh-accent-fg);
+    margin-bottom: 14px;
+  }
+  .service-card h3 {
+    font-size: 18px;
+    letter-spacing: -0.01em;
+    margin-bottom: 8px;
+  }
+  .service-card p {
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+  .more {
+    margin-top: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gh-accent-fg);
+  }
+  .more :global(.icon) {
+    font-size: 11px;
+  }
+
+  .services-cta {
+    text-align: center;
+    margin-top: 40px;
+  }
+</style>
