@@ -6,6 +6,24 @@
 
 ---
 
+> **Status update — 2026-09-26.** Sections 1–3 below are the **original audit, kept unchanged** as a historical baseline. Its scores (64 / 88 / 100 / 92) and the 15.0 s LCP were measured on the client-rendered site, *before* prerendering shipped, and **have not been re-measured**. The current plan lives in [`seo-performance-roadmap.md`](seo-performance-roadmap.md).
+>
+> | Recommendation | Status | Notes |
+> | --- | --- | --- |
+> | Static pre-rendering (SSG) | ✅ Done | CI runs `npm run prerender`; the live HTML contains the full content |
+> | Hero image optimisation | 🟡 Partly | Hero uses a 19 KB JPEG with `width`/`height`, `fetchpriority="high"` and a `<link rel="preload">`. The 2 MB `shakoor-photo.png` was deleted. WebP/AVIF not adopted — planned for Phase 2 |
+> | Critical-path management | 🟡 Partly | Angular's build inlines critical CSS and loads scripts as deferred modules; fonts and Font Awesome load non-blocking. They are still third-party requests — planned for Phase 2 |
+> | Icon-link `aria-label`s and image `alt` text | ✅ Done | |
+> | Colour-contrast (WCAG AA) | ❓ Not re-audited | Re-check after the Astro migration |
+> | Above-the-fold CTAs | ✅ Done | *Hire Me*, *Download CV*, *View Case Studies* in the hero |
+> | Case studies framed as Challenge → Architecture → Impact | ✅ Done | `projects.component.ts` |
+> | Social proof | 🟡 Partly | A "Recommendations & Trust Signals" section summarises themes and links to LinkedIn; it has no direct quotes |
+> | Architecture Decision Records / topology diagrams | ⬜ Open | Candidate content for indexable case-study pages (Phase 3) |
+>
+> References below to `shakoor-photo.png` and `assets/shakoor-photo.webp` are historical: the PNG no longer exists.
+
+---
+
 ## 1. Executive Summary & Performance Baseline
 
 Your portfolio establishes a solid foundation with a highly professional aesthetic, a distinct senior identity, and strong baseline metadata configuration. However, synthetic performance testing reveals significant architecture-driven bottlenecks—specifically a critical **15.0-second Largest Contentful Paint (LCP)** on mobile devices.
