@@ -137,3 +137,12 @@ dist
 
 # Leftover Angular CLI cache (from the pre-Astro toolchain)
 .angular/
+
+# Lighthouse CI
+.lighthouseci/
+
+# Playwright
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/

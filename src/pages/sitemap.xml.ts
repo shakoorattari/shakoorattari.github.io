@@ -1,21 +1,34 @@
 import type { APIRoute } from 'astro';
 import { site } from '../data/site';
+import { services } from '../data/services';
+import { caseStudies } from '../data/caseStudies';
+import { getPublishedPosts } from '../lib/blog';
 import { lastModified } from '../lib/lastmod';
 
-// Only the home page is indexable; /about, /skills, … are anchors on the same page.
-const routes = [{ path: '/', changefreq: 'monthly', priority: '1.0' }];
-
-export const GET: APIRoute = () => {
+export const GET: APIRoute = async () => {
   const lastmod = lastModified();
-  const urls = routes
-    .map(
-      ({ path, changefreq, priority }) => `  <url>
-    <loc>${site.url}${path}</loc>
-    <lastmod>${lastmod}</lastmod>
-    <changefreq>${changefreq}</changefreq>
-    <priority>${priority}</priority>
-  </url>`,
-    )
+  const posts = await getPublishedPosts();
+
+  // Every indexable page, once. Drafts and outlines never appear; /blog/ only exists in the index once it has posts.
+  const pages: { path: string; lastmod: string }[] = [
+    { path: '/', lastmod },
+    { path: '/services/', lastmod },
+    ...services.map((s) => ({ path: `/services/${s.slug}/`, lastmod })),
+    { path: '/projects/', lastmod },
+    ...caseStudies.map((c) => ({ path: `/projects/${c.slug}/`, lastmod })),
+    ...(posts.length
+      ? [
+          { path: '/blog/', lastmod: (posts[0].data.updated ?? posts[0].data.date).toISOString().slice(0, 10) },
+          ...posts.map((p) => ({
+            path: `/blog/${p.id}/`,
+            lastmod: (p.data.updated ?? p.data.date).toISOString().slice(0, 10),
+          })),
+        ]
+      : []),
+  ];
+
+  const urls = pages
+    .map((page) => `  <url>\n    <loc>${site.url}${page.path}</loc>\n    <lastmod>${page.lastmod}</lastmod>\n  </url>`)
     .join('\n');
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>

@@ -12,8 +12,8 @@ export const skillCategories: SkillCategory[] = [
       'Organization-Wide Architectural Consultancy',
       'G2G (Government-to-Government) Integration Design',
       'Vendor Engagement & Technical Due-Diligence',
-      'Performance Reviews, Mentoring & Growth Planning'
-    ]
+      'Performance Reviews, Mentoring & Growth Planning',
+    ],
   },
   {
     title: '.NET & Backend',
@@ -23,8 +23,8 @@ export const skillCategories: SkillCategory[] = [
       'Microservices & RESTful API Design',
       'Windows Services & Background Workers',
       'Entity Framework Core, LINQ',
-      'MS Graph APIs & Microsoft 365 Integration'
-    ]
+      'MS Graph APIs & Microsoft 365 Integration',
+    ],
   },
   {
     title: 'Frontend',
@@ -33,8 +33,8 @@ export const skillCategories: SkillCategory[] = [
       'SPA, Lazy-Loading Modules, Standalone APIs',
       'RxJS, Reactive Forms, State Management',
       'HTML5, CSS3 / SCSS, Responsive Design',
-      'Bootstrap, Material, PWA'
-    ]
+      'Bootstrap, Material, PWA',
+    ],
   },
   {
     title: 'Identity, Security & IAM',
@@ -44,8 +44,8 @@ export const skillCategories: SkillCategory[] = [
       'Multi-Tenant IAM Design',
       'RBAC & Scoped Authorization',
       'Threat Modelling & Security-by-Design',
-      'Secrets Management & Audit-Log Readiness'
-    ]
+      'Secrets Management & Audit-Log Readiness',
+    ],
   },
   {
     title: 'Databases',
@@ -53,8 +53,8 @@ export const skillCategories: SkillCategory[] = [
       'Microsoft SQL Server (T-SQL)',
       'Oracle DB & PL/SQL',
       'Schema Design & Performance Tuning',
-      'Stored Procedures, Functions, Triggers, Views'
-    ]
+      'Stored Procedures, Functions, Triggers, Views',
+    ],
   },
   {
     title: 'DevOps & CI/CD',
@@ -64,8 +64,8 @@ export const skillCategories: SkillCategory[] = [
       'GitHub Actions, Jenkins',
       'SonarQube Quality Gates',
       'Self-Hosted Agents & Environment Promotion',
-      'Branch Policies & Release Governance'
-    ]
+      'Branch Policies & Release Governance',
+    ],
   },
   {
     title: 'Real-Time, Caching & Integration',
@@ -73,8 +73,8 @@ export const skillCategories: SkillCategory[] = [
       'SignalR for live chat, voting, and notifications',
       'Redis Distributed Cache & Session Management',
       'Event-Driven & Webhook Integration Patterns',
-      'MS Exchange / EWS, Active Directory / LDAP'
-    ]
+      'MS Exchange / EWS, Active Directory / LDAP',
+    ],
   },
   {
     title: 'Testing & Quality',
@@ -82,8 +82,8 @@ export const skillCategories: SkillCategory[] = [
       'Playwright Test Automation',
       'Selenium (Parallel Frameworks)',
       'HP LoadRunner Performance Testing',
-      'Unit & Integration Testing'
-    ]
+      'Unit & Integration Testing',
+    ],
   },
   {
     title: 'AI Tooling & Agentic Workflows',
@@ -92,8 +92,8 @@ export const skillCategories: SkillCategory[] = [
       'AIRIA Orchestration: agents, RAG, guardrails, intent routing',
       'Retrieval-Augmented Generation (RAG) Pipelines',
       'GitHub Copilot & Prompt Engineering',
-      'Engineering Workflow Automation'
-    ]
+      'Engineering Workflow Automation',
+    ],
   },
   {
     title: 'Methodology & Tooling',
@@ -101,7 +101,7 @@ export const skillCategories: SkillCategory[] = [
       'Agile / Scrum / Kanban',
       'Azure Boards, JIRA, TFS',
       'OutSystems (Service & Integration Studio)',
-      'Splunk — Observability & Log Analysis'
-    ]
-  }
+      'Splunk — Observability & Log Analysis',
+    ],
+  },
 ];

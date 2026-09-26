@@ -12,7 +12,9 @@ import { skillCategories } from '../data/skills';
         <div class="skill-category">
           <h3>{category.title}</h3>
           <ul class="skill-list">
-            {category.skills.map((skill) => <li>{skill}</li>)}
+            {category.skills.map((skill) => (
+              <li>{skill}</li>
+            ))}
           </ul>
         </div>
       ))}
@@ -70,10 +72,14 @@ import { skillCategories } from '../data/skills';
     border-radius: 12px;
     padding: 1px;
     background: linear-gradient(135deg, var(--gh-purple), var(--gh-accent-fg));
-    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
-            mask-composite: exclude;
+    mask-composite: exclude;
     opacity: 0;
     transition: opacity 0.25s ease;
     pointer-events: none;

@@ -1,10 +1,12 @@
-name: Build and Deploy Astro Site to GitHub Pages
+name: Deploy to GitHub Pages
 
+# Every push to main runs the full quality gates (ci.yml and lighthouse.yml) and deploys only if
+# they all pass. The site is served from GitHub Pages at the custom domain in public/CNAME.
+#
+# workflow_dispatch can be run on any branch as a dry run: the gates execute, but the deploy job
+# only runs on main.
 on:
   push:
-    branches: [main]
-  # Build (and type-check) pull requests too, but never deploy them.
-  pull_request:
     branches: [main]
   workflow_dispatch:
 
@@ -14,49 +16,39 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages-${{ github.ref }}
+  group: pages
   cancel-in-progress: true
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          # Full history: the sitemap / structured-data `lastmod` comes from `git log`.
-          fetch-depth: 0
+  ci:
+    name: CI
+    uses: ./.github/workflows/ci.yml
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          # Astro requires Node >= 22.12
-          node-version: 22
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Type-check
-        run: npm run check
-
-      - name: Build
-        run: npm run build
-
-      - name: Upload Pages artifact
-        if: github.event_name != 'pull_request'
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist/
+  lighthouse:
+    name: Lighthouse CI
+    uses: ./.github/workflows/lighthouse.yml
 
   deploy:
-    if: github.event_name != 'pull_request'
-    needs: build
+    name: Deploy
+    needs: [ci, lighthouse]
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      # The exact build that passed the gates (uploaded by ci.yml), not a fresh one.
+      - name: Download build
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

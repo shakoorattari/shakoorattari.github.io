@@ -1,0 +1,29 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+
+interface Props {
+  heading?: string;
+  text?: string;
+}
+const {
+  heading = "Let's talk",
+  text = 'Tell me about the role or the project — goals, timeline and constraints. I usually respond within 24 hours.',
+} = Astro.props;
+---
+
+<aside class="cta-panel" aria-labelledby="cta-title">
+  <h2 id="cta-title">{heading}</h2>
+  <p>{text}</p>
+  <div class="cta-actions">
+    <a class="btn primary-btn" href="/#contact">
+      <Icon name="fa6-solid:paper-plane" /> Get in touch
+    </a>
+    <a class="btn secondary-btn" href={site.resume} download>
+      <Icon name="fa6-solid:download" /> Download résumé
+    </a>
+    <a class="btn secondary-btn" href={site.social.linkedin} target="_blank" rel="noopener noreferrer">
+      <Icon name="fa6-brands:linkedin" /> LinkedIn
+    </a>
+  </div>
+</aside>

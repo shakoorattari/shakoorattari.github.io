@@ -1,0 +1,44 @@
+name: Lighthouse CI
+
+# Performance / accessibility / best-practices / SEO budgets (see lighthouserc.json).
+# Runs on pull requests, and is also called by deploy.yml so nothing ships without passing.
+on:
+  pull_request:
+    branches: [main]
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  lighthouse:
+    name: Lighthouse budget check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+        env:
+          PUBLIC_CF_ANALYTICS_TOKEN: ${{ vars.CF_ANALYTICS_TOKEN }}
+          PUBLIC_GOOGLE_SITE_VERIFICATION: ${{ vars.GOOGLE_SITE_VERIFICATION }}
+          PUBLIC_BING_SITE_VERIFICATION: ${{ vars.BING_SITE_VERIFICATION }}
+
+      - name: Run Lighthouse CI
+        # Pinned explicitly (not a wrapper action) so CI runs the exact Lighthouse / axe-core version
+        # verified locally with `npm run lighthouse`. A version drift can produce CI-only false
+        # positives, so bump it deliberately, and re-run locally first.
+        run: |
+          npm install -g @lhci/cli@0.14.0
+          lhci autorun --config=./lighthouserc.json

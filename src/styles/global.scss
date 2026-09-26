@@ -40,28 +40,11 @@
   --gh-btn-active-bg: #161b22;
 
   /* Gradients (GitHub homepage glows) */
-  --gh-gradient-text: linear-gradient(
-    90deg,
-    #ffffff 0%,
-    #c9d1d9 25%,
-    #a371f7 60%,
-    #2f81f7 100%
-  );
-  --gh-gradient-hero: radial-gradient(
-      1200px 600px at 50% -10%,
-      rgba(163, 113, 247, 0.35),
-      transparent 60%
-    ),
-    radial-gradient(
-      800px 400px at 80% 20%,
-      rgba(47, 129, 247, 0.25),
-      transparent 60%
-    ),
-    radial-gradient(
-      600px 400px at 10% 30%,
-      rgba(219, 97, 162, 0.18),
-      transparent 60%
-    );
+  --gh-gradient-text: linear-gradient(90deg, #ffffff 0%, #c9d1d9 25%, #a371f7 60%, #2f81f7 100%);
+  --gh-gradient-hero:
+    radial-gradient(1200px 600px at 50% -10%, rgba(163, 113, 247, 0.35), transparent 60%),
+    radial-gradient(800px 400px at 80% 20%, rgba(47, 129, 247, 0.25), transparent 60%),
+    radial-gradient(600px 400px at 10% 30%, rgba(219, 97, 162, 0.18), transparent 60%);
   --gh-gradient-button: linear-gradient(180deg, #1f6feb, #1158c7);
 
   /* Legacy aliases for existing component styles */
@@ -77,17 +60,10 @@
   --border-color: #30363d;
   --transition: all 0.25s ease;
   --box-shadow: 0 0 0 1px var(--gh-border-default);
-  --box-shadow-hover: 0 0 0 1px var(--gh-accent-muted),
-    0 10px 30px rgba(1, 4, 9, 0.6);
+  --box-shadow-hover: 0 0 0 1px var(--gh-accent-muted), 0 10px 30px rgba(1, 4, 9, 0.6);
 
   /* Reusable composites */
-  --gh-ring: conic-gradient(
-    from 0deg,
-    var(--gh-purple),
-    var(--gh-accent-fg),
-    var(--gh-pink),
-    var(--gh-purple)
-  );
+  --gh-ring: conic-gradient(from 0deg, var(--gh-purple), var(--gh-accent-fg), var(--gh-pink), var(--gh-purple));
   --gh-grad-pb: linear-gradient(90deg, var(--gh-purple), var(--gh-accent-fg));
 }
 
@@ -166,8 +142,16 @@ html {
 }
 
 body {
-  font-family: 'Inter', 'Inter Fallback', -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family:
+    'Inter',
+    'Inter Fallback',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    'Helvetica Neue',
+    Helvetica,
+    Arial,
+    sans-serif;
   color: var(--gh-fg-default);
   background-color: var(--gh-canvas);
   line-height: 1.5;
@@ -186,7 +170,11 @@ body::before {
     radial-gradient(1px 1px at 70% 80%, rgba(240, 246, 252, 0.06) 50%, transparent 51%),
     radial-gradient(1px 1px at 40% 60%, rgba(240, 246, 252, 0.05) 50%, transparent 51%),
     radial-gradient(1px 1px at 85% 25%, rgba(240, 246, 252, 0.07) 50%, transparent 51%);
-  background-size: 600px 600px, 400px 400px, 500px 500px, 700px 700px;
+  background-size:
+    600px 600px,
+    400px 400px,
+    500px 500px,
+    700px 700px;
   z-index: 0;
   opacity: 0.6;
 }
@@ -197,7 +185,12 @@ body::before {
   display: block;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   color: var(--gh-fg-default);
   font-weight: 600;
   letter-spacing: -0.02em;
@@ -297,7 +290,8 @@ section {
   background: var(--gh-gradient-button);
   color: var(--gh-fg-onEmphasis);
   border: 1px solid rgba(240, 246, 252, 0.1);
-  box-shadow: 0 0 0 1px rgba(31, 111, 235, 0.2),
+  box-shadow:
+    0 0 0 1px rgba(31, 111, 235, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
@@ -452,7 +446,7 @@ section {
   border: 1px solid var(--gh-border-default);
   border-radius: 8px;
   text-decoration: none;
-  transition: all .2s ease;
+  transition: all 0.2s ease;
 }
 
 .section-cta a:hover {
@@ -469,8 +463,8 @@ section {
 
 .tech-stack span {
   padding: 3px 10px;
-  background: rgba(56, 139, 253, .1);
-  border: 1px solid rgba(56, 139, 253, .28);
+  background: rgba(56, 139, 253, 0.1);
+  border: 1px solid rgba(56, 139, 253, 0.28);
   color: #79c0ff;
   border-radius: 999px;
   font-size: 11.5px;
@@ -483,7 +477,7 @@ section {
   gap: 7px;
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: .09em;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
   color: var(--gh-fg-subtle);
   margin: 22px 0 14px;
@@ -491,7 +485,9 @@ section {
   border-bottom: 1px solid var(--gh-border-muted);
 }
 
-.detail-section-label svg { flex-shrink: 0 }
+.detail-section-label svg {
+  flex-shrink: 0;
+}
 
 .bullet-list {
   list-style: none;
@@ -519,13 +515,13 @@ section {
   height: 5px;
   border-radius: 50%;
   background: var(--gh-accent-fg);
-  opacity: .75;
+  opacity: 0.75;
 }
 
 .proj-role {
   padding: 2px 9px;
-  background: rgba(163, 113, 247, .12);
-  border: 1px solid rgba(163, 113, 247, .3);
+  background: rgba(163, 113, 247, 0.12);
+  border: 1px solid rgba(163, 113, 247, 0.3);
   color: var(--gh-purple);
   border-radius: 999px;
   font-size: 11px;
@@ -540,7 +536,9 @@ section {
   border-left: 3px solid var(--gh-accent-fg);
 }
 
-.resp-block:last-child { margin-bottom: 0 }
+.resp-block:last-child {
+  margin-bottom: 0;
+}
 
 .resp-block-title {
   display: flex;
@@ -551,10 +549,13 @@ section {
   line-height: 1.4;
   color: var(--gh-fg-default);
   margin: 0 0 12px;
-  letter-spacing: -.01em;
+  letter-spacing: -0.01em;
 }
 
-.resp-block-title .icon { font-size: 17px; line-height: 1 }
+.resp-block-title .icon {
+  font-size: 17px;
+  line-height: 1;
+}
 
 /* Project blocks — single-column premium cards */
 .project-block {
@@ -566,10 +567,14 @@ section {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  transition: border-color .2s ease, background .2s ease;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
 }
 
-.project-block:last-child { margin-bottom: 0 }
+.project-block:last-child {
+  margin-bottom: 0;
+}
 
 .project-block:hover {
   border-color: var(--gh-accent-muted);

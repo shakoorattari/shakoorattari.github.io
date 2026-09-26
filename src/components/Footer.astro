@@ -1,6 +1,9 @@
 ---
 import Icon from './Icon.astro';
 import { site } from '../data/site';
+import { getPublishedPosts } from '../lib/blog';
+
+const hasPosts = (await getPublishedPosts()).length > 0;
 
 const social = [
   { icon: 'fa6-brands:linkedin', url: site.social.linkedin, label: 'LinkedIn' },
@@ -12,12 +15,26 @@ const social = [
 <footer class="site-footer">
   <div class="container">
     <div class="footer-content">
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="/services/">Services</a>
+        <a href="/projects/">Case studies</a>
+        {hasPosts && <a href="/blog/">Articles</a>}
+        <a href="/#contact">Contact</a>
+      </nav>
       <div class="copyright">
-        <p>&copy; <span id="year">{new Date().getFullYear()}</span> {site.name}. All Rights Reserved.</p>
+        <p>
+          &copy; <span id="year">{new Date().getFullYear()}</span> {site.name}. All Rights Reserved.
+        </p>
       </div>
       <div class="social-links">
         {social.map((item) => (
-          <a href={item.url} target="_blank" rel="noopener noreferrer" aria-label={`Follow me on ${item.label}`} title={`Follow me on ${item.label}`}>
+          <a
+            href={item.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Follow me on ${item.label}`}
+            title={`Follow me on ${item.label}`}
+          >
             <Icon name={item.icon} />
           </a>
         ))}
@@ -80,5 +97,18 @@ const social = [
       flex-direction: column;
       text-align: center;
     }
+  }
+
+  .footer-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+    font-size: 13px;
+  }
+  .footer-nav a {
+    color: var(--gh-fg-muted);
+  }
+  .footer-nav a:hover {
+    color: var(--gh-accent-fg);
   }
 </style>

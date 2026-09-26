@@ -1,0 +1,83 @@
+---
+import { render } from 'astro:content';
+import Page from '../../layouts/Page.astro';
+import CtaPanel from '../../components/CtaPanel.astro';
+import { getRenderablePosts, type Post } from '../../lib/blog';
+import { site } from '../../data/site';
+import { personRef } from '../../lib/schema';
+
+export async function getStaticPaths() {
+  const posts = await getRenderablePosts();
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+interface Props {
+  post: Post;
+}
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const withSite = `${post.data.title} | ${site.name}`;
+const pageTitle = post.data.seoTitle ?? (withSite.length <= 60 ? withSite : post.data.title);
+
+const path = `/blog/${post.id}/`;
+const url = new URL(path, site.url).href;
+const published = post.data.date.toISOString();
+const modified = (post.data.updated ?? post.data.date).toISOString();
+const unpublished = post.data.draft || post.data.outline;
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
+
+const jsonLd = [
+  {
+    '@type': 'BlogPosting',
+    '@id': `${url}#article`,
+    mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+    headline: post.data.title,
+    description: post.data.description,
+    datePublished: published,
+    dateModified: modified,
+    author: personRef,
+    publisher: personRef,
+    image: new URL(site.ogImage, site.url).href,
+    keywords: post.data.tags.join(', '),
+    inLanguage: 'en',
+  },
+];
+---
+
+<Page
+  title={pageTitle}
+  description={post.data.description}
+  path={path}
+  crumbs={[
+    { name: 'Articles', href: '/blog/' },
+    { name: post.data.title, href: path },
+  ]}
+  current="blog"
+  jsonLd={jsonLd}
+  ogType="article"
+  publishedTime={published}
+  modifiedTime={modified}
+  noindex={unpublished}
+>
+  <article>
+    <h1 class="page-title">{post.data.title}</h1>
+    <p class="page-meta">
+      <span>
+        <strong>By</strong> {site.name}
+      </span>
+      <span>Published {fmt(post.data.date)}</span>
+      {post.data.updated && <span>Updated {fmt(post.data.updated)}</span>}
+      {post.data.tags.length > 0 && <span>{post.data.tags.join(' · ')}</span>}
+    </p>
+    <div class="prose">
+      <Content />
+    </div>
+  </article>
+
+  <CtaPanel
+    heading="Working on something similar?"
+    text="If this is relevant to a role or a project you have in mind, get in touch."
+  />
+</Page>

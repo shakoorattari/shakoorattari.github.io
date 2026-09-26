@@ -12,18 +12,27 @@ import { site } from '../data/site';
     <div class="social-proof-grid">
       <article class="proof-card">
         <h3>Architecture Leadership</h3>
-        <p>Trusted to define system boundaries, security controls, and integration standards for cross-entity platforms.</p>
+        <p>
+          Trusted to define system boundaries, security controls, and integration standards for cross-entity platforms.
+        </p>
       </article>
       <article class="proof-card">
         <h3>Delivery Reliability</h3>
-        <p>Recognized for owning delivery end-to-end, unblocking teams quickly, and turning complex constraints into shippable plans.</p>
+        <p>
+          Recognized for owning delivery end-to-end, unblocking teams quickly, and turning complex constraints into
+          shippable plans.
+        </p>
       </article>
       <article class="proof-card">
         <h3>Security &amp; Compliance</h3>
-        <p>Frequently engaged by cyber-security stakeholders to translate policy into practical architecture decisions.</p>
+        <p>
+          Frequently engaged by cyber-security stakeholders to translate policy into practical architecture decisions.
+        </p>
       </article>
     </div>
 
+    <!-- The period must directly follow the link: no whitespace between </a> and "." -->
+    <!-- prettier-ignore -->
     <p class="social-proof-link">
       For verified recommendations and endorsements, visit
       <a href={site.social.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn profile</a>.
@@ -54,7 +63,9 @@ import { site } from '../data/site';
     border: 1px solid var(--gh-border-default);
     border-radius: 10px;
     padding: 20px;
-    transition: transform 0.2s ease, border-color 0.2s ease;
+    transition:
+      transform 0.2s ease,
+      border-color 0.2s ease;
   }
 
   .proof-card:hover {
@@ -90,5 +101,4 @@ import { site } from '../data/site';
       grid-template-columns: 1fr;
     }
   }
-
 </style>
