@@ -1,0 +1,84 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+
+const social = [
+  { icon: 'fa6-brands:linkedin', url: site.social.linkedin, label: 'LinkedIn' },
+  { icon: 'fa6-brands:github', url: site.social.github, label: 'GitHub' },
+  { icon: 'fa6-brands:x-twitter', url: site.social.x, label: 'X (Twitter)' },
+];
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="copyright">
+        <p>&copy; <span id="year">{new Date().getFullYear()}</span> {site.name}. All Rights Reserved.</p>
+      </div>
+      <div class="social-links">
+        {social.map((item) => (
+          <a href={item.url} target="_blank" rel="noopener noreferrer" aria-label={`Follow me on ${item.label}`} title={`Follow me on ${item.label}`}>
+            <Icon name={item.icon} />
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style lang="scss">
+  .site-footer {
+    display: block;
+    background-color: var(--gh-canvas-inset);
+    color: var(--gh-fg-muted);
+    padding: 32px 0;
+    border-top: 1px solid var(--gh-border-default);
+    position: relative;
+  }
+
+  .footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .copyright p {
+    font-size: 13px;
+    color: var(--gh-fg-subtle);
+    margin: 0;
+  }
+
+  .social-links {
+    display: flex;
+    gap: 8px;
+  }
+
+  .social-links a {
+    width: 36px;
+    height: 36px;
+    background-color: var(--gh-canvas-overlay);
+    border: 1px solid var(--gh-border-default);
+    color: var(--gh-fg-default);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    font-size: 14px;
+  }
+
+  .social-links a:hover {
+    background-color: var(--gh-canvas-elevated);
+    border-color: var(--gh-accent-muted);
+    color: var(--gh-accent-fg);
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 768px) {
+    .footer-content {
+      flex-direction: column;
+      text-align: center;
+    }
+  }
+</style>

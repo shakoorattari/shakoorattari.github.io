@@ -1,0 +1,403 @@
+---
+import { Picture } from 'astro:assets';
+import Icon from './Icon.astro';
+import profile from '../assets/profile.jpg';
+import { site } from '../data/site';
+import {
+  aboutSummary,
+  professionalHighlights,
+  professionalStats,
+  personalInfo,
+  endorsements,
+  certifications,
+} from '../data/about';
+
+const isAvailableForWork = true;
+const maxEndorsements = Math.max(...endorsements.map((e) => e.count));
+---
+
+<section id="about" class="about" aria-labelledby="about-title">
+  <div class="container">
+    <div class="section-title">
+      <h2 id="about-title">About Me</h2>
+      <p>Discover my professional journey and expertise</p>
+    </div>
+
+    <div class="about-content">
+      <!-- Profile side -->
+      <div class="profile-image">
+        <div class="image-container">
+          <Picture
+            src={profile}
+            alt={site.name}
+            widths={[220, 335]}
+            sizes="220px"
+            formats={['avif', 'webp']}
+            width={220}
+            height={220}
+            loading="lazy"
+            decoding="async"
+          />
+          <div class="social-overlay">
+            <a href={site.social.linkedin} target="_blank" rel="noopener noreferrer" aria-label="Open LinkedIn profile">
+              <Icon name="fa6-brands:linkedin" />
+            </a>
+            <a href={site.social.github} target="_blank" rel="noopener noreferrer" aria-label="Open GitHub profile">
+              <Icon name="fa6-brands:github" />
+            </a>
+            <a href={`mailto:${site.email}`} aria-label={`Send email to ${site.name}`}>
+              <Icon name="fa6-solid:envelope" />
+            </a>
+          </div>
+        </div>
+
+        <div class="profile-badge">
+          <span><Icon name="fa6-solid:code" /> Lead Software Engineer</span>
+        </div>
+
+        <div class="quick-stats">
+          {professionalStats.map((stat) => (
+            <div class="stat-item">
+              <div class="stat-value">{stat.value}</div>
+              <div class="stat-label">{stat.label}</div>
+            </div>
+          ))}
+        </div>
+
+        <div class:list={['availability-status', { available: isAvailableForWork }]}>
+          <Icon name={isAvailableForWork ? 'fa6-solid:circle-check' : 'fa6-solid:clock'} />
+          <span>{isAvailableForWork ? 'Available for Work' : 'Limited Availability'}</span>
+        </div>
+      </div>
+
+      <!-- Text side -->
+      <div class="about-text">
+        <div class="about-intro">
+          <h3><span class="highlight">Lead Software Engineer, Full-Stack Developer &amp; Application Architect</span> with 15+ years owning enterprise platforms</h3>
+          <p class="summary">{aboutSummary}</p>
+        </div>
+
+        <div class="professional-highlights">
+          <h3>Professional Highlights</h3>
+          <ul class="highlights-list">
+            {professionalHighlights.map((highlight) => (
+              <li>
+                <Icon name="fa6-solid:check" />
+                <span>{highlight}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div class="personal-info">
+          <h3>Details</h3>
+          <div class="info-grid">
+            {personalInfo.map((info) => (
+              <div class="info-item">
+                <div class="info-label">
+                  <Icon name={info.icon} />
+                  <span>{info.label}</span>
+                </div>
+                <div class="info-value">
+                  {info.isLink ? (
+                    <a
+                      href={`${info.linkPrefix}${info.value}`}
+                      target={info.isExternal ? '_blank' : undefined}
+                      rel="noopener noreferrer"
+                    >{info.value}</a>
+                  ) : (
+                    <span>{info.value}</span>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div class="call-to-action">
+          <a href={site.resume} class="btn primary-btn" download>
+            <Icon name="fa6-solid:download" /> Download Resume
+          </a>
+          <a href="#contact" class="btn secondary-btn">
+            <Icon name="fa6-solid:paper-plane" /> Contact Me
+          </a>
+        </div>
+
+        <div class="endorsements-section">
+          <h3>Skills Endorsements</h3>
+          <div class="endorsements-grid">
+            {endorsements.map((item) => (
+              <div class="endorsement-item">
+                <div class="endorsement-header">
+                  <div class="endorsement-skill">{item.skill}</div>
+                  <div class="endorsement-count">
+                    <Icon name="fa6-solid:thumbs-up" />
+                    <span>{item.count}</span>
+                  </div>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-progress" style={`width:${(item.count / maxEndorsements) * 100}%`}></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div class="certifications">
+          <h3>Certifications</h3>
+          <div class="certificates-list">
+            {certifications.map((cert) => (
+              <div class="certificate">
+                <div class="certificate-logo">
+                  <Icon name={cert.icon} />
+                </div>
+                <div class="certificate-info">
+                  <h4>{cert.name}</h4>
+                  <p>{cert.issuer} • {cert.year}</p>
+                  {cert.link && (
+                    <a href={cert.link} target="_blank" rel="noopener noreferrer">
+                      <Icon name="fa6-solid:arrow-up-right-from-square" /> Verify
+                    </a>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style lang="scss">
+  .about {
+    background: var(--gh-canvas);
+    position: relative;
+  }
+  .about::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gh-border-default), transparent);
+  }
+
+  .about-content {
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+
+  .profile-image {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: sticky;
+    top: 96px;
+  }
+  .image-container {
+    width: 220px;
+    height: 220px;
+    padding: 4px;
+  }
+  .image-container :global(img) {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--gh-canvas);
+  }
+
+  .social-overlay {
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
+    padding: 6px 10px;
+    background: rgba(13, 17, 23, 0.9);
+    border: 1px solid var(--gh-border-default);
+    border-radius: 999px;
+    backdrop-filter: blur(8px);
+  }
+  .social-overlay a {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gh-fg-default);
+    font-size: 13px;
+  }
+  .social-overlay a:hover { color: var(--gh-accent-fg); }
+
+  .profile-badge { margin-top: 20px; }
+  .profile-badge span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    background: rgba(63, 185, 80, 0.1);
+    border: 1px solid rgba(63, 185, 80, 0.4);
+    border-radius: 999px;
+    color: var(--gh-success-fg);
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .quick-stats {
+    margin-top: 24px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    width: 100%;
+  }
+  .stat-item { text-align: center; padding: 14px 10px; }
+  .stat-value { font-size: 22px; font-weight: 700; }
+  .stat-label {
+    font-size: 11px;
+    color: var(--gh-fg-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 2px;
+  }
+
+  .availability-status {
+    margin-top: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: var(--gh-canvas-subtle);
+    border: 1px solid var(--gh-border-default);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gh-fg-muted);
+  }
+  .availability-status.available {
+    color: var(--gh-success-fg);
+    border-color: rgba(63, 185, 80, 0.4);
+    background: rgba(63, 185, 80, 0.08);
+  }
+
+  .about-text {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .about-text h3 {
+    font-size: 22px;
+    margin-bottom: 12px;
+  }
+  .about-text p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--gh-fg-muted);
+  }
+  .summary { font-size: 16px; }
+
+  .highlights-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 8px;
+  }
+  .highlights-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+  .highlights-list :global(.icon) {
+    color: var(--gh-success-fg);
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+
+  .info-grid,
+  .endorsements-grid,
+  .certificates-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 12px;
+  }
+  .info-item { padding: 12px 14px; }
+  .info-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--gh-fg-muted);
+    margin-bottom: 4px;
+  }
+  .info-label :global(.icon) { color: var(--gh-accent-fg); }
+  .info-value { font-size: 14px; font-weight: 500; }
+  .info-value a { color: var(--gh-accent-fg); }
+
+  .call-to-action { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  .endorsement-item { padding: 14px; }
+  .endorsement-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .endorsement-skill { font-weight: 600; font-size: 14px; }
+  .endorsement-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: var(--gh-fg-muted);
+  }
+  .endorsement-count :global(.icon) { color: var(--gh-accent-fg); }
+
+  .skill-bar {
+    height: 6px;
+    background: var(--gh-canvas-overlay);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .skill-progress {
+    height: 100%;
+    background: var(--gh-grad-pb);
+    border-radius: 999px;
+    transition: width 0.5s ease;
+  }
+
+  .certificate { display: flex; gap: 12px; padding: 14px; }
+  .certificate-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: var(--gh-canvas-overlay);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gh-accent-fg);
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .certificate-info h4 { font-size: 14px; margin-bottom: 2px; }
+  .certificate-info p { font-size: 12px; color: var(--gh-fg-muted); margin: 0; }
+  .certificate-info a {
+    font-size: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 4px;
+  }
+
+  @media (max-width: 992px) {
+    .about-content { grid-template-columns: 1fr; gap: 32px; }
+    .profile-image { position: static; }
+  }
+</style>

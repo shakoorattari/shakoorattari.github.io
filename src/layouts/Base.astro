@@ -1,0 +1,125 @@
+---
+import '../styles/global.scss';
+import interLatin from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
+import { site } from '../data/site';
+import { lastModified } from '../lib/lastmod';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Path of this page, used for the canonical URL. */
+  path?: string;
+  noindex?: boolean;
+  /** Emit Person / WebSite / ProfilePage structured data (home page only). */
+  structuredData?: boolean;
+}
+
+const {
+  title = site.title,
+  description = site.description,
+  path = '/',
+  noindex = false,
+  structuredData = false,
+} = Astro.props;
+
+const canonical = new URL(path, site.url).href;
+const ogImage = new URL(site.ogImage, site.url).href;
+
+// Inter (Latin subset, variable) is self-hosted and preloaded; "Inter Fallback" is metric-matched
+// to Arial so text doesn't jump when the webfont swaps in.
+const fontCss =
+  `@font-face{font-family:"Inter";font-style:normal;font-display:swap;font-weight:100 900;` +
+  `src:url(${interLatin}) format("woff2");` +
+  `unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}` +
+  `@font-face{font-family:"Inter Fallback";src:local("Arial");size-adjust:107.4%;ascent-override:90.2%;descent-override:22.5%;line-gap-override:0%}`;
+
+const personId = `${site.url}/#person`;
+const websiteId = `${site.url}/#website`;
+const graph = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': websiteId,
+      url: `${site.url}/`,
+      name: site.siteName,
+      inLanguage: 'en',
+      publisher: { '@id': personId },
+    },
+    {
+      '@type': 'ProfilePage',
+      '@id': `${site.url}/#webpage`,
+      url: `${site.url}/`,
+      name: site.title,
+      isPartOf: { '@id': websiteId },
+      about: { '@id': personId },
+      mainEntity: { '@id': personId },
+      inLanguage: 'en',
+      dateModified: lastModified(),
+    },
+    {
+      '@type': 'Person',
+      '@id': personId,
+      name: site.name,
+      jobTitle: site.jobTitle,
+      url: `${site.url}/`,
+      image: new URL(site.photo, site.url).href,
+      description: site.schemaDescription,
+      email: site.email,
+      address: { '@type': 'PostalAddress', addressCountry: site.country, addressRegion: site.region },
+      sameAs: [site.social.linkedin, site.social.github, site.social.x],
+      knowsAbout: site.knowsAbout,
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#0d1117" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="keywords" content={site.keywords} />
+    <meta name="author" content={site.name} />
+    <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow'} />
+    <link rel="canonical" href={canonical} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={site.shortDescription} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={site.ogImageAlt} />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:site_name" content={site.siteName} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonical} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={site.shortDescription} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={site.ogImageAlt} />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <link rel="preload" as="font" type="font/woff2" href={interLatin} crossorigin />
+    <style set:html={fontCss}></style>
+
+    {structuredData && <script type="application/ld+json" set:html={JSON.stringify(graph)} />}
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="app">
+      <slot />
+    </div>
+  </body>
+</html>

@@ -1,0 +1,264 @@
+---
+import { Picture } from 'astro:assets';
+import Icon from './Icon.astro';
+import profile from '../assets/profile.jpg';
+import { site } from '../data/site';
+---
+
+<section id="contact" class="contact" aria-labelledby="contact-title">
+  <div class="container">
+    <div class="section-title">
+      <h2 id="contact-title">Contact Me</h2>
+      <p>Get in touch for opportunities or just to say hello!</p>
+    </div>
+
+    <div class="contact-content">
+      <!-- Contact information -->
+      <div class="contact-info">
+        <div class="contact-item contact-profile">
+          <div class="contact-profile-image">
+            <Picture
+              src={profile}
+              alt={site.name}
+              widths={[80, 160]}
+              sizes="80px"
+              formats={['avif', 'webp']}
+              width={80}
+              height={80}
+              loading="lazy"
+              decoding="async"
+            />
+            <div class="online-indicator"></div>
+          </div>
+          <h3>{site.name}</h3>
+          <p>Open to senior engineering &amp; architect roles</p>
+          <div class="availability">
+            <span class="availability-status">Currently Available</span>
+            <span class="response-time">Responds within 24 hours</span>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <Icon name="fa6-solid:envelope" />
+          <h3>Email</h3>
+          <p><a href={`mailto:${site.email}`}>{site.email}</a></p>
+          <div class="contact-action">
+            <button type="button" class="action-btn copy-btn" data-copy={site.email} data-label="Email">
+              <Icon name="fa6-solid:copy" /> Copy Email
+            </button>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <Icon name="fa6-solid:phone" />
+          <h3>Phone</h3>
+          <p><a href={`tel:${site.phone}`}>{site.phoneDisplay}</a></p>
+          <div class="contact-action">
+            <button type="button" class="action-btn copy-btn" data-copy={site.phone} data-label="Phone">
+              <Icon name="fa6-solid:copy" /> Copy Phone
+            </button>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <Icon name="fa6-solid:location-dot" />
+          <h3>Location</h3>
+          <p>{site.locationLabel}</p>
+          <div class="contact-action">
+            <a href="https://maps.google.com/?q=Sharjah,UAE" target="_blank" rel="noopener noreferrer" class="action-btn">
+              <Icon name="fa6-solid:arrow-up-right-from-square" /> Open Map
+            </a>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <Icon name="fa6-brands:microsoft" />
+          <h3>MS Teams</h3>
+          <p><a href={`mailto:${site.teamsId}`}>{site.teamsId}</a></p>
+          <div class="contact-action">
+            <button type="button" class="action-btn copy-btn" data-copy={site.teamsId} data-label="Teams ID">
+              <Icon name="fa6-solid:copy" /> Copy Teams ID
+            </button>
+          </div>
+        </div>
+
+        <div class="contact-item linkedin-badge">
+          <Icon name="fa6-brands:linkedin" />
+          <h3>LinkedIn</h3>
+          <p><a href={site.social.linkedin} target="_blank" rel="noopener noreferrer">Connect on LinkedIn</a></p>
+          <div class="contact-action">
+            <a href={site.social.linkedin} target="_blank" rel="noopener noreferrer" class="action-btn">
+              <Icon name="fa6-solid:arrow-up-right-from-square" /> View Profile
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact form -->
+      <div class="contact-form">
+        <div class="form-header">
+          <h3>Send Me a Message</h3>
+          <p>I'll get back to you as soon as possible</p>
+        </div>
+
+        <div class="toast" id="contact-toast" role="status" aria-live="polite">
+          <div class="toast-icon">
+            <span class="t-success"><Icon name="fa6-solid:circle-check" /></span>
+            <span class="t-error"><Icon name="fa6-solid:circle-exclamation" /></span>
+          </div>
+          <div class="toast-content">
+            <p class="toast-text"></p>
+          </div>
+          <button class="toast-close" type="button" aria-label="Dismiss notification">
+            <Icon name="fa6-solid:xmark" />
+          </button>
+        </div>
+
+        <form id="contact-form" novalidate>
+          <!-- Honeypot: hidden from people, tempting to bots -->
+          <input type="text" name="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true"
+            style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" />
+
+          <div class="form-row">
+          <div class="form-group">
+            <label for="name">Your Name</label>
+            <div class="input-container">
+              <Icon name="fa6-solid:user" />
+              <input type="text" id="name" name="name" placeholder="Enter your name" autocomplete="name" maxlength="100" />
+            </div>
+            <div class="error-message" data-error-for="name" hidden><Icon name="fa6-solid:circle-exclamation" /> <span></span></div>
+          </div>
+          <div class="form-group">
+            <label for="email">Your Email</label>
+            <div class="input-container">
+              <Icon name="fa6-solid:envelope" />
+              <input type="email" id="email" name="email" placeholder="Enter your email" autocomplete="email" maxlength="150" />
+            </div>
+            <div class="error-message" data-error-for="email" hidden><Icon name="fa6-solid:circle-exclamation" /> <span></span></div>
+          </div>
+          </div>
+
+          <div class="form-group">
+            <label for="subject">Subject</label>
+            <div class="input-container">
+              <Icon name="fa6-solid:heading" />
+              <input type="text" id="subject" name="subject" placeholder="What is this regarding?" maxlength="150" />
+            </div>
+            <div class="error-message" data-error-for="subject" hidden><Icon name="fa6-solid:circle-exclamation" /> <span></span></div>
+          </div>
+
+          <div class="form-group">
+            <label for="message">Message</label>
+            <div class="input-container textarea-container">
+              <Icon name="fa6-solid:message" />
+              <textarea id="message" name="message" placeholder="How can I help you?" rows="5" maxlength="500"></textarea>
+            </div>
+            <div class="char-count" id="char-count">0/500 characters</div>
+            <div class="error-message" data-error-for="message" hidden><Icon name="fa6-solid:circle-exclamation" /> <span></span></div>
+          </div>
+
+          <div class="turnstile-wrap">
+            <div class="turnstile-widget" data-turnstile></div>
+            <small class="turnstile-hint"><Icon name="fa6-solid:shield-halved" /> Bot protection by Cloudflare Turnstile</small>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn primary-btn submit-btn" disabled>
+              <span class="submit-label">Send Message</span>
+              <div class="spinner" hidden>
+                <div class="bounce1"></div>
+                <div class="bounce2"></div>
+                <div class="bounce3"></div>
+              </div>
+            </button>
+            <button type="button" class="btn secondary-btn reset-btn">Reset Form</button>
+          </div>
+        </form>
+        <noscript>
+          <p class="noscript-note">The contact form needs JavaScript. You can email <a href={`mailto:${site.email}`}>{site.email}</a> directly.</p>
+        </noscript>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import '../scripts/contact';
+</script>
+
+<style lang="scss">
+  .contact{background:var(--gh-canvas);position:relative}
+  .contact::before{content:'';position:absolute;inset:0 0 auto;height:1px;background:linear-gradient(90deg,transparent,var(--gh-border-default),transparent)}
+  .contact-content{display:grid;grid-template-columns:1.2fr 1fr;gap:48px}
+  .contact-info{display:flex;flex-direction:column;gap:20px}
+  .contact-profile{display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;padding:24px;border-radius:12px}
+  .contact-profile h3{font-size:18px;font-weight:600;margin:0}
+  .contact-profile>p{font-size:13px;color:var(--gh-fg-muted);margin:0}
+  .availability{display:flex;flex-direction:column;gap:6px;margin-top:8px;width:100%}
+  .availability-status{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:6px 12px;font-size:12px;font-weight:600;color:var(--gh-success-fg);background:rgba(63,185,80,.1);border:1px solid rgba(63,185,80,.3);border-radius:6px}
+  .availability-status::before{content:'';width:8px;height:8px;background:var(--gh-success-fg);border-radius:50%}
+  .response-time{font-size:11px;color:var(--gh-fg-muted)}
+  .contact-profile-image{width:80px;height:80px;padding:3px;position:relative}
+  .contact-profile-image :global(img){width:100%;height:100%;border-radius:50%;object-fit:cover;border:2px solid var(--gh-canvas-subtle)}
+  .online-indicator{position:absolute;bottom:4px;right:4px;width:16px;height:16px;border-radius:50%;background:var(--gh-success-fg);border:3px solid var(--gh-canvas-subtle)}
+  .contact-item{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px;border-radius:8px;transition:transform .2s}
+  .contact-item:hover{border-color:var(--gh-border-muted);transform:translateY(-2px)}
+  .contact-item>:global(.icon){font-size:24px;color:var(--gh-accent-fg);width:40px;text-align:center}
+  .contact-item h3{font-size:14px;font-weight:600;margin-bottom:4px}
+  .contact-item p{font-size:13px;color:var(--gh-fg-muted);margin:0}
+  .contact-item p a{color:inherit;text-decoration:none}
+  .contact-item p a:hover{color:var(--gh-accent-fg)}
+  .contact-action{display:flex;gap:8px;margin-left:auto}
+  .action-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--gh-btn-bg);border:1px solid var(--gh-border-default);border-radius:6px;font-size:12px;font-weight:500;cursor:pointer;transition:all .2s;text-decoration:none}
+  .action-btn:hover{background:var(--gh-btn-hover-bg);transform:translateY(-1px)}
+  .action-btn :global(.icon){font-size:11px;opacity:.8}
+  .copy-btn:hover{background:var(--gh-accent-subtle);color:var(--gh-accent-fg)}
+  .contact-form{padding:32px;border-radius:12px}
+  .form-header{margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--gh-border-default)}
+  .form-header h3{font-size:20px;font-weight:600;margin-bottom:6px}
+  .form-header p{font-size:14px;color:var(--gh-fg-muted);margin:0}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+  .form-group{margin-bottom:16px}
+  .form-group:focus-within label,.form-group:focus-within .input-container>:global(.icon){color:var(--gh-accent-fg)}
+  .form-group label{display:block;font-size:13px;font-weight:600;margin-bottom:8px}
+  .input-container{position:relative}
+  .input-container>:global(.icon){position:absolute;left:12px;top:11px;color:var(--gh-fg-muted);font-size:14px}
+  .input-container.textarea-container>:global(.icon){top:12px}
+  .form-group input,.form-group textarea{width:100%;padding:11px 12px 11px 38px;background:var(--gh-canvas-inset);border:1px solid var(--gh-border-default);border-radius:8px;color:var(--gh-fg-default);font-family:inherit;font-size:14px;transition:border .2s}
+  .form-group input::placeholder,.form-group textarea::placeholder{color:var(--gh-fg-subtle);opacity:1}
+  .form-group input:focus,.form-group textarea:focus{outline:0;border-color:var(--gh-accent-fg);box-shadow:0 0 0 3px var(--gh-accent-subtle)}
+  .form-group input.invalid,.form-group textarea.invalid{border-color:var(--gh-danger-fg)}
+  .form-group textarea{resize:vertical;min-height:120px;padding-top:12px}
+  .turnstile-wrap{margin:14px 0 4px;display:flex;flex-direction:column;gap:6px}
+  .turnstile-widget{min-height:65px}
+  .turnstile-hint{color:var(--gh-fg-muted);font-size:12px}
+  .error-message{display:flex;gap:6px;margin-top:6px;font-size:12px;color:var(--gh-danger-fg)}
+  .char-count{margin-top:6px;font-size:12px;color:var(--gh-fg-muted);text-align:right}
+  .char-count.warning{color:var(--gh-attention-fg);font-weight:600}
+  .form-actions{display:flex;gap:12px;margin-top:24px;padding-top:20px;border-top:1px solid var(--gh-border-default)}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 24px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:transform .2s;border:1px solid transparent;min-height:42px}
+  .btn:disabled{opacity:.6;cursor:not-allowed}
+  .primary-btn{background:linear-gradient(180deg,var(--gh-accent-emphasis),var(--gh-accent-fg));color:#fff}
+  .primary-btn:hover:not(:disabled){transform:translateY(-1px)}
+  .secondary-btn{background:var(--gh-canvas-subtle);border:1px solid var(--gh-border-default)}
+  .secondary-btn:hover:not(:disabled){background:var(--gh-canvas-inset)}
+  .submit-btn{flex:1;max-width:200px}
+  .reset-btn{min-width:140px}
+  .spinner{display:inline-flex;gap:4px}
+  .spinner>div{width:8px;height:8px;background:currentColor;border-radius:50%;animation:b 1.4s infinite both}
+  .spinner .bounce1{animation-delay:-.32s}
+  .spinner .bounce2{animation-delay:-.16s}
+  @keyframes b{0%,80%,100%{transform:scale(0)}40%{transform:scale(1)}}
+  .toast{position:absolute;top:16px;right:16px;padding:10px 14px;background:var(--gh-canvas-overlay);border:1px solid var(--gh-border-default);border-radius:8px;font-size:13px;opacity:0;pointer-events:none;transition:opacity .25s;z-index:10}
+  .toast.show{opacity:1;pointer-events:auto}
+  .toast-close{background:0;border:0;color:var(--gh-fg-muted);cursor:pointer}
+  @media (max-width:968px){.contact-content{grid-template-columns:1fr}}
+  @media (max-width:768px){.form-row,.form-actions{grid-template-columns:1fr;flex-direction:column}.contact-form{padding:20px}.submit-btn,.reset-btn{max-width:100%;width:100%}.contact-item,.contact-action{flex-direction:column;align-items:flex-start}.contact-action{width:100%;margin-left:0}}
+
+  /* Link-style action buttons: the base accent blue is 4.06:1 on this surface (needs 4.5:1). */
+  a.action-btn { color: #58a6ff }
+  a.action-btn:hover { color: #79c0ff }
+  .toast:not(.success) .t-success,
+  .toast:not(.error) .t-error { display: none }
+  .noscript-note { margin-top: 16px; font-size: 13px }
+</style>

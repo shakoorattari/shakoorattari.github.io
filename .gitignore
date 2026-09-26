@@ -128,9 +128,12 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
-.angular/*
-pnpm-lock.yaml
-package-lock.json
 
 # macOS
 .DS_Store
+
+# Astro
+.astro/
+
+# Leftover Angular CLI cache (from the pre-Astro toolchain)
+.angular/

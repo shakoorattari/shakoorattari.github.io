@@ -1,0 +1,94 @@
+---
+import { site } from '../data/site';
+---
+
+<section class="social-proof" aria-labelledby="social-proof-title">
+  <div class="container">
+    <div class="section-title social-proof-title">
+      <h2 id="social-proof-title">Recommendations &amp; Trust Signals</h2>
+      <p>Feedback themes from collaborators and stakeholders across enterprise and public-sector delivery.</p>
+    </div>
+
+    <div class="social-proof-grid">
+      <article class="proof-card">
+        <h3>Architecture Leadership</h3>
+        <p>Trusted to define system boundaries, security controls, and integration standards for cross-entity platforms.</p>
+      </article>
+      <article class="proof-card">
+        <h3>Delivery Reliability</h3>
+        <p>Recognized for owning delivery end-to-end, unblocking teams quickly, and turning complex constraints into shippable plans.</p>
+      </article>
+      <article class="proof-card">
+        <h3>Security &amp; Compliance</h3>
+        <p>Frequently engaged by cyber-security stakeholders to translate policy into practical architecture decisions.</p>
+      </article>
+    </div>
+
+    <p class="social-proof-link">
+      For verified recommendations and endorsements, visit
+      <a href={site.social.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn profile</a>.
+    </p>
+  </div>
+</section>
+
+<style lang="scss">
+  .social-proof {
+    background: var(--gh-canvas-subtle);
+    border-top: 1px solid var(--gh-border-default);
+    border-bottom: 1px solid var(--gh-border-default);
+    padding: 72px 0;
+  }
+
+  .social-proof-title {
+    margin-bottom: 36px;
+  }
+
+  .social-proof-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .proof-card {
+    background: var(--gh-canvas);
+    border: 1px solid var(--gh-border-default);
+    border-radius: 10px;
+    padding: 20px;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+
+  .proof-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--gh-accent-muted);
+  }
+
+  .proof-card h3 {
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+
+  .proof-card p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--gh-fg-muted);
+  }
+
+  .social-proof-link {
+    margin-top: 18px;
+    font-size: 14px;
+    color: var(--gh-fg-subtle);
+  }
+
+  .social-proof-link a {
+    color: var(--gh-accent-fg);
+    font-weight: 600;
+  }
+
+  @media (max-width: 992px) {
+    .social-proof-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+</style>

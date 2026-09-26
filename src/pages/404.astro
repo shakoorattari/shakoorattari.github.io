@@ -1,0 +1,40 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Base title="Page not found | Shakoor Hussain Attari" description="This page does not exist." path="/404/" noindex>
+  <Header />
+  <main id="main" class="not-found">
+    <div class="container">
+      <p class="code">404</p>
+      <h1>Page not found</h1>
+      <p>The page you're looking for doesn't exist or has moved.</p>
+      <a class="btn primary-btn" href="/">Back to the portfolio</a>
+    </div>
+  </main>
+  <Footer />
+</Base>
+
+<style lang="scss">
+  .not-found {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    padding: 120px 0 80px;
+  }
+  .code {
+    font-size: clamp(64px, 14vw, 128px);
+    font-weight: 800;
+    line-height: 1;
+    background: var(--gh-gradient-text);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+  h1 { margin: 12px 0; font-size: clamp(28px, 5vw, 40px) }
+  .not-found p:not(.code) { margin-bottom: 24px }
+</style>

@@ -1,0 +1,219 @@
+---
+const links = [
+  ['home', 'Home'],
+  ['about', 'About'],
+  ['skills', 'Skills'],
+  ['experience', 'Experience'],
+  ['projects', 'Projects'],
+  ['contact', 'Contact'],
+] as const;
+---
+
+<header class="site-header">
+  <div class="container">
+    <nav aria-label="Primary">
+      <a class="logo" href="#home" aria-label="Shakoor Hussain Attari — back to top">
+        <svg class="logo-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="sha-grad" x1="0%" y1="100%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#2f81f7" />
+              <stop offset="100%" stop-color="#a371f7" />
+            </linearGradient>
+          </defs>
+          <polygon points="18,2 32,10 32,26 18,34 4,26 4,10" stroke="url(#sha-grad)" stroke-width="1.5" fill="none" />
+          <text x="18" y="24.5" text-anchor="middle" fill="url(#sha-grad)" font-size="18" font-weight="700" font-family="-apple-system,system-ui,sans-serif">S</text>
+        </svg>
+        <span class="logo-text"><span class="logo-bracket">&lt;</span><span class="logo-name">SHA</span><span class="logo-bracket">&nbsp;/&gt;</span></span>
+      </a>
+      <ul class="nav-links" id="primary-navigation">
+        {links.map(([id, label]) => (
+          <li><a href={`#${id}`}>{label}</a></li>
+        ))}
+      </ul>
+      <button class="menu-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="primary-navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<script>
+  import '../scripts/nav';
+</script>
+
+<style lang="scss">
+  .site-header {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    padding: 12px 0;
+    transition: background-color 0.25s ease, border-color 0.25s ease,
+      backdrop-filter 0.25s ease;
+    background-color: rgba(13, 17, 23, 0.7);
+    backdrop-filter: saturate(180%) blur(12px);
+    -webkit-backdrop-filter: saturate(180%) blur(12px);
+    border-bottom: 1px solid transparent;
+  }
+
+  .site-header.scrolled {
+    background-color: rgba(13, 17, 23, 0.85);
+    border-bottom-color: var(--gh-border-default);
+  }
+
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 40px;
+  }
+
+  .logo {
+    cursor: pointer;
+    color: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    user-select: none;
+  }
+
+  .logo-icon {
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    filter: drop-shadow(0 0 5px rgba(163, 113, 247, 0.35));
+    transition: filter 0.3s ease, transform 0.35s ease;
+  }
+
+  .logo:hover .logo-icon {
+    filter: drop-shadow(0 0 10px rgba(163, 113, 247, 0.65));
+    transform: rotate(15deg);
+  }
+
+  .logo-text {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 17px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+
+  .logo-bracket {
+    color: var(--gh-accent-fg);
+    font-weight: 400;
+    opacity: 0.85;
+  }
+
+  .logo-name {
+    background: var(--gh-gradient-text);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+  }
+
+  .nav-links {
+    display: flex;
+    list-style: none;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .nav-links li a {
+    color: var(--gh-fg-default);
+    font-weight: 500;
+    font-size: 14px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    position: relative;
+    cursor: pointer;
+    transition: color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .nav-links li a:hover {
+    color: var(--gh-fg-default);
+    background-color: rgba(177, 186, 196, 0.12);
+  }
+
+  .nav-links li a.active {
+    color: var(--gh-fg-default);
+    background-color: rgba(177, 186, 196, 0.08);
+  }
+
+  .nav-links li a.active::after {
+    content: '';
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: 0;
+    height: 2px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--gh-purple), var(--gh-accent-fg));
+  }
+
+  .menu-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    cursor: pointer;
+    appearance: none;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid var(--gh-border-default);
+    background: var(--gh-canvas-overlay);
+  }
+
+  .menu-toggle span {
+    width: 18px;
+    height: 2px;
+    background-color: var(--gh-fg-default);
+    transition: all 0.3s ease;
+  }
+
+  .menu-toggle.active span:nth-child(1) {
+    transform: rotate(45deg) translate(4px, 4px);
+  }
+
+  .menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .menu-toggle.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(4px, -4px);
+  }
+
+  @media (max-width: 768px) {
+    .nav-links {
+      position: fixed;
+      top: 64px;
+      left: -100%;
+      width: 100%;
+      height: calc(100vh - 64px);
+      background-color: var(--gh-canvas);
+      border-top: 1px solid var(--gh-border-default);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: left 0.25s ease;
+    }
+
+    .nav-links.active {
+      left: 0;
+    }
+
+    .nav-links li a {
+      font-size: 18px;
+      padding: 12px 24px;
+    }
+
+    .menu-toggle {
+      display: flex;
+    }
+  }
+</style>
