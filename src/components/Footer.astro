@@ -2,8 +2,13 @@
 import Icon from './Icon.astro';
 import { site } from '../data/site';
 import { getPublishedPosts } from '../lib/blog';
+import { getBuildInfo } from '../lib/version';
 
 const hasPosts = (await getPublishedPosts()).length > 0;
+
+const build = getBuildInfo();
+const builtOn = build.commitDate.slice(0, 10);
+const versionTitle = `Version ${build.version} · build ${build.commitShort}${build.dirty ? ' (modified)' : ''} · ${builtOn}`;
 
 const social = [
   { icon: 'fa6-brands:linkedin', url: site.social.linkedin, label: 'LinkedIn' },
@@ -24,6 +29,11 @@ const social = [
       <div class="copyright">
         <p>
           &copy; <span id="year">{new Date().getFullYear()}</span> {site.name}. All Rights Reserved.
+          <!-- The dot must have no whitespace inside it; ignore applies per-node, so the link needs its own too. -->
+          <!-- prettier-ignore -->
+          <span class="dot" aria-hidden="true">·</span>
+          <!-- prettier-ignore -->
+          <a class="version" href={build.releaseUrl} target="_blank" rel="noopener noreferrer" title={versionTitle}>v{build.version}</a>
         </p>
       </div>
       <div class="social-links">
@@ -97,6 +107,21 @@ const social = [
       flex-direction: column;
       text-align: center;
     }
+  }
+
+  .dot {
+    color: var(--gh-border-default);
+    margin: 0 2px;
+  }
+
+  .version {
+    color: var(--gh-fg-subtle);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12px;
+  }
+
+  .version:hover {
+    color: var(--gh-accent-fg);
   }
 
   .footer-nav {

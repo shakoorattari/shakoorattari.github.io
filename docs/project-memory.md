@@ -15,6 +15,7 @@ The log of **what was decided and why**, and where assets came from. `CLAUDE.md`
 | 2026-09-26 | **Astro migration**: same design and content, one page, ~2 KB of JavaScript, no third-party requests | PR #1, merged |
 | 2026-09-26 | **Discovery diagnosis**, then service/case-study pages, blog, tracking hooks, SEO guard | PR #2 |
 | 2026-09-26 | **CI quality gates** modelled on the sibling `earthcone` project; `CLAUDE.md`, `.claude/`, this file | PR #2 |
+| 2026-09-27 | **Versioning** (1.2.0): SemVer + changelog + footer display + `/version.json` + release tooling. Retroactive v1.0.0 (`e730451`) and v1.1.0 (`4b6c5f6`) | `feat/versioning` |
 
 ## Decisions and why
 
@@ -32,6 +33,7 @@ The log of **what was decided and why**, and where assets came from. `CLAUDE.md`
 - **Playwright is served by `scripts/serve-dist.mjs`**, not `astro preview`, which daemonizes in Astro 7 and reads as a crashed server. Uses system Chrome (`channel: 'chrome'`, preinstalled on GitHub runners).
 - **Lighthouse CI pinned to 0.14.0** (same as earthcone) for reproducible results; the local `npm run lighthouse` writes to disk and never uploads.
 - **Deploy waits for the gates** via reusable workflows (`ci.yml`, `lighthouse.yml`) and publishes the tested artifact.
+- **Versioning (2026-09-27).** `package.json` is the single source of truth; the version is shown in the footer (linked to the GitHub Release) and served at `/version.json`. The displayed date is the **commit date**, not a build timestamp, so builds stay reproducible. Bumps come from Conventional Commits via a small tested script (`npm run release`) that writes the changelog but **does not commit or tag**; CI tags and publishes the GitHub Release only after a deploy whose live `/version.json` reports the deployed commit. release-please and semantic-release were considered and not adopted (PRs opened with `GITHUB_TOKEN` need a repository setting and don't trigger CI; semantic-release releases on every merge) — see `docs/versioning.md`. `npm run release` refuses to prepare a second release while the previous one is untagged (a scenario test found the script would otherwise double-bump).
 
 ## Search-visibility diagnosis (2026-09-26)
 

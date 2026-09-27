@@ -6,20 +6,22 @@ The goal: performance, accessibility and SEO can't quietly regress. Every pull r
 
 | Workflow | Runs on | Jobs |
 |---|---|---|
-| `ci.yml` | pull requests to `main`; called by `deploy.yml` | **Lint, type-check, build & SEO checks** · **End-to-end tests (Playwright)** |
+| `ci.yml` | pull requests to `main`; called by `deploy.yml` | **Lint, type-check, build & site checks** · **End-to-end tests (Playwright)** |
 | `lighthouse.yml` | pull requests to `main`; called by `deploy.yml` | **Lighthouse budget check** |
-| `deploy.yml` | push to `main`; manual (`workflow_dispatch`) | calls both workflows above, then **Deploy** — only if every job passed, and only from `main` |
+| `deploy.yml` | push to `main`; manual (`workflow_dispatch`) | calls both workflows above, then **Deploy** (only if every job passed, and only from `main`) → verifies the live site serves the deployed commit → **Tag & publish release** if the version is new |
 
-Deploy publishes the exact `dist/` that passed the gates (the artifact uploaded by `ci.yml`), not a fresh build. A manual run of `deploy.yml` on any other branch is a safe dry run: the gates execute, the deploy job is skipped.
+Deploy publishes the exact `dist/` that passed the gates (the artifact uploaded by `ci.yml`), not a fresh build. After deploying, it polls `/version.json` on the live site until it reports the commit that was just deployed (up to 5 minutes). Only then does the **release** job create the git tag `vX.Y.Z` and a GitHub Release with the changelog section as its notes, and only if that version has no tag yet (see [versioning.md](versioning.md)). A manual run of `deploy.yml` on any other branch is a safe dry run: the gates execute, the deploy and release jobs are skipped.
 
 ## The gates
 
 | Gate | Command | Fails when |
 |---|---|---|
 | Formatting | `npm run lint` | Any source file differs from Prettier's output |
+| Unit tests | `npm run test:unit` | The SemVer / Conventional Commits / changelog logic behind `npm run release` misbehaves (Node's built-in test runner) |
 | Types + build | `npm run build` (`astro check && astro build`) | A type error, a broken import, an unknown icon, invalid blog frontmatter |
 | SEO checks | `npm run check:seo` | See below |
-| End-to-end tests | `npm run test:e2e` | Any of the 79 Playwright tests fails |
+| Version checks | `npm run check:version` | `package.json`, `package-lock.json`, `CHANGELOG.md` and the git tags disagree (see [versioning.md](versioning.md)) |
+| End-to-end tests | `npm run test:e2e` | Any of the 94 Playwright tests fails |
 | Lighthouse CI | `npm run lighthouse` | A page misses a threshold below (3 runs per page, median) |
 
 ### SEO checks (`scripts/check-seo.mjs`)
@@ -29,6 +31,7 @@ For every indexable page: `<title>` ≤ 60 characters; meta description 70–160
 Runs against the production build (`scripts/serve-dist.mjs` serves `dist/` the way GitHub Pages does).
 
 - **health** — each page loads with no console errors, failed requests or third-party requests; the home page ships < 20 KB of JavaScript; every image has alt and dimensions; the skip link works.
+- **version** — every page's footer shows `v<package version>` linked to its GitHub Release; `/version.json` is well-formed and matches the footer and the `<html>` attributes.
 - **navigation** — header state, scroll-spy for all six sections, anchor landing under the fixed header, the Services link, `<details>` expand/collapse (and that collapsed text stays indexable), the role animation and reduced motion, and guards for whitespace-sensitive markup (see below).
 - **mobile** — the menu (open, choose a link, Escape), no horizontal overflow on any page, tap-target size.
 - **contact-form** — Turnstile loads lazily (not on load, not while far away, yes when near or focused), validation messages, character counter, the submission payload, success reset, client rate limit, server 429, network failure, honeypot, reset, copy button. Web3Forms, Turnstile and the clipboard are all mocked; nothing real is contacted.
@@ -71,13 +74,14 @@ Node 22 is required (`.nvmrc`). Playwright uses the system Google Chrome (`chann
 
 ## Formatting and inline whitespace
 
-Prettier (with `prettier-plugin-astro`) is the formatter of record. Inline whitespace is significant in HTML, and the Astro plugin will add line breaks between adjacent inline elements. Three places rely on tags staying adjacent and are protected with `<!-- prettier-ignore -->`:
+Prettier (with `prettier-plugin-astro`) is the formatter of record. Inline whitespace is significant in HTML, and the Astro plugin will add line breaks between adjacent inline elements. Four places rely on tags staying adjacent and are protected with `<!-- prettier-ignore -->`:
 
 - the header logo (`<SHA />`), otherwise it widens by ~20px;
 - the hero role line (`I'm a` + the rotating role);
-- the period after the "LinkedIn profile" link in the trust-signals section.
+- the period after the "LinkedIn profile" link in the trust-signals section;
+- the version link in the footer (`v1.2.0`, no whitespace inside the link).
 
-Tests in `navigation.spec.ts` pin all three. If you add markup like this, wrap it the same way (put the explanation in a separate comment: Prettier only honors a comment that is exactly `prettier-ignore`).
+Tests in `navigation.spec.ts` and `version.spec.ts` pin all four. If you add markup like this, wrap it the same way (put the explanation in a separate comment: Prettier only honors a comment that is exactly `prettier-ignore`).
 
 ## Branch protection (GitHub settings, not code)
 
@@ -93,7 +97,7 @@ CI only *reports*; a check blocks a merge only if the branch protection requires
 
 **To close it**, in **Settings → Rules → Rulesets**, edit the ruleset and add **Require status checks to pass** with these three checks:
 
-- `Lint, type-check, build & SEO checks`
+- `Lint, type-check, build & site checks`
 - `End-to-end tests (Playwright)`
 - `Lighthouse budget check`
 

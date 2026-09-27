@@ -38,7 +38,9 @@ npm start       # dev server on http://localhost:4321
 | `npm run lint` / `npm run format` | Check / fix formatting with Prettier |
 | `npm run test:e2e` | Playwright suite against the build (run `npm run build` first) |
 | `npm run lighthouse` | Lighthouse CI thresholds against the build (reports written locally, nothing uploaded) |
-| `npm run verify` | Formatting + type-check + build + SEO checks — what to run before pushing |
+| `npm run verify` | Formatting + type-check + build + SEO checks + version checks + unit tests — what to run before pushing |
+| `npm run release` | Prepare a release: recommended SemVer bump from your commits, `CHANGELOG.md` section, `package.json` + lockfile (`-- --dry-run` to preview) — see [docs/versioning.md](docs/versioning.md) |
+| `npm run check:version` / `npm run test:unit` | Keep `package.json`, the lockfile, `CHANGELOG.md` and git tags consistent / unit-test the release logic — both run in CI |
 | `npm run check:seo` | After a build, verify every page's title/description length, canonical, single `<h1>`, structured data, internal links and anchors, and that `sitemap.xml` matches the indexable pages — also runs in CI |
 
 ## Project structure
@@ -70,12 +72,15 @@ src/
 │   ├── 404.astro            Not-found page (noindex)
 │   ├── sitemap.xml.ts       /sitemap.xml — every indexable page, with its own lastmod
 │   ├── rss.xml.ts           /rss.xml (published posts)
-│   └── llms.txt.ts          /llms.txt — plain-text site map for AI assistants
+│   ├── llms.txt.ts          /llms.txt — plain-text site map for AI assistants
+│   └── version.json.ts      /version.json — version + build metadata of the deployed site
 ├── scripts/                 nav.ts (menu, scroll-spy) · hero-roles.ts · contact.ts (form)
 ├── styles/global.scss       Design tokens and shared utilities
 ├── assets/profile.jpg       Source photo that Astro resizes to AVIF/WebP
-└── lib/                     lastmod.ts (git date), blog.ts (published vs preview), schema.ts (Person/WebSite refs)
-scripts/                     check-seo.mjs (post-build SEO guard) · serve-dist.mjs (static server for tests)
+└── lib/                     lastmod.ts (git date), blog.ts (published vs preview), schema.ts (Person/WebSite refs),
+                             version.ts (build info: version + commit)
+scripts/                     check-seo.mjs · check-version.mjs · release.mjs · release-notes.mjs · serve-dist.mjs · lib/release.mjs (+ tests)
+CHANGELOG.md                 Keep a Changelog; the source of the GitHub Release notes
 tests/                       Playwright suite: health, navigation, mobile, contact form, SEO
 playwright.config.ts  lighthouserc.json  .prettierrc.json  .nvmrc  .env.example
 .github/                     workflows (ci, lighthouse, deploy) and the PR template
@@ -153,9 +158,9 @@ Modelled on the sibling `earthcone` project. Three workflows in `.github/workflo
 
 | Workflow | When | What |
 |---|---|---|
-| `ci.yml` | pull requests | Prettier check · type-check + build · SEO checks · the Playwright suite |
+| `ci.yml` | pull requests | Prettier check · unit tests · type-check + build · SEO checks · version checks · the Playwright suite |
 | `lighthouse.yml` | pull requests | Lighthouse CI (pinned `@lhci/cli@0.14.0`): performance ≥ 0.95, accessibility = 1, best practices ≥ 0.95, SEO = 1, plus LCP, CLS, TBT, JavaScript and page-weight budgets |
-| `deploy.yml` | push to `main` | **Calls both workflows above and deploys to GitHub Pages only if every job passed**, publishing the exact build that was tested |
+| `deploy.yml` | push to `main` | **Calls both workflows above and deploys to GitHub Pages only if every job passed**, publishing the exact build that was tested; then verifies the live `/version.json` and creates the `vX.Y.Z` tag + GitHub Release if the version is new |
 
 The gates are proven to fail: each one has been mutation-tested with a deliberate regression. Thresholds, what each check covers, how to run them locally and how to make the checks required on `main` (so a failing check actually blocks a merge) are in **[docs/ci-cd.md](docs/ci-cd.md)**.
 
@@ -164,6 +169,12 @@ The gates are proven to fail: each one has been mutation-tested with a deliberat
 ### Old URLs
 
 The Angular version served `/about`, `/skills`, `/experience`, `/projects` and `/contact` as separate pages. `/about/`, `/skills/`, `/experience/` and `/contact/` now redirect to the matching anchor (e.g. `/about/` → `/#about`) via `redirects` in `astro.config.mjs`, so existing links keep working. `/projects/` is now a real page (the case-study hub), so it is intentionally not redirected.
+
+## Versioning and releases
+
+The site follows [Semantic Versioning](https://semver.org), keeps a [Keep a Changelog](https://keepachangelog.com) `CHANGELOG.md`, and reads its bumps from [Conventional Commits](https://www.conventionalcommits.org). The current version is in `package.json` (the single source of truth), **shown in the footer** (`v1.2.0`, linked to its GitHub Release, with the build's commit and date in the tooltip), and served as machine-readable JSON at `/version.json` (`{ "version": "1.2.0", "versionFull": "1.2.0+abc1234", "commit": "…", … }`).
+
+To ship a version: run `npm run release` in the PR (it picks the bump, writes the changelog section and bumps `package.json` and the lockfile), review and commit it. On merge, CI deploys, checks the live `/version.json`, and creates the tag and GitHub Release. What MAJOR / MINOR / PATCH mean for a website, the full workflow and troubleshooting are in **[docs/versioning.md](docs/versioning.md)**.
 
 ## SEO and performance
 
@@ -192,6 +203,7 @@ Getting *found* is a separate job from being fast: see **[docs/visibility-playbo
 |---|---|
 | [CLAUDE.md](CLAUDE.md) | Project instructions for Claude Code and contributors: purpose, content rules, architecture, conventions, quality bar, workflow, known gaps |
 | [docs/project-memory.md](docs/project-memory.md) | Decision log, asset provenance and hard-won gotchas |
+| [docs/versioning.md](docs/versioning.md) | The versioning standards, what each bump means for this site, how to release, and what CI verifies |
 | [docs/ci-cd.md](docs/ci-cd.md) | The quality gates, thresholds, running them locally, and branch protection |
 | [docs/seo-performance-roadmap.md](docs/seo-performance-roadmap.md) | Phased SEO / performance plan with status, measurements, known issues |
 | [docs/visibility-playbook.md](docs/visibility-playbook.md) | How to get indexed, earn links, publish articles and measure — the parts that need your accounts |

@@ -4,6 +4,8 @@ export const site = {
   url: 'https://shakoorattari.com',
   name: 'Shakoor Hussain Attari',
   siteName: 'Shakoor Hussain Attari — Portfolio',
+  /** Source repository (releases and the changelog live here). */
+  repository: 'https://github.com/shakoorattari/shakoorattari.github.io',
   title: 'Shakoor Hussain Attari — Full-Stack Software Engineer, UAE',
   jobTitle: 'Lead Software Engineer, Full-Stack Developer & Application Architect',
   description:
