@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   quality:
-    name: Lint, type-check, build & SEO checks
+    name: Lint, type-check, build & site checks
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -32,6 +32,9 @@ jobs:
       - name: Check formatting
         run: npm run lint
 
+      - name: Unit tests
+        run: npm run test:unit
+
       - name: Type-check & build
         run: npm run build
         env:
@@ -42,6 +45,9 @@ jobs:
 
       - name: SEO checks
         run: npm run check:seo
+
+      - name: Version & changelog checks
+        run: npm run check:version
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4

@@ -122,8 +122,9 @@ GitHub Pages can't set headers, redirects or brotli. Cloudflare Pages is free, g
 - [x] Crawler check with JavaScript disabled: content, headings, JSON-LD all present
 - [x] Lighthouse CI on every PR and before every deploy (pinned 0.14.0): performance ≥ 0.95, accessibility = 1, best practices ≥ 0.95, SEO = 1, LCP ≤ 2000 ms, CLS ≤ 0.05, TBT ≤ 150 ms, JS ≤ 20 KB, ≤ 2 third-party requests, page weight ≤ 200 KB
 - [x] Prettier check in CI (formatting verified not to change rendering: element geometry identical across 7 pages at 2 viewports)
-- [x] Playwright suite (79 tests) committed and run in CI: behaviour, contact form (mocked), mobile, SEO/social previews, redirects, health and performance guards
-- [x] Deploy waits for every gate and publishes the tested build
+- [x] Playwright suite (94 tests) committed and run in CI: behaviour, contact form (mocked), mobile, SEO/social previews, redirects, health and performance guards
+- [x] Deploy waits for every gate and publishes the tested build, then verifies the live `/version.json`
+- [x] Versioning: SemVer in `package.json`, `CHANGELOG.md`, version in the footer and `/version.json`, release tooling with unit tests, tag + GitHub Release created by CI after a verified deploy ([versioning.md](versioning.md))
 - [ ] **You:** add a "Require status checks to pass" rule (the three checks) to the existing `main` ruleset — it currently requires a review but no checks ([ci-cd.md](ci-cd.md#branch-protection-github-settings-not-code))
 
 ## Phase 6 — Discovery 🟡

@@ -1,6 +1,6 @@
 {
   "name": "shakoor-portfolio",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "private": true,
   "type": "module",
   "engines": {
@@ -18,7 +18,10 @@
     "lint": "prettier --check \"src/**/*.{astro,ts,js,scss,css}\" \"scripts/**/*.mjs\" \"tests/**/*.ts\" astro.config.mjs playwright.config.ts",
     "test:e2e": "playwright test",
     "lighthouse": "npx --yes @lhci/cli@0.14.0 autorun --config=./lighthouserc.json --upload.target=filesystem --upload.outputDir=.lighthouseci/reports",
-    "verify": "npm run lint && npm run build && npm run check:seo"
+    "verify": "npm run lint && npm run build && npm run check:seo && npm run check:version && npm run test:unit",
+    "release": "node scripts/release.mjs",
+    "check:version": "node scripts/check-version.mjs",
+    "test:unit": "node --test scripts/lib/release.test.mjs"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.19",
@@ -36,5 +39,16 @@
     "prettier-plugin-astro": "^1.1.0",
     "sass": "^1.105.0",
     "typescript": "^6.0.3"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shakoorattari/shakoorattari.github.io.git"
+  },
+  "homepage": "https://shakoorattari.com",
+  "bugs": {
+    "url": "https://github.com/shakoorattari/shakoorattari.github.io/issues"
+  },
+  "license": "MIT",
+  "author": "Shakoor Hussain Attari <binmushtaq@gmail.com>",
+  "description": "Personal portfolio of Shakoor Hussain Attari — Lead Software Engineer, Full-Stack Developer & Application Architect"
 }

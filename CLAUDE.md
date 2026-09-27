@@ -67,14 +67,17 @@ src/
     services/            /services/ hub + /services/<slug>/
     projects/            /projects/ hub + /projects/<slug>/   (NOT redirected — see §4)
     blog/                /blog/ + /blog/<slug>/ (dev previews drafts; production builds only published posts)
-    404.astro  sitemap.xml.ts  rss.xml.ts  llms.txt.ts
+    404.astro  sitemap.xml.ts  rss.xml.ts  llms.txt.ts  version.json.ts
   scripts/               nav.ts (menu, scroll-spy, footer year) · hero-roles.ts (role rotator) · contact.ts (the form)
-  lib/                   lastmod.ts (git date), blog.ts (published vs preview), schema.ts (Person/WebSite JSON-LD refs)
+  lib/                   lastmod.ts (git date), blog.ts (published vs preview), schema.ts (Person/WebSite JSON-LD refs),
+                         version.ts (build info: version + commit, resolved at build time)
   styles/global.scss     Design tokens (--gh-* GitHub-dark palette) and shared utilities
   assets/profile.jpg     Source photo Astro resizes to AVIF/WebP (a 335px source — do not request wider variants)
-scripts/                 check-seo.mjs (post-build SEO guard) · serve-dist.mjs (static server for tests)
+scripts/                 check-seo.mjs (post-build SEO guard) · check-version.mjs · release.mjs · release-notes.mjs ·
+                         serve-dist.mjs (static server for tests) · lib/release.mjs (+ unit tests)
 tests/                   Playwright: health, navigation, mobile, contact-form, seo (+ helpers.ts)
-docs/                    ci-cd, roadmap, visibility playbook, migration notes, original audit, project-memory
+CHANGELOG.md             Keep a Changelog; the source of the GitHub Release notes
+docs/                    ci-cd, versioning, roadmap, visibility playbook, migration notes, original audit, project-memory
 .github/                 workflows: ci.yml · lighthouse.yml · deploy.yml — and the PR template
 .claude/launch.json      Dev / preview server configs for the Claude app
 astro.config.mjs         site URL, trailingSlash 'always', inlined CSS, legacy redirects
@@ -132,7 +135,7 @@ Rules to stay inside the budget:
 
 - TypeScript strict; no `any` without a comment. Content lives in `src/data/`, never hard-coded in a component.
 - **Prettier is the formatter of record** (`npm run format` / `npm run lint`), 2-space indent, single quotes, print width 120. Don't hand-format.
-- **Inline whitespace is significant in HTML.** The Astro Prettier plugin adds line breaks between adjacent inline elements, which changes rendering. Three spots are protected with `<!-- prettier-ignore -->` (logo text, the hero role line, the period after the LinkedIn link) and pinned by tests. If you add markup where whitespace matters, wrap it the same way — and put the explanation in a _separate_ comment, because Prettier only honours a comment that is exactly `prettier-ignore`.
+- **Inline whitespace is significant in HTML.** The Astro Prettier plugin adds line breaks between adjacent inline elements, which changes rendering. Four spots are protected with `<!-- prettier-ignore -->` (logo text, the hero role line, the period after the LinkedIn link, the footer version link) and pinned by tests. If you add markup where whitespace matters, wrap it the same way — and put the explanation in a _separate_ comment, because Prettier only honours a comment that is exactly `prettier-ignore`.
 - Icons: `<Icon name="fa6-solid:envelope" />` (`fa6-solid`, `fa6-brands`, `fa6-regular`); an unknown name fails the build. In scoped styles, target an icon or a `<Picture>` `<img>` from the parent with `:global(.icon)` / `:global(img)`.
 - The `hidden` attribute must win over component `display:` rules — `global.scss` has a `[hidden] { display: none !important }` guard.
 - Component files are PascalCase `.astro`; scripts are lower-case `.ts` in `src/scripts/`.
@@ -142,10 +145,12 @@ Rules to stay inside the budget:
 
 - `main` is production: **every push to `main` deploys to https://shakoorattari.com** (after the gates pass, §10). All changes land through a pull request; the owner reviews and merges.
 - Branch names: `feat/<name>`, `fix/<name>`, `chore/<name>`, `docs/<name>`. Keep PRs coherent; a PR that changes behaviour and formatting should say so and keep the formatting whitespace-only.
+- **Versioning follows SemVer 2.0.0 + Keep a Changelog + Conventional Commits** (details: `docs/versioning.md`). `package.json` `version` is the single source of truth; it is shown in the footer (`v1.2.0`, linked to its GitHub Release), served at `/version.json` (with build metadata `1.2.0+abc1234`), and recorded in `CHANGELOG.md`. For a website: **MAJOR** = a public URL or the whole site breaks/is rebuilt, **MINOR** = new visible capability, **PATCH** = fixes, copy, dependency and performance updates; tooling/docs-only changes don't need their own release.
+- **Releasing is part of the PR that should ship a version:** `npm run release` (or `-- minor|major|patch|x.y.z`, `-- --dry-run` first) bumps `package.json` + lockfile and writes the changelog section; review it, commit `chore(release): vX.Y.Z`, merge. CI then deploys, verifies the live `/version.json`, and creates the tag + GitHub Release. Never hand-edit the version without a matching changelog section (`npm run check:version` fails), and never tag manually.
 - **Don't push, open PRs, or merge without the owner's say-so.** Ask, then act. Never enable auto-merge unless asked.
 - Merge with a **merge commit** or squash as the owner prefers (PR #1 was a merge commit); never force-push `main`.
 - **Branch protection is a GitHub setting, not code.** As checked on 2026-09-26, `main` has an active ruleset, **"Protect main — owner direct push only"** (id 16798191): it blocks deletion and force-pushes and requires a pull request with 1 approving review (approval of the last push, resolved review threads). Repository admins **bypass it always**, so the owner can merge their own PRs and push directly. **It has no required-status-checks rule**, so a failing CI check reports but does not block a merge (see §14).
-- Status checks that should be required (job names): `Lint, type-check, build & SEO checks`, `End-to-end tests (Playwright)`, `Lighthouse budget check`. Note GitHub never lets an author approve their own PR, and the admin bypass is what lets a solo owner merge; removing the owner from the bypass list would make the checks binding for them too but would also block their direct pushes.
+- Status checks that should be required (job names): `Lint, type-check, build & site checks`, `End-to-end tests (Playwright)`, `Lighthouse budget check`. Note GitHub never lets an author approve their own PR, and the admin bypass is what lets a solo owner merge; removing the owner from the bypass list would make the checks binding for them too but would also block their direct pushes.
 
 ## 10. CI/CD
 
@@ -153,7 +158,7 @@ Workflows in `.github/workflows/` (details and thresholds: `docs/ci-cd.md`):
 
 - `ci.yml` — on PRs to `main` (and callable): Prettier check → `astro check && astro build` → `check:seo` → uploads `dist`; separate job runs the Playwright suite against the build.
 - `lighthouse.yml` — on PRs (and callable): builds, then `lhci autorun` with **`@lhci/cli` pinned to 0.14.0** (same as earthcone; bump deliberately, run `npm run lighthouse` locally first — version drift caused a CI-only false positive there once).
-- `deploy.yml` — on push to `main` / manual: **calls both workflows above, then deploys the exact `dist` that passed**, only from `main`. Running it manually on another branch is a safe dry run.
+- `deploy.yml` — on push to `main` / manual: **calls both workflows above, then deploys the exact `dist` that passed**, only from `main`; then verifies the live `/version.json` reports the deployed commit, and finally creates the `vX.Y.Z` tag and GitHub Release if that version is new. Running it manually on another branch is a safe dry run.
 - Pages is configured with `build_type: workflow` (Settings → Pages → Source: GitHub Actions). The old committed `docs/` build folder was removed; nothing is served from a branch.
 - CI checks out full git history (`fetch-depth: 0`) because `lastmod` comes from `git log`.
 - Node 22 (`.nvmrc`). Both lockfile formats used to be gitignored; `package-lock.json` is now committed and CI uses `npm ci`.
@@ -175,6 +180,7 @@ npm start               # http://localhost:4321 (previews blog drafts)
 npm run verify          # format check + type-check + build + SEO checks — run before pushing
 npm run test:e2e        # Playwright against the build (npm run build first)
 npm run lighthouse      # Lighthouse CI thresholds locally (reports in .lighthouseci/reports)
+npm run release -- --dry-run   # preview the next version and changelog section
 ```
 
 ## 13. QA workflow
