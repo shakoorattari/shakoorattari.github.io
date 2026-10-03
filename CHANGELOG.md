@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-10-03
+
 ### Added
 
 - The Credly badge for WES International Academic Qualifications, shown first under Certifications in About, linking to its public Credly page. It is a local image, not Credly's embed script, which would load a third-party script on every page view.
@@ -123,7 +125,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - The Angular 16 app, its Express server, a 2 MB unused PNG, the committed `docs/` build output and the dev TLS files.
 
-[Unreleased]: https://github.com/shakoorattari/shakoorattari.github.io/compare/v1.4.0...HEAD
+[Unreleased]: https://github.com/shakoorattari/shakoorattari.github.io/compare/v1.5.0...HEAD
+[1.5.0]: https://github.com/shakoorattari/shakoorattari.github.io/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/shakoorattari/shakoorattari.github.io/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/shakoorattari/shakoorattari.github.io/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/shakoorattari/shakoorattari.github.io/compare/v1.1.0...v1.2.0
