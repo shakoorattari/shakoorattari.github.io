@@ -10,18 +10,32 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- **A quote path for clients:** `/quote/` has a quote form, a WhatsApp button that opens a chat pre-filled with the same text as the email, and a call button. A "Get a quote" button joins the nav, the hero, the footer, the call-to-action panels and the Contact section.
+- **Websites & apps gallery:** `/work/` and `/work/<slug>/` show Earth Cone and Lail O Nahar with live screenshots, an Angular UAE-information chatbot (with a plain note on what it does not do), and a link card for HandGestureAI. Own projects are labelled as such. The home page has a matching section.
+- **Two client-facing services:** website design & development, and SEO & performance.
+- **LinkedIn recommendations:** three, verbatim and attributed, on the home page (above Contact) and on `/services/`, replacing the earlier unsourced "feedback themes".
+- **The team:** the site now says the owner works with a team of developers and specialists in front-end, back-end, web design and SEO (the owner's own words; no names or numbers).
+- `generate_lead` now reports its channel (`contact_form`, `quote_form`, `whatsapp`, `phone`) and never anything typed. New end-to-end tests for the quote form, the work gallery and the recommendations, and an analytics test for the lead channels.
 - Google Analytics 4, **opt-in and off until a Measurement ID is set**: a small consent notice (Accept and Decline styled identically); Google's script is requested only after a visitor accepts, with Consent Mode v2 (advertising signals permanently denied), Google signals off, and a 13-month cookie lifetime. A footer "Privacy choices" button changes the decision and deletes the analytics cookies; Global Privacy Control is honoured.
 - A `generate_lead` event when the contact form is sent (never the content of the message).
 - A `/privacy/` page, linked from the footer on every page and generated from the build configuration, so it only describes the tools that are actually enabled.
 - `docs/analytics.md`: how it works, what it costs, setup steps, and which tool answers which question (Google Analytics measures visitors, not a rating; Search Console and Lighthouse cover search performance and quality).
-- `npm run test:analytics`: builds with a fake Measurement ID and runs 14 consent/analytics tests with Google's endpoints mocked; runs in CI.
+- `npm run test:analytics`: builds with a fake Measurement ID and runs 15 consent/analytics tests with Google's endpoints mocked; runs in CI.
 
 ### Changed
 
+- **Profile photo:** the GitHub avatar (460×460, up from 335 px), now the same portrait as the social card.
+- Home page copy, the services hub and the Contact section now speak to clients as well as employers; the nav gains "Work" and a "Get a quote" button and collapses to the menu below 920 px instead of 768 px.
+- `/privacy/` describes the quote form and the WhatsApp and phone buttons.
+- Lighthouse CI also covers `/work/`, a work page and `/quote/`. The contact and quote forms share one module for the toast, lazy Turnstile, rate limit and Web3Forms delivery.
 - GitHub Actions updated to the versions that run on Node 24 (`checkout`, `setup-node`, `upload-artifact`, `download-artifact`, `upload-pages-artifact`, `deploy-pages`), clearing GitHub's Node 20 deprecation warnings. The Pages artifact keeps including `.nojekyll`.
 - Dependencies updated within their ranges (sharp, Vite, shiki, sass and others; no major bumps). The built site is byte-identical to before.
 - CI test builds (Playwright, Lighthouse) now carry no analytics configuration, so test runs can never send fake visits to the real Google Analytics or Cloudflare properties.
 - The Cloudflare Web Analytics beacon is gated by the same build-time configuration helper as Google Analytics.
+
+### Fixed
+
+- Links inside a sentence on content pages are underlined, so they no longer rely on colour alone (WCAG 1.4.1).
 
 ## [1.2.0] - 2026-09-27
 
