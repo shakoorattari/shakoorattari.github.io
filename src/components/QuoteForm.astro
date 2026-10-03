@@ -1,0 +1,413 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+import { quoteGreeting, quoteOptions } from '../data/quote';
+import { whatsappUrl } from '../lib/whatsapp';
+---
+
+<div class="quote">
+  <div class="toast" id="quote-toast" role="status" aria-live="polite">
+    <div class="toast-icon">
+      <span class="t-success">
+        <Icon name="fa6-solid:circle-check" />
+      </span>
+      <span class="t-error">
+        <Icon name="fa6-solid:circle-exclamation" />
+      </span>
+    </div>
+    <div class="toast-content">
+      <p class="toast-text"></p>
+    </div>
+    <button class="toast-close" type="button" aria-label="Dismiss notification">
+      <Icon name="fa6-solid:xmark" />
+    </button>
+  </div>
+
+  <div id="quote-sent" class="quote-sent" hidden>
+    <h2>Request sent</h2>
+    <p>Thank you. I'll reply within 24 hours. For a faster answer you can send the same details on WhatsApp.</p>
+    <a
+      class="btn whatsapp-btn"
+      data-wa-sent
+      data-lead="whatsapp"
+      href={whatsappUrl(quoteGreeting)}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <Icon name="fa6-brands:whatsapp" /> Send the same on WhatsApp
+    </a>
+  </div>
+
+  <form id="quote-form" data-greeting={quoteGreeting} novalidate>
+    <!-- Honeypot: hidden from people, tempting to bots -->
+    <input
+      type="text"
+      name="botcheck"
+      tabindex="-1"
+      autocomplete="off"
+      aria-hidden="true"
+      style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0"
+    />
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="q-name">Your name</label>
+        <input type="text" id="q-name" name="name" autocomplete="name" maxlength="100" />
+        <div class="error-message" data-error-for="name" hidden>
+          <Icon name="fa6-solid:circle-exclamation" /> <span></span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="q-email">Your email</label>
+        <input type="email" id="q-email" name="email" autocomplete="email" maxlength="150" />
+        <div class="error-message" data-error-for="email" hidden>
+          <Icon name="fa6-solid:circle-exclamation" /> <span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="q-phone">
+          Phone or WhatsApp <span class="optional">(optional)</span>
+        </label>
+        <input type="tel" id="q-phone" name="phone" autocomplete="tel" maxlength="40" />
+        <div class="error-message" data-error-for="phone" hidden>
+          <Icon name="fa6-solid:circle-exclamation" /> <span></span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="q-project">What do you need?</label>
+        <select id="q-project" name="project">
+          <option value="">Choose a project type</option>
+          {quoteOptions.projectTypes.map((option) => (
+            <option value={option}>{option}</option>
+          ))}
+        </select>
+        <div class="error-message" data-error-for="project" hidden>
+          <Icon name="fa6-solid:circle-exclamation" /> <span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="q-timeline">
+          Timeline <span class="optional">(optional)</span>
+        </label>
+        <select id="q-timeline" name="timeline">
+          <option value="">Choose a timeline</option>
+          {quoteOptions.timelines.map((option) => (
+            <option value={option}>{option}</option>
+          ))}
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="q-budget">
+          Budget <span class="optional">(optional)</span>
+        </label>
+        <select id="q-budget" name="budget">
+          <option value="">Choose a range</option>
+          {quoteOptions.budgets.map((option) => (
+            <option value={option}>{option}</option>
+          ))}
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="q-message">About the project</label>
+      <textarea
+        id="q-message"
+        name="message"
+        rows="6"
+        maxlength="800"
+        placeholder="What the business does, what the site or app should do, any links you like, and anything else that helps."
+      ></textarea>
+      <div class="char-count" id="quote-char-count">
+        0/800 characters
+      </div>
+      <div class="error-message" data-error-for="message" hidden>
+        <Icon name="fa6-solid:circle-exclamation" /> <span></span>
+      </div>
+    </div>
+
+    <div class="turnstile-wrap">
+      <div class="turnstile-widget" data-turnstile></div>
+      <small class="turnstile-hint">
+        <Icon name="fa6-solid:shield-halved" /> Bot protection by Cloudflare Turnstile loads when you start typing
+      </small>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn primary-btn submit-btn" disabled>
+        <span class="submit-label">
+          <Icon name="fa6-solid:paper-plane" /> Send request
+        </span>
+        <div class="spinner" hidden>
+          <div class="bounce1"></div>
+          <div class="bounce2"></div>
+          <div class="bounce3"></div>
+        </div>
+      </button>
+    </div>
+  </form>
+  <noscript>
+    <p class="noscript-note">
+      The form needs JavaScript. You can email <a href={`mailto:${site.email}`}>{site.email}</a>, or use the buttons
+      below.
+    </p>
+  </noscript>
+
+  <div class="alt-channels">
+    <p>Prefer to chat or talk? The WhatsApp message carries the same text you have typed above.</p>
+    <div class="alt-actions">
+      <a
+        class="btn whatsapp-btn"
+        data-wa-compose
+        data-wa-base={whatsappUrl()}
+        data-lead="whatsapp"
+        href={whatsappUrl(quoteGreeting)}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <Icon name="fa6-brands:whatsapp" /> Send on WhatsApp
+      </a>
+      <a class="btn secondary-btn" data-lead="phone" href={`tel:${site.phone}`}>
+        <Icon name="fa6-solid:phone" /> Call {site.phoneDisplay}
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+  import '../scripts/quote';
+</script>
+
+<style lang="scss">
+  .quote {
+    position: relative;
+    padding: 32px;
+    background: var(--gh-canvas-subtle);
+    border: 1px solid var(--gh-border-default);
+    border-radius: 12px;
+  }
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .form-group {
+    margin-bottom: 16px;
+  }
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .optional {
+    font-weight: 400;
+    color: var(--gh-fg-muted);
+  }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 11px 12px;
+    background: var(--gh-canvas-inset);
+    border: 1px solid var(--gh-border-default);
+    border-radius: 8px;
+    color: var(--gh-fg-default);
+    font-family: inherit;
+    font-size: 14px;
+    transition: border 0.2s;
+  }
+  .form-group textarea {
+    min-height: 140px;
+    resize: vertical;
+  }
+  .form-group textarea::placeholder {
+    color: var(--gh-fg-subtle);
+    opacity: 1;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    outline: 0;
+    border-color: var(--gh-accent-fg);
+    box-shadow: 0 0 0 3px var(--gh-accent-subtle);
+  }
+  .form-group :is(input, select, textarea).invalid {
+    border-color: var(--gh-danger-fg);
+  }
+  .error-message {
+    display: flex;
+    gap: 6px;
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--gh-danger-fg);
+  }
+  .char-count {
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--gh-fg-muted);
+    text-align: right;
+  }
+  .char-count.warning {
+    color: var(--gh-attention-fg);
+    font-weight: 600;
+  }
+  .turnstile-wrap {
+    margin: 6px 0 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .turnstile-widget {
+    min-height: 65px;
+  }
+  .turnstile-hint {
+    color: var(--gh-fg-muted);
+    font-size: 12px;
+  }
+  .form-actions {
+    margin-top: 20px;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  .submit-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  /* White on #1a7f37 is 5.3:1; WhatsApp's own brand green is too light for white text. */
+  .whatsapp-btn {
+    background: #1a7f37;
+    border: 1px solid transparent;
+    color: #fff;
+  }
+  .whatsapp-btn:hover {
+    background: #17702f;
+    color: #fff;
+  }
+  .alt-channels {
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid var(--gh-border-default);
+  }
+  .alt-channels p {
+    margin-bottom: 14px;
+    font-size: 14px;
+  }
+  .alt-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .quote-sent {
+    margin-bottom: 24px;
+    padding: 20px;
+    border: 1px solid rgba(63, 185, 80, 0.4);
+    border-radius: 10px;
+    background: rgba(63, 185, 80, 0.08);
+  }
+  .quote-sent h2 {
+    margin-bottom: 6px;
+    font-size: 18px;
+  }
+  .quote-sent p {
+    margin-bottom: 14px;
+    font-size: 14px;
+  }
+  .spinner {
+    display: inline-flex;
+    gap: 4px;
+  }
+  .spinner > div {
+    width: 8px;
+    height: 8px;
+    background: currentColor;
+    border-radius: 50%;
+    animation: b 1.4s infinite both;
+  }
+  .spinner .bounce1 {
+    animation-delay: -0.32s;
+  }
+  .spinner .bounce2 {
+    animation-delay: -0.16s;
+  }
+  @keyframes b {
+    0%,
+    80%,
+    100% {
+      transform: scale(0);
+    }
+    40% {
+      transform: scale(1);
+    }
+  }
+  .toast {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: var(--gh-canvas-overlay);
+    border: 1px solid var(--gh-border-default);
+    border-radius: 8px;
+    font-size: 13px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s;
+    z-index: 10;
+  }
+  .toast.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .toast p {
+    margin: 0;
+  }
+  .toast-close {
+    background: 0;
+    border: 0;
+    color: var(--gh-fg-muted);
+    cursor: pointer;
+  }
+  .toast:not(.success) .t-success,
+  .toast:not(.error) .t-error {
+    display: none;
+  }
+  .noscript-note {
+    margin-top: 16px;
+    font-size: 13px;
+  }
+  @media (max-width: 640px) {
+    .quote {
+      padding: 20px;
+    }
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+    .btn {
+      width: 100%;
+    }
+  }
+</style>

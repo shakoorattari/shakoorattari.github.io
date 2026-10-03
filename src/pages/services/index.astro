@@ -2,14 +2,18 @@
 import Page from '../../layouts/Page.astro';
 import Icon from '../../components/Icon.astro';
 import CtaPanel from '../../components/CtaPanel.astro';
+import WorkCard from '../../components/WorkCard.astro';
+import RecommendationCard from '../../components/RecommendationCard.astro';
 import { services } from '../../data/services';
+import { work } from '../../data/work';
+import { recommendations, recommendationsUrl } from '../../data/recommendations';
 import { caseStudies } from '../../data/caseStudies';
 import { site } from '../../data/site';
 import { personRef, websiteRef } from '../../lib/schema';
 
 const title = 'Hire Shakoor Attari: Software Engineering Services';
 const description =
-  'Hire Shakoor Attari for senior engineering roles or projects: web and application development, OAuth/OIDC identity, integration, DevOps and AI tooling.';
+  'Hire Shakoor Attari and a team of developers for websites, web apps, SEO, identity, integration and DevOps, or for senior engineering roles in the UAE.';
 const path = '/services/';
 const url = new URL(path, site.url).href;
 
@@ -48,14 +52,24 @@ const jsonLd = [
     <p>{site.availability}</p>
     <p>
       I'm a full-stack software engineer and application architect with 15+ years of experience delivering enterprise
-      web platforms. Whether you're hiring for a senior role or need a specialist for a project, this page shows what I
-      can help with and how to reach me.
+      web platforms. Whether you're hiring for a senior role, need a website or app built, or want a specialist for one
+      project, this page shows what I can help with and how to reach me.
     </p>
   </div>
 
   <section class="page-section" aria-labelledby="paths-title">
-    <h2 id="paths-title">Two ways to work together</h2>
+    <h2 id="paths-title">Three ways to work together</h2>
     <ul class="card-grid">
+      <li class="info-card">
+        <h3>Need a website or app built?</h3>
+        <p>
+          Business websites, web apps and SEO, built by me together with {site.team}. You deal with me directly, and the
+          team joins as the project needs.
+        </p>
+        <a class="more" href="/quote/">
+          Request a quote →
+        </a>
+      </li>
       <li class="info-card">
         <h3>Hiring for a senior role</h3>
         <p>
@@ -69,8 +83,8 @@ const jsonLd = [
       <li class="info-card">
         <h3>Need a specialist for a project</h3>
         <p>
-          Web or application development, an identity / SSO integration, an API or integration design, a CI/CD setup, or
-          an AI tooling proof of concept. Send me the goals, timeline and constraints.
+          An identity / SSO integration, an API or integration design, a CI/CD setup, or an AI tooling proof of concept.
+          Send me the goals, timeline and constraints.
         </p>
         <a class="more" href="/#contact">
           Contact me →
@@ -95,6 +109,22 @@ const jsonLd = [
     </ul>
   </section>
 
+  <section class="page-section" aria-labelledby="built-title">
+    <h2 id="built-title">Websites &amp; apps I've built</h2>
+    <ul class="card-grid">
+      {work.map((item) => (
+        <li>
+          <WorkCard item={item} level="h3" />
+        </li>
+      ))}
+    </ul>
+    <p style="margin-top:16px">
+      <a class="more" href="/work/">
+        See all work →
+      </a>
+    </p>
+  </section>
+
   <section class="page-section" aria-labelledby="work-title">
     <h2 id="work-title">Evidence: case studies</h2>
     <ul class="link-list">
@@ -104,6 +134,23 @@ const jsonLd = [
         </li>
       ))}
     </ul>
+  </section>
+
+  <section class="page-section" aria-labelledby="says-title">
+    <h2 id="says-title">What colleagues and managers say</h2>
+    <ul class="card-grid">
+      {recommendations.map((recommendation) => (
+        <li>
+          <RecommendationCard recommendation={recommendation} />
+        </li>
+      ))}
+    </ul>
+    <p style="margin-top:16px;font-size:14px">
+      Recommendations written on LinkedIn, shown as written.
+      <a href={recommendationsUrl} target="_blank" rel="noopener noreferrer">
+        Read them on LinkedIn
+      </a>
+    </p>
   </section>
 
   <CtaPanel />

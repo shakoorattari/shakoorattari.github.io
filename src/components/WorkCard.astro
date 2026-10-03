@@ -1,0 +1,178 @@
+---
+import { Picture } from 'astro:assets';
+import Icon from './Icon.astro';
+import { hasPage, type WorkItem } from '../data/work';
+
+interface Props {
+  item: WorkItem;
+  /** Heading level of the card title, so it nests correctly under the section heading. */
+  level?: 'h2' | 'h3';
+  /** Load the screenshot eagerly (only for cards above the fold). */
+  eager?: boolean;
+}
+const { item, level: Heading = 'h3', eager = false } = Astro.props;
+
+// Entries with a page link to it; repo-only entries link straight to GitHub, in a new tab.
+const page = hasPage(item) ? item : undefined;
+const href = page ? `/work/${item.slug}/` : item.repo!;
+const kindLabel = item.kind === 'client' ? 'Client project' : 'Own project';
+---
+
+<article class="work-card">
+  {page ? (
+    <Picture
+      src={page.image}
+      alt={page.imageAlt}
+      widths={[480, 720, 960]}
+      sizes="(max-width: 640px) calc(100vw - 32px), 460px"
+      formats={['avif', 'webp']}
+      width={960}
+      height={600}
+      loading={eager ? 'eager' : 'lazy'}
+      fetchpriority={eager ? 'high' : 'auto'}
+      decoding="async"
+    />
+  ) : (
+    <div class="work-banner" aria-hidden="true">
+      <Icon name={'icon' in item ? item.icon : 'fa6-solid:code'} />
+    </div>
+  )}
+  <div class="work-body">
+    <p class="work-kind">{kindLabel}</p>
+    <p class="work-client">{item.label}</p>
+    <Heading class="work-name">
+      {page ? (
+        <a href={href}>{item.name}</a>
+      ) : (
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`${item.name} source code on GitHub (opens in a new tab)`}
+        >
+          {item.name} <span aria-hidden="true">↗</span>
+        </a>
+      )}
+    </Heading>
+    <p class="work-blurb">{item.blurb}</p>
+    <ul class="work-tags">
+      {item.tags.map((tag) => (
+        <li>{tag}</li>
+      ))}
+    </ul>
+  </div>
+</article>
+
+<style lang="scss">
+  .work-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    background: var(--gh-canvas-subtle);
+    border: 1px solid var(--gh-border-default);
+    border-radius: 12px;
+    transition:
+      border-color 0.2s ease,
+      transform 0.2s ease;
+  }
+  .work-card:hover,
+  .work-card:focus-within {
+    border-color: var(--gh-accent-muted);
+    transform: translateY(-3px);
+  }
+  .work-card :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    border-bottom: 1px solid var(--gh-border-default);
+  }
+  .work-body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 8px;
+    padding: 20px;
+  }
+  .work-banner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 16 / 10;
+    border-bottom: 1px solid var(--gh-border-default);
+    background:
+      radial-gradient(circle at 30% 20%, rgba(163, 113, 247, 0.28), transparent 55%),
+      radial-gradient(circle at 75% 80%, rgba(47, 129, 247, 0.25), transparent 55%), var(--gh-canvas);
+  }
+  .work-banner :global(.icon) {
+    width: 72px;
+    height: 72px;
+    color: var(--gh-accent-fg);
+    opacity: 0.9;
+  }
+  .work-kind {
+    align-self: flex-start;
+    margin: 0;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--gh-fg-default);
+    background: var(--gh-canvas-overlay);
+    border: 1px solid var(--gh-border-default);
+    border-radius: 6px;
+  }
+  .work-client {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--gh-fg-muted);
+  }
+  .work-name {
+    margin: 0;
+    font-size: 19px;
+    letter-spacing: -0.01em;
+  }
+  /* Stretched link: the whole card is clickable through its title. */
+  .work-name a {
+    color: var(--gh-fg-default);
+  }
+  .work-name a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  .work-name a:hover {
+    color: var(--gh-accent-fg);
+  }
+  .work-blurb {
+    flex: 1;
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--gh-fg-muted);
+  }
+  .work-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    list-style: none;
+    margin: 4px 0 0;
+    padding: 0;
+  }
+  .work-tags li {
+    padding: 3px 10px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #79c0ff;
+    background: rgba(56, 139, 253, 0.12);
+    border: 1px solid rgba(56, 139, 253, 0.3);
+    border-radius: 999px;
+  }
+</style>

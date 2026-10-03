@@ -3,13 +3,19 @@ import { Picture } from 'astro:assets';
 import Icon from './Icon.astro';
 import profile from '../assets/profile.jpg';
 import { site } from '../data/site';
+import { whatsappUrl } from '../lib/whatsapp';
+
+const whatsappLink = whatsappUrl("Hello Shakoor, I found your website and I'd like to get in touch.");
 ---
 
 <section id="contact" class="contact" aria-labelledby="contact-title">
   <div class="container">
     <div class="section-title">
       <h2 id="contact-title">Contact Me</h2>
-      <p>Get in touch for opportunities or just to say hello!</p>
+      <p>
+        Get in touch about a role, a website or app project, or just to say hello. Planning a project?
+        <a href="/quote/">Request a quote</a>.
+      </p>
     </div>
 
     <div class="contact-content">
@@ -31,7 +37,7 @@ import { site } from '../data/site';
             <div class="online-indicator"></div>
           </div>
           <h3>{site.name}</h3>
-          <p>Open to senior engineering &amp; architect roles</p>
+          <p>Open to senior roles &amp; client projects</p>
           <div class="availability">
             <span class="availability-status">Currently Available</span>
             <span class="response-time">Responds within 24 hours</span>
@@ -61,6 +67,21 @@ import { site } from '../data/site';
             <button type="button" class="action-btn copy-btn" data-copy={site.phone} data-label="Phone">
               <Icon name="fa6-solid:copy" /> Copy Phone
             </button>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <Icon name="fa6-brands:whatsapp" />
+          <h3>WhatsApp</h3>
+          <p>
+            <a href={whatsappLink} target="_blank" rel="noopener noreferrer" data-lead="whatsapp">
+              {site.phoneDisplay}
+            </a>
+          </p>
+          <div class="contact-action">
+            <a href={whatsappLink} target="_blank" rel="noopener noreferrer" class="action-btn" data-lead="whatsapp">
+              <Icon name="fa6-solid:arrow-up-right-from-square" /> Open WhatsApp
+            </a>
           </div>
         </div>
 
@@ -258,6 +279,12 @@ import { site } from '../data/site';
     inset: 0 0 auto;
     height: 1px;
     background: linear-gradient(90deg, transparent, var(--gh-border-default), transparent);
+  }
+  .section-title p a {
+    color: #58a6ff;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
   .contact-content {
     display: grid;

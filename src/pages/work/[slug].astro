@@ -1,0 +1,184 @@
+---
+import { Picture } from 'astro:assets';
+import Page from '../../layouts/Page.astro';
+import CtaPanel from '../../components/CtaPanel.astro';
+import { workPages, getWork, type WorkPage } from '../../data/work';
+import { getService } from '../../data/services';
+import { site } from '../../data/site';
+import { personRef } from '../../lib/schema';
+
+export function getStaticPaths() {
+  return workPages.map((item) => ({ params: { slug: item.slug }, props: { item } }));
+}
+
+interface Props {
+  item: WorkPage;
+}
+const { item } = Astro.props;
+
+const path = `/work/${item.slug}/`;
+const url = new URL(path, site.url).href;
+const services = item.services.map((slug) => getService(slug)).filter((s) => !!s);
+const others = workPages.filter((w) => w.slug !== item.slug).map((w) => getWork(w.slug)!);
+const isClient = item.kind === 'client';
+const shortUrl = (u: string) => u.replace(/^https:\/\//, '').replace(/\/$/, '');
+
+const jsonLd = [
+  {
+    '@type': 'WebPage',
+    '@id': `${url}#page`,
+    url,
+    name: item.h1,
+    description: item.metaDescription,
+    about: { '@type': isClient ? 'WebSite' : 'SoftwareApplication', name: item.name, url: item.url ?? item.repo },
+    author: personRef,
+    mainEntity: {
+      '@type': 'CreativeWork',
+      name: isClient ? `${item.name} website` : item.name,
+      url: item.url ?? item.repo,
+      description: item.blurb,
+      creator: personRef,
+    },
+  },
+];
+---
+
+<Page
+  title={item.metaTitle}
+  description={item.metaDescription}
+  path={path}
+  crumbs={[
+    { name: 'Work', href: '/work/' },
+    { name: item.name, href: path },
+  ]}
+  current="work"
+  jsonLd={jsonLd}
+>
+  <h1 class="page-title">{item.h1}</h1>
+  <p class="page-meta">
+    <span>
+      <strong>{isClient ? 'Client' : 'Project type'}:</strong> {item.label}
+    </span>
+    {item.role && (
+      <span>
+        <strong>My role:</strong> {item.role}
+      </span>
+    )}
+    {item.url && (
+      <span>
+        <strong>Live site:</strong>
+        <a class="live-link" href={item.url} target="_blank" rel="noopener noreferrer">
+          {shortUrl(item.url)}
+        </a>
+      </span>
+    )}
+    {item.repo && (
+      <span>
+        <strong>Source code:</strong>
+        <a class="repo-link" href={item.repo} target="_blank" rel="noopener noreferrer">
+          {shortUrl(item.repo)}
+        </a>
+      </span>
+    )}
+  </p>
+  <div class="page-lead">
+    {item.intro.map((paragraph) => (
+      <p>{paragraph}</p>
+    ))}
+  </div>
+
+  <figure class="work-shot">
+    <Picture
+      src={item.image}
+      alt={item.imageAlt}
+      widths={[640, 960, 1280]}
+      sizes="(max-width: 992px) calc(100vw - 32px), 928px"
+      formats={['avif', 'webp']}
+      width={1280}
+      height={800}
+      loading="eager"
+      fetchpriority="high"
+      decoding="async"
+    />
+    <figcaption>The home page, captured from the live site.</figcaption>
+  </figure>
+
+  <section class="page-section" aria-labelledby="goal-title">
+    <h2 id="goal-title">The goal</h2>
+    <p>{item.goal}</p>
+  </section>
+
+  <section class="page-section" aria-labelledby="built-title">
+    <h2 id="built-title">What I built</h2>
+    <ul class="card-grid">
+      {item.built.map((part) => (
+        <li class="info-card">
+          <h3>{part.title}</h3>
+          <p>{part.text}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  {item.scope && (
+    <section class="page-section" aria-labelledby="scope-title">
+      <h2 id="scope-title">Scope and limits</h2>
+      <p>{item.scope}</p>
+    </section>
+  )}
+
+  <section class="page-section" aria-labelledby="stack-title">
+    <h2 id="stack-title">Technologies</h2>
+    <ul class="chips">
+      {item.stack.map((tech) => (
+        <li>{tech}</li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="page-section" aria-labelledby="more-title">
+    <h2 id="more-title">Related</h2>
+    <ul class="link-list">
+      {services.map((service) => (
+        <li>
+          <a href={`/services/${service!.slug}/`}>{service!.name}</a>
+        </li>
+      ))}
+      {others.map((other) => (
+        <li>
+          <a href={`/work/${other.slug}/`}>More work: {other.name}</a>
+        </li>
+      ))}
+      <li>
+        <a href="/work/">All work</a>
+      </li>
+    </ul>
+  </section>
+
+  <CtaPanel
+    heading={isClient ? 'Need a site like this?' : 'Need a web app?'}
+    text={
+      isClient
+        ? 'Tell me about the business and what the site should achieve. I reply within 24 hours.'
+        : 'Tell me what the app should do and who will use it. I reply within 24 hours.'
+    }
+  />
+</Page>
+
+<style is:global lang="scss">
+  .work-shot {
+    margin: 36px 0 0;
+  }
+  .work-shot img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--gh-border-default);
+    border-radius: 12px;
+  }
+  .work-shot figcaption {
+    margin-top: 10px;
+    font-size: 13px;
+    color: var(--gh-fg-muted);
+  }
+</style>

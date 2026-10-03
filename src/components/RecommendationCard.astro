@@ -1,0 +1,71 @@
+---
+import { formatRecommendationDate, type Recommendation } from '../data/recommendations';
+
+interface Props {
+  recommendation: Recommendation;
+}
+const { recommendation: r } = Astro.props;
+---
+
+<figure class="rec">
+  <blockquote>
+    <p>{r.text}</p>
+  </blockquote>
+  <figcaption>
+    <span class="rec-name">{r.name}</span>
+    <span class="rec-role">{r.role}</span>
+    <span class="rec-meta">
+      {r.relationship} · {formatRecommendationDate(r.date)} · on LinkedIn
+    </span>
+  </figcaption>
+</figure>
+
+<style lang="scss">
+  .rec {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    margin: 0;
+    padding: 22px;
+    background: var(--gh-canvas);
+    border: 1px solid var(--gh-border-default);
+    border-radius: 10px;
+  }
+  blockquote {
+    flex: 1;
+    margin: 0 0 16px;
+    padding: 0;
+    border: 0;
+  }
+  blockquote p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--gh-fg-default);
+  }
+  blockquote p::before {
+    content: '\201C';
+  }
+  blockquote p::after {
+    content: '\201D';
+  }
+  figcaption {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding-top: 14px;
+    border-top: 1px solid var(--gh-border-default);
+    font-size: 13px;
+  }
+  .rec-name {
+    font-weight: 600;
+    color: var(--gh-fg-default);
+  }
+  .rec-role,
+  .rec-meta {
+    color: var(--gh-fg-muted);
+  }
+  .rec-meta {
+    font-size: 12px;
+  }
+</style>

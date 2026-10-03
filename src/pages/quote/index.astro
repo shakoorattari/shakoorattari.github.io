@@ -1,0 +1,86 @@
+---
+import Page from '../../layouts/Page.astro';
+import QuoteForm from '../../components/QuoteForm.astro';
+import { site } from '../../data/site';
+import { personRef, websiteRef } from '../../lib/schema';
+
+const title = 'Request a Quote: Website or App Development | S. Attari';
+const description =
+  'Request a quote for a website, web app or SEO work. Send the brief by form, WhatsApp or phone and get a reply within 24 hours from a UAE-based engineer.';
+const path = '/quote/';
+const url = new URL(path, site.url).href;
+
+const jsonLd = [
+  {
+    '@type': 'ContactPage',
+    '@id': `${url}#page`,
+    url,
+    name: 'Request a quote',
+    description,
+    isPartOf: websiteRef,
+    about: personRef,
+  },
+];
+---
+
+<Page
+  title={title}
+  description={description}
+  path={path}
+  crumbs={[{ name: 'Request a quote', href: path }]}
+  current="quote"
+  jsonLd={jsonLd}
+>
+  <h1 class="page-title">Request a quote</h1>
+  <div class="page-lead">
+    <p>
+      Tell me about the website, web app or SEO work you need. You deal with me directly; for larger projects I bring in{' '}
+      {site.team}.
+    </p>
+    <p>
+      Use the form, or message or call me, whichever is easiest. A few lines about the business and what you want the
+      site to do is enough to start.
+    </p>
+  </div>
+
+  <section class="page-section" aria-labelledby="steps-title">
+    <h2 id="steps-title">What happens next</h2>
+    <ul class="card-grid">
+      <li class="info-card">
+        <h3>1. You send the brief</h3>
+        <p>By form, WhatsApp or phone. The details you type in the form are carried into the WhatsApp message too.</p>
+      </li>
+      <li class="info-card">
+        <h3>2. I reply</h3>
+        <p>Usually within 24 hours, with questions or a suggestion for a short call.</p>
+      </li>
+      <li class="info-card">
+        <h3>3. Scope and estimate</h3>
+        <p>If it is a good fit, you get a written scope and estimate before any work starts.</p>
+      </li>
+    </ul>
+  </section>
+
+  <section class="page-section" aria-labelledby="form-title">
+    <h2 id="form-title">Your project</h2>
+    <QuoteForm />
+  </section>
+
+  <section class="page-section" aria-labelledby="see-title">
+    <h2 id="see-title">Not sure yet?</h2>
+    <ul class="link-list">
+      <li>
+        <a href="/work/">See websites and apps I've built</a>
+      </li>
+      <li>
+        <a href="/services/">Browse services</a>
+      </li>
+      <li>
+        <a href="/services/website-design-development/">Website design and development</a>
+      </li>
+      <li>
+        <a href="/services/seo-performance/">SEO and website performance</a>
+      </li>
+    </ul>
+  </section>
+</Page>

@@ -9,7 +9,11 @@
         "/services/identity-sso-oauth/index.html",
         "/services/web-application-development/index.html",
         "/projects/index.html",
-        "/projects/oneportal-iam/index.html"
+        "/projects/oneportal-iam/index.html",
+        "/work/index.html",
+        "/work/earth-cone/index.html",
+        "/work/uae-information-chatbot/index.html",
+        "/quote/index.html"
       ],
       "settings": {
         "chromeFlags": "--no-sandbox"

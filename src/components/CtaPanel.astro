@@ -1,6 +1,8 @@
 ---
 import Icon from './Icon.astro';
 import { site } from '../data/site';
+import { whatsappUrl } from '../lib/whatsapp';
+import { quoteGreeting } from '../data/quote';
 
 interface Props {
   heading?: string;
@@ -16,8 +18,14 @@ const {
   <h2 id="cta-title">{heading}</h2>
   <p>{text}</p>
   <div class="cta-actions">
-    <a class="btn primary-btn" href="/#contact">
-      <Icon name="fa6-solid:paper-plane" /> Get in touch
+    <a class="btn primary-btn" href="/quote/">
+      <Icon name="fa6-solid:paper-plane" /> Request a quote
+    </a>
+    <a class="btn secondary-btn" href={whatsappUrl(quoteGreeting)} target="_blank" rel="noopener noreferrer">
+      <Icon name="fa6-brands:whatsapp" /> WhatsApp
+    </a>
+    <a class="btn secondary-btn" href="/#contact">
+      <Icon name="fa6-solid:envelope" /> Get in touch
     </a>
     <a class="btn secondary-btn" href={site.resume} download>
       <Icon name="fa6-solid:download" /> Download résumé
