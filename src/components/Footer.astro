@@ -3,10 +3,12 @@ import Icon from './Icon.astro';
 import { site } from '../data/site';
 import { getPublishedPosts } from '../lib/blog';
 import { getBuildInfo } from '../lib/version';
+import { getAnalyticsConfig } from '../lib/analytics';
 
 const hasPosts = (await getPublishedPosts()).length > 0;
 
 const build = getBuildInfo();
+const analytics = getAnalyticsConfig();
 const builtOn = build.commitDate.slice(0, 10);
 const versionTitle = `Version ${build.version} · build ${build.commitShort}${build.dirty ? ' (modified)' : ''} · ${builtOn}`;
 
@@ -25,6 +27,12 @@ const social = [
         <a href="/projects/">Case studies</a>
         {hasPosts && <a href="/blog/">Articles</a>}
         <a href="/#contact">Contact</a>
+        <a href="/privacy/">Privacy</a>
+        {analytics.ga.enabled && (
+          <button type="button" class="link-button" data-consent-settings>
+            Privacy choices
+          </button>
+        )}
       </nav>
       <div class="copyright">
         <p>
@@ -130,10 +138,20 @@ const social = [
     gap: 6px 18px;
     font-size: 13px;
   }
-  .footer-nav a {
+  .footer-nav a,
+  .link-button {
     color: var(--gh-fg-muted);
   }
-  .footer-nav a:hover {
+  .footer-nav a:hover,
+  .link-button:hover {
     color: var(--gh-accent-fg);
+  }
+
+  .link-button {
+    padding: 0;
+    background: none;
+    border: 0;
+    font: inherit;
+    cursor: pointer;
   }
 </style>

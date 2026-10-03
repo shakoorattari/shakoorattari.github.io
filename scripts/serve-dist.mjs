@@ -10,10 +10,11 @@ import { createServer } from 'node:http';
 import { extname, join, normalize } from 'node:path';
 
 const port = Number(process.argv[2] ?? process.env.PORT ?? 4321);
-const root = join(process.cwd(), 'dist');
+const dist = process.env.DIST_DIR ?? 'dist';
+const root = join(process.cwd(), dist);
 
 if (!existsSync(root)) {
-  console.error('serve-dist: dist/ not found — run `npm run build` first.');
+  console.error(`serve-dist: ${dist}/ not found — build the site first.`);
   process.exit(1);
 }
 
@@ -54,4 +55,4 @@ createServer((request, response) => {
   }
   response.writeHead(status, { 'Content-Type': types[extname(target)] ?? 'application/octet-stream' });
   createReadStream(target).pipe(response);
-}).listen(port, () => console.log(`serving dist/ on http://localhost:${port}`));
+}).listen(port, () => console.log(`serving ${dist}/ on http://localhost:${port}`));

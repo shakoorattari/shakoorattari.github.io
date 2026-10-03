@@ -11,6 +11,7 @@ export const pages = [
   '/services/devops-ci-cd/',
   '/services/ai-tooling-mcp/',
   '/projects/',
+  '/privacy/',
   '/projects/oneportal-iam/',
   '/projects/oneportal-digital-workplace/',
   '/projects/ai-tooling-suite/',

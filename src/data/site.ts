@@ -80,12 +80,22 @@ export const contactConfig = {
 /**
  * Measurement + search-engine verification. All optional: nothing is emitted while a value is empty.
  * Set them here, or as GitHub Actions *variables* (Settings → Secrets and variables → Actions → Variables):
- *   CF_ANALYTICS_TOKEN, GOOGLE_SITE_VERIFICATION, BING_SITE_VERIFICATION
+ *   CF_ANALYTICS_TOKEN, GA_MEASUREMENT_ID, GOOGLE_SITE_VERIFICATION, BING_SITE_VERIFICATION
  * (the workflow exposes them to the build as PUBLIC_* env vars). These values are public by design.
  */
 export const tracking = {
   /** Cloudflare Web Analytics token (cookieless, no consent banner needed). */
   cloudflareToken: import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN ?? '',
+  /**
+   * Google Analytics 4 Measurement ID ("G-XXXXXXXXXX"). Opt-in only: Google's script is requested after a
+   * visitor accepts the consent notice. See src/lib/analytics.ts and docs/analytics.md.
+   */
+  googleAnalyticsId: import.meta.env.PUBLIC_GA_MEASUREMENT_ID ?? '',
+  /**
+   * Comma-separated hostnames allowed to send analytics (default: the production domain and www). Keeps a
+   * production build served from localhost or a preview URL from polluting the real property.
+   */
+  googleAnalyticsHosts: import.meta.env.PUBLIC_GA_HOSTS ?? '',
   /** <meta name="google-site-verification"> content, for a Search Console "URL prefix" property. */
   googleVerification: import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION ?? '',
   /** <meta name="msvalidate.01"> content, for Bing Webmaster Tools. */
