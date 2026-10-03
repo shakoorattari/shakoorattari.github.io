@@ -8,6 +8,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+
+- The Credly badge for WES International Academic Qualifications, shown first under Certifications in About, linking to its public Credly page. It is a local image, not Credly's embed script, which would load a third-party script on every page view.
+
+### Fixed
+
+- At widths between about 920 and 1100 px the header wrapped onto two lines (the theme button took the space); it now collapses to the menu button below 1100 px.
+
 ## [1.4.0] - 2026-10-03
 
 ### Added
