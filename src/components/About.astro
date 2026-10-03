@@ -155,9 +155,24 @@ const maxEndorsements = Math.max(...endorsements.map((e) => e.count));
           <div class="certificates-list">
             {certifications.map((cert) => (
               <div class="certificate">
-                <div class="certificate-logo">
-                  <Icon name={cert.icon} />
-                </div>
+                {cert.badge ? (
+                  <Picture
+                    class="certificate-badge"
+                    src={cert.badge.image}
+                    alt={cert.badge.alt}
+                    widths={[56, 112]}
+                    sizes="56px"
+                    formats={['avif', 'webp']}
+                    width={56}
+                    height={56}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                ) : (
+                  <div class="certificate-logo">
+                    <Icon name={cert.icon} />
+                  </div>
+                )}
                 <div class="certificate-info">
                   <h4>{cert.name}</h4>
                   <p>
@@ -429,6 +444,11 @@ const maxEndorsements = Math.max(...endorsements.map((e) => e.count));
     justify-content: center;
     color: var(--gh-accent-fg);
     font-size: 18px;
+    flex-shrink: 0;
+  }
+  .certificate :global(img.certificate-badge) {
+    width: 56px;
+    height: 56px;
     flex-shrink: 0;
   }
   .certificate-info h4 {

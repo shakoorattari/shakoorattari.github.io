@@ -155,3 +155,21 @@ test.describe('recommendations', () => {
     expect(await page.locator('.rec blockquote p').allTextContents()).toEqual(recommendations.map((r) => r.text));
   });
 });
+
+test('the Credly badge is a local image linking safely to its public page, with no Credly script', async ({ page }) => {
+  const requests: string[] = [];
+  page.on('request', (request) => requests.push(request.url()));
+  await page.goto('/');
+  const badge = page.locator('.certificate', { hasText: 'International Academic Qualifications' });
+  await expect(badge.locator('img')).toHaveAttribute('alt', /WES International Academic Qualifications/);
+  const link = badge.getByRole('link', { name: 'Verify' });
+  await expect(link).toHaveAttribute(
+    'href',
+    'https://www.credly.com/badges/eb7c4611-bcfd-48a5-8ae7-be977082468c/public_url',
+  );
+  await expect(link).toHaveAttribute('target', '_blank');
+  await expect(link).toHaveAttribute('rel', /noopener/);
+  await badge.scrollIntoViewIfNeeded();
+  await page.waitForLoadState('networkidle');
+  expect(requests.filter((url) => url.includes('credly.com'))).toEqual([]); // the embed script is deliberately not used
+});
