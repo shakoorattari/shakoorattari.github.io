@@ -39,7 +39,8 @@ npm start       # dev server on http://localhost:4321
 | `npm run lint` / `npm run format` | Check / fix formatting with Prettier |
 | `npm run test:e2e` | Playwright suite against the build (run `npm run build` first) |
 | `npm run test:analytics` | Builds with a *fake* Google Analytics ID and runs the consent/analytics tests with Google mocked — nothing leaves the machine |
-| `npm run lighthouse` | Lighthouse CI thresholds against the build (reports written locally, nothing uploaded) |
+| `npm run lighthouse` | Lighthouse CI thresholds against the build, light theme (reports written locally, nothing uploaded) |
+| `npm run lighthouse:dark` | The same thresholds with the dark theme forced, on six pages |
 | `npm run verify` | Formatting + type-check + build + SEO checks + version checks + unit tests — what to run before pushing |
 | `npm run release` | Prepare a release: recommended SemVer bump from your commits, `CHANGELOG.md` section, `package.json` + lockfile (`-- --dry-run` to preview) — see [docs/versioning.md](docs/versioning.md) |
 | `npm run check:version` / `npm run test:unit` | Keep `package.json`, the lockfile, `CHANGELOG.md` and git tags consistent / unit-test the release logic — both run in CI |
@@ -83,8 +84,8 @@ src/
 │   ├── rss.xml.ts           /rss.xml (published posts)
 │   ├── llms.txt.ts          /llms.txt — plain-text site map for AI assistants
 │   └── version.json.ts      /version.json — version + build metadata of the deployed site
-├── scripts/                 nav.ts (menu, scroll-spy) · hero-roles.ts · contact.ts + quote.ts (forms, on form-kit.ts) · analytics.ts (opt-in GA4)
-├── styles/global.scss       Design tokens and shared utilities
+├── scripts/                 nav.ts (menu, scroll-spy) · theme.ts (light/dark/system button) · hero-roles.ts · contact.ts + quote.ts (forms, on form-kit.ts) · analytics.ts (opt-in GA4)
+├── styles/global.scss       Design tokens (a light and a dark set; the system decides by default) and shared utilities
 ├── assets/profile.jpg       Source photo that Astro resizes to AVIF/WebP (460×460, from the GitHub avatar)
 ├── assets/work/             Home-page screenshots of the client sites (1440×900), resized by Astro
 └── lib/                     lastmod.ts (git date), blog.ts (published vs preview), schema.ts (Person/WebSite refs), whatsapp.ts (wa.me links),
@@ -123,6 +124,7 @@ Notes:
 
 - **Structured data is generated** from `site.ts` (Person + WebSite + ProfilePage in `Base.astro`), so the title, description, email and profile links can't drift from the visible page. The phone number is deliberately **not** in the structured data.
 - **Contact details:** the public email is `binmushtaq@gmail.com`; the Outlook address is listed as a Teams ID only.
+- **Theme:** the site follows the visitor's system (light or dark) and the header button cycles system → light → dark. Colours are tokens in `src/styles/global.scss` (`tokens-light` and `tokens-dark`); never hard-code a colour in a component, and add any new token to both sets.
 - **Icons:** use `<Icon name="fa6-solid:envelope" />` (`fa6-solid`, `fa6-brands` or `fa6-regular`). An unknown name fails the build.
 - **Social card:** replace `public/assets/og-image.jpg` with a 1200×630 JPEG (keep it under ~100 KB); the dimensions are declared in `Base.astro`.
 - **Profile photo:** replace `src/assets/profile.jpg` (hero, about, contact) and `public/assets/files/shakoor_pic.jpeg` (structured data); Astro generates the sizes and formats. Both currently hold the GitHub avatar at 460 px. The social card and the résumé portrait are separate files.

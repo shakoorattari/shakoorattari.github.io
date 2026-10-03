@@ -8,6 +8,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+
+- **Light and dark themes.** The site follows the visitor's system by default; a header button cycles system → light → dark and remembers the choice. A stored choice is applied before first paint (no flash), native controls and the browser's UI colour follow the theme, and without JavaScript the system theme still applies. Contrast is checked in both themes by `tests/theme.spec.ts`, and Lighthouse audits both (`npm run lighthouse:dark` is new and runs in CI).
+- **Komorebi Cameron** (a creative studio website with a custom canvas engine) joins the own projects on `/work/`, with a live link.
+
+### Changed
+
+- Every colour in the site now comes from a theme token; the dark theme looks as before. The nav's quote button now darkens instead of lightening on hover or when current, to keep its text contrast.
+- Lighthouse CI is pinned to the light theme explicitly (a browser otherwise audits whatever its host prefers).
+
 ## [1.3.0] - 2026-10-03
 
 ### Added
