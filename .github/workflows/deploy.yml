@@ -41,19 +41,22 @@ jobs:
     steps:
       # The exact build that passed the gates (uploaded by ci.yml), not a fresh one.
       - name: Download build
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: dist
           path: dist
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: dist/
+          # Since v4 this action leaves out dotfiles by default. dist/ contains .nojekyll, so keep including it:
+          # the published site stays byte-for-byte what it was.
+          include-hidden-files: true
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
 
       # /version.json is built from the deployed commit. The query string bypasses the Pages CDN cache.
       - name: Verify the live site is serving this commit
@@ -82,7 +85,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
