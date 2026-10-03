@@ -8,6 +8,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+
+- Google Analytics 4, **opt-in and off until a Measurement ID is set**: a small consent notice (Accept and Decline styled identically); Google's script is requested only after a visitor accepts, with Consent Mode v2 (advertising signals permanently denied), Google signals off, and a 13-month cookie lifetime. A footer "Privacy choices" button changes the decision and deletes the analytics cookies; Global Privacy Control is honoured.
+- A `generate_lead` event when the contact form is sent (never the content of the message).
+- A `/privacy/` page, linked from the footer on every page and generated from the build configuration, so it only describes the tools that are actually enabled.
+- `docs/analytics.md`: how it works, what it costs, setup steps, and which tool answers which question (Google Analytics measures visitors, not a rating; Search Console and Lighthouse cover search performance and quality).
+- `npm run test:analytics`: builds with a fake Measurement ID and runs 14 consent/analytics tests with Google's endpoints mocked; runs in CI.
+
+### Changed
+
+- CI test builds (Playwright, Lighthouse) now carry no analytics configuration, so test runs can never send fake visits to the real Google Analytics or Cloudflare properties.
+- The Cloudflare Web Analytics beacon is gated by the same build-time configuration helper as Google Analytics.
+
 ## [1.2.0] - 2026-09-27
 
 ### Added

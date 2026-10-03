@@ -34,7 +34,7 @@ Non-negotiable quality bar for every page shipped: **fast, accessible, SEO-optim
 | Content | Astro Content Collections (Markdown) for the blog | Schema-validated; `draft` defaults to `true` |
 | Forms | Web3Forms + Cloudflare Turnstile (lazy) + honeypot + client rate limit | No backend needed |
 | Hosting | GitHub Pages (Actions deploy) at `shakoorattari.com` via `public/CNAME` | Free, simple |
-| Analytics | Cloudflare Web Analytics (optional, cookieless, off until a token is set) | Owner's choice, 2026-09-26 |
+| Analytics | **Google Analytics 4, opt-in** behind a consent notice (optional, off until `GA_MEASUREMENT_ID` is set) and/or Cloudflare Web Analytics (optional, cookieless, off until a token is set) | Owner asked for GA on 2026-10-03; Cloudflare was the 2026-09-26 choice and stays. GA's script is ~150 KB, so it is opt-in to keep the "no third-party requests on load" rule — see `docs/analytics.md` |
 | Language | TypeScript (strict) | |
 | Quality gates | Prettier, `astro check`, `scripts/check-seo.mjs`, Playwright, Lighthouse CI | Mirrors the sibling `earthcone` project — see §10 |
 
@@ -51,14 +51,14 @@ public/                 Served as-is at the same URLs as the old Angular site (d
   assets/files/          Résumé PDFs + markdown, shakoor_pic.jpeg, shakoor-photo.jpg — public URLs, keep names
 src/
   data/                  ALL content and site config — edit these, not the components
-    site.ts              Identity, SEO copy, contact details, socials, `contactConfig`, `tracking` (analytics/verification)
+    site.ts              Identity, SEO copy, contact details, socials, `contactConfig`, `tracking` (GA id, Cloudflare token, verification tags)
     about.ts skills.ts experience.ts projects.ts
     services.ts          The six service pages (copy, deliverables, selected work, related links)
     caseStudies.ts       Case-study pages = projects.ts joined with the detailed bullets in experience.ts
   content/blog/          Articles + outlines (Markdown). `draft: true` until the owner finishes; `outline: true` never renders
   content.config.ts      Blog schema (title ≤ 70, optional seoTitle ≤ 60, description 70–160)
   components/            Header, Hero, About, Services, Skills, Experience, Projects, Contact, SocialProof, Footer,
-                         Icon, Breadcrumbs, CtaPanel — one .astro file each, styles scoped inside it
+                         Icon, Breadcrumbs, CtaPanel, AnalyticsConsent — one .astro file each, styles scoped inside it
   layouts/
     Base.astro           <head>: title/description/canonical, Open Graph, Twitter, JSON-LD, verification tags, analytics, font preload
     Page.astro           Content-page layout (breadcrumbs + BreadcrumbList JSON-LD + shared page styles)
@@ -67,10 +67,13 @@ src/
     services/            /services/ hub + /services/<slug>/
     projects/            /projects/ hub + /projects/<slug>/   (NOT redirected — see §4)
     blog/                /blog/ + /blog/<slug>/ (dev previews drafts; production builds only published posts)
+    privacy.astro        /privacy/ — generated from the build config: describes only the tools that are enabled
     404.astro  sitemap.xml.ts  rss.xml.ts  llms.txt.ts  version.json.ts
-  scripts/               nav.ts (menu, scroll-spy, footer year) · hero-roles.ts (role rotator) · contact.ts (the form)
+  scripts/               nav.ts (menu, scroll-spy, footer year) · hero-roles.ts (role rotator) · contact.ts (the form) ·
+                         analytics.ts (opt-in GA4: consent, load, withdraw; bundled only when an ID is set)
   lib/                   lastmod.ts (git date), blog.ts (published vs preview), schema.ts (Person/WebSite JSON-LD refs),
-                         version.ts (build info: version + commit, resolved at build time)
+                         version.ts (build info: version + commit, resolved at build time),
+                         analytics.ts (what this build ships; a malformed GA id fails the build)
   styles/global.scss     Design tokens (--gh-* GitHub-dark palette) and shared utilities
   assets/profile.jpg     Source photo Astro resizes to AVIF/WebP (a 335px source — do not request wider variants)
 scripts/                 check-seo.mjs (post-build SEO guard) · check-version.mjs · release.mjs · release-notes.mjs ·
@@ -117,7 +120,7 @@ Enforced by Lighthouse CI (`lighthouserc.json`, mobile, median of 3 runs, six re
 
 Rules to stay inside the budget:
 
-- **No third-party requests on load.** Turnstile loads lazily (form within 400px, or a field focused); the optional Cloudflare beacon is the only allowed third party.
+- **No third-party requests on load.** Turnstile loads lazily (form within 400px, or a field focused); the optional Cloudflare beacon is the only third party that loads for everyone. **Google Analytics is opt-in:** `gtag.js` (~150 KB on the wire, measured) is requested only after a visitor clicks Accept, so a visitor who hasn't agreed makes zero Google requests. Never load Google's script before consent, and don't switch to "advanced" consent mode, without the owner deciding it.
 - CSS is inlined (`inlineStylesheets: 'always'`); fonts self-hosted and preloaded; images through `astro:assets`; icons inlined SVG.
 - No client-side framework, no polyfills, no libraries for things a few lines of vanilla TS can do.
 - Don't apply `content-visibility: auto` to real sections: with `contain-intrinsic-size` it reserved a wrong height and made the page height jump (it was a bug in the old Angular version).
@@ -168,7 +171,8 @@ Workflows in `.github/workflows/` (details and thresholds: `docs/ci-cd.md`):
 ## 11. Environment & secrets
 
 - Nothing here is a secret. The Web3Forms access key and the Turnstile **site** key are designed to be public and live in `src/data/site.ts` (`contactConfig`); development uses a different Web3Forms key and Cloudflare's always-pass Turnstile test key (`import.meta.env.DEV`).
-- Optional public values (analytics token, search-engine verification tags) are read from `PUBLIC_*` env vars (`.env.example`). In CI they come from GitHub **repository variables** `CF_ANALYTICS_TOKEN`, `GOOGLE_SITE_VERIFICATION`, `BING_SITE_VERIFICATION`. Nothing is emitted while empty.
+- Optional public values (analytics IDs/tokens, search-engine verification tags) are read from `PUBLIC_*` env vars (`.env.example`). In CI they come from GitHub **repository variables** `GA_MEASUREMENT_ID`, `CF_ANALYTICS_TOKEN`, `GOOGLE_SITE_VERIFICATION`, `BING_SITE_VERIFICATION`. Nothing is emitted while empty.
+- **Analytics rules** (details in `docs/analytics.md`): only the *deployed* build (the `ci.yml` quality job) gets the real IDs; the **Playwright and Lighthouse builds blank them** (`PUBLIC_GA_MEASUREMENT_ID: ''`, `PUBLIC_CF_ANALYTICS_TOKEN: ''`) so CI can never send fake visits to the real properties. GA is also dormant in `astro dev`, on any hostname other than the production domain (`PUBLIC_GA_HOSTS`), and for Global Privacy Control visitors. Test GA only with a **fake** ID (`G-TEST123456`) and mocked Google endpoints (`npm run test:analytics`); never with the real ID. Send no personal data in events (the form's content, email, name). Update `/privacy/` (`src/pages/privacy.astro`) whenever a data-handling tool is added or removed.
 - Never commit real secrets. The repo needs no GitHub Actions secrets.
 
 ## 12. Getting started
@@ -186,7 +190,7 @@ npm run release -- --dry-run   # preview the next version and changelog section
 ## 13. QA workflow
 
 - **Before pushing:** `npm run verify`, then `npm run test:e2e` if you touched behaviour, layout or markup.
-- **Playwright** (`tests/`) runs against the production build, never `astro dev`, and uses the system Google Chrome (`channel: 'chrome'`). It is served by `scripts/serve-dist.mjs` because **Astro 7's `astro preview` daemonizes** — the launcher exits immediately, which test runners read as a crashed server. Web3Forms, Turnstile and the clipboard are always mocked; tests must never contact a real service.
+- **Playwright** (`tests/`) runs against the production build, never `astro dev`, and uses the system Google Chrome (`channel: 'chrome'`). It is served by `scripts/serve-dist.mjs` because **Astro 7's `astro preview` daemonizes** — the launcher exits immediately, which test runners read as a crashed server. Web3Forms, Turnstile, the clipboard and Google's endpoints are always mocked; tests must never contact a real service. The analytics tests need a separate fake-ID build: `npm run test:analytics` (it builds into `dist-analytics/` and serves it through `DIST_DIR`); in the default run they check that **no** analytics ships.
 - **Look at the page, don't just trust green.** Assertions guard what you already know about; screenshots and computed geometry surface the rest. Useful techniques from this project: screenshot each section of old vs new builds side by side (use `captureBeyondViewport` — resizing the viewport to full-page height breaks `100vh` heroes and gives false "no difference"); compare the bounding box of _every element_ between two builds to prove a formatting or refactor change moved nothing.
 - **Mutation-test gates and tests:** deliberately break the site and confirm the right check fails.
 - Prefer a targeted assertion over eyeballing once; screenshots catch what you thought to look at, assertions catch the regression next time.
@@ -195,7 +199,9 @@ npm run release -- --dry-run   # preview the next version and changelog section
 
 Owner actions (need their accounts — see `docs/visibility-playbook.md`):
 
-- Verify the domain in **Search Console**, submit the sitemap, request indexing; add the **analytics token**.
+- Verify the domain in **Search Console**, submit the sitemap, request indexing; add the **analytics tokens**.
+- **Turn on Google Analytics:** create the GA4 property + web stream and set the `GA_MEASUREMENT_ID` repository variable (10 steps in `docs/analytics.md`, including turning off "Page changes based on browser history events" for this anchor-navigated single page, and setting 14-month data retention). Until then nothing GA-related ships.
+- **Review `/privacy/`**: it is a draft written from the site's actual behaviour (contact form via Web3Forms/Turnstile, GitHub Pages hosting, analytics), including "I use what you send only to reply to you"; confirm it matches how you really handle messages.
 - **Make the checks required:** add a "Require status checks to pass" rule with the three checks in §9 to the existing `main` ruleset, so a failing check blocks merges (the ruleset currently has none).
 - Fix the **GitHub profile location** (says Dubai; site and résumé say Sharjah), add a profile README linking here, and link the site from LinkedIn.
 - **Finish and publish the first article** (a full draft plus three outlines are in `src/content/blog/`).

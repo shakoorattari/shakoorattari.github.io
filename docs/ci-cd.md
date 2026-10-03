@@ -6,7 +6,7 @@ The goal: performance, accessibility and SEO can't quietly regress. Every pull r
 
 | Workflow | Runs on | Jobs |
 |---|---|---|
-| `ci.yml` | pull requests to `main`; called by `deploy.yml` | **Lint, type-check, build & site checks** · **End-to-end tests (Playwright)** |
+| `ci.yml` | pull requests to `main`; called by `deploy.yml` | **Lint, type-check, build & site checks** · **End-to-end tests (Playwright)** (including the analytics integration tests) |
 | `lighthouse.yml` | pull requests to `main`; called by `deploy.yml` | **Lighthouse budget check** |
 | `deploy.yml` | push to `main`; manual (`workflow_dispatch`) | calls both workflows above, then **Deploy** (only if every job passed, and only from `main`) → verifies the live site serves the deployed commit → **Tag & publish release** if the version is new |
 
@@ -21,7 +21,8 @@ Deploy publishes the exact `dist/` that passed the gates (the artifact uploaded 
 | Types + build | `npm run build` (`astro check && astro build`) | A type error, a broken import, an unknown icon, invalid blog frontmatter |
 | SEO checks | `npm run check:seo` | See below |
 | Version checks | `npm run check:version` | `package.json`, `package-lock.json`, `CHANGELOG.md` and the git tags disagree (see [versioning.md](versioning.md)) |
-| End-to-end tests | `npm run test:e2e` | Any of the 94 Playwright tests fails |
+| End-to-end tests | `npm run test:e2e` | Any of the 101 Playwright tests that run against the default build fails |
+| Analytics tests | `npm run test:analytics` | Any of the 14 consent/analytics tests fails (separate build with a *fake* Google Analytics ID; Google is mocked) |
 | Lighthouse CI | `npm run lighthouse` | A page misses a threshold below (3 runs per page, median) |
 
 ### SEO checks (`scripts/check-seo.mjs`)
@@ -105,7 +106,7 @@ Earthcone works the same way (ruleset + required CI check). One design choice re
 
 ## Optional configuration
 
-Set as repository **variables** (Settings → Secrets and variables → Actions → Variables): `CF_ANALYTICS_TOKEN`, `GOOGLE_SITE_VERIFICATION`, `BING_SITE_VERIFICATION`. The CI jobs pass them to the build so the tested artifact is the one that ships. See [`.env.example`](../.env.example) and [visibility-playbook.md](visibility-playbook.md).
+Set as repository **variables** (Settings → Secrets and variables → Actions → Variables): `GA_MEASUREMENT_ID`, `CF_ANALYTICS_TOKEN`, `GOOGLE_SITE_VERIFICATION`, `BING_SITE_VERIFICATION`. The `ci.yml` quality job passes them to the build, and that build is the artifact that gets deployed. **The Playwright and Lighthouse builds deliberately blank the analytics IDs**: those jobs run from GitHub's servers, and with a real ID every run would send fake visits to the real Google Analytics / Cloudflare properties. The integration itself is covered by `npm run test:analytics` (fake ID, mocked Google). Consequence: the deployed build differs from the tested ones only by the analytics snippet and notice. See [`.env.example`](../.env.example) and [visibility-playbook.md](visibility-playbook.md).
 
 ## When a gate fails
 

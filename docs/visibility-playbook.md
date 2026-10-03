@@ -38,7 +38,10 @@ Also: most recruiters find engineers on **LinkedIn**, not Google. The site's mai
 ### 3.2 Bing Webmaster Tools
 <https://www.bing.com/webmasters> → *Import from Google Search Console*, or add the site and submit the sitemap. Bing also feeds DuckDuckGo and others. (Optional repository variable: `BING_SITE_VERIFICATION`.)
 
-### 3.3 Analytics (Cloudflare Web Analytics)
+### 3.3 Analytics
+Two tools, complementary. **Google Analytics 4** (opt-in, consented visitors only; full steps in [analytics.md](analytics.md)) and **Cloudflare Web Analytics** (below; cookieless, counts everyone). Note that neither gives a "rating": Search Console (§3.1) is the closest thing to how Google rates the site.
+
+**Cloudflare Web Analytics:**
 1. Cloudflare dashboard → **Web Analytics** → *Add a site* → `shakoorattari.com` (no DNS change needed).
 2. Copy the **token** from the snippet.
 3. Set a repository **variable** `CF_ANALYTICS_TOKEN` to that token and re-run the workflow. The beacon is cookieless, so no consent banner is needed. Nothing is loaded until the token is set.
@@ -88,7 +91,8 @@ After publishing: request indexing in Search Console, share on LinkedIn, and cro
 ## 7. Measure, monthly
 
 - **Search Console → Performance:** impressions, clicks, average position and the actual queries. Queries with impressions but low clicks need a better title or description; queries at positions 8–20 are worth improving with content.
-- **Cloudflare Web Analytics:** visits, referrers (which links bring people), top pages.
+- **Cloudflare Web Analytics:** visits (everyone, cookieless), referrers (which links bring people), top pages.
+- **Google Analytics 4:** engagement of the visitors who accepted: sources, countries, devices, `file_download` (résumé), outbound clicks, `generate_lead` (contact form). Expect it to under-count — see [analytics.md](analytics.md#reading-the-numbers).
 - **Judge on trends over months**, not days.
 
 ## 8. What was deliberately not done
