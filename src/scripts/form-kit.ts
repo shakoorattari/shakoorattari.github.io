@@ -62,6 +62,10 @@ export function bindCopyButtons(show: (type: ToastType, message: string) => void
 }
 
 // ---------------------------------------------------------------- Turnstile (lazy)
+/** The theme the page is showing: an explicit choice, else the system's. Turnstile renders in the same one. */
+const pageTheme = () =>
+  document.documentElement.dataset.theme ?? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+
 const INTERACTION_EVENTS = ['focusin', 'pointerdown', 'input'] as const;
 
 /**
@@ -96,7 +100,7 @@ export function lazyTurnstile(
       if (!api || !container) return;
       widgetId = api.render(container, {
         sitekey: contactConfig.turnstileSiteKey,
-        theme: 'dark',
+        theme: pageTheme(),
         appearance: 'always',
         callback: (value: string) => onToken(value),
         'expired-callback': () => onToken(null),

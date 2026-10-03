@@ -226,7 +226,7 @@ const maxEndorsements = Math.max(...endorsements.map((e) => e.count));
     display: flex;
     gap: 6px;
     padding: 6px 10px;
-    background: rgba(13, 17, 23, 0.9);
+    background: var(--gh-pill-bg);
     border: 1px solid var(--gh-border-default);
     border-radius: 999px;
     backdrop-filter: blur(8px);
@@ -253,8 +253,8 @@ const maxEndorsements = Math.max(...endorsements.map((e) => e.count));
     align-items: center;
     gap: 6px;
     padding: 4px 12px;
-    background: rgba(63, 185, 80, 0.1);
-    border: 1px solid rgba(63, 185, 80, 0.4);
+    background: var(--gh-success-subtle);
+    border: 1px solid var(--gh-success-muted);
     border-radius: 999px;
     color: var(--gh-success-fg);
     font-size: 12px;
@@ -299,8 +299,8 @@ const maxEndorsements = Math.max(...endorsements.map((e) => e.count));
   }
   .availability-status.available {
     color: var(--gh-success-fg);
-    border-color: rgba(63, 185, 80, 0.4);
-    background: rgba(63, 185, 80, 0.08);
+    border-color: var(--gh-success-muted);
+    background: var(--gh-success-subtle);
   }
 
   .about-text {

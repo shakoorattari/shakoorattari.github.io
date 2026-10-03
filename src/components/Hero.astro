@@ -112,8 +112,8 @@ import { site } from '../data/site';
     position: absolute;
     inset: 0;
     background-image:
-      linear-gradient(rgba(48, 54, 61, 0.25) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(48, 54, 61, 0.25) 1px, transparent 1px);
+      linear-gradient(var(--gh-grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--gh-grid-line) 1px, transparent 1px);
     background-size: 56px 56px;
     mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black 30%, transparent 80%);
     -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black 30%, transparent 80%);
@@ -254,7 +254,7 @@ import { site } from '../data/site';
   }
   .professional-badge a:hover {
     border-color: var(--gh-accent-muted);
-    background: rgba(56, 139, 253, 0.1);
+    background: var(--gh-accent-subtle);
   }
   .professional-badge :global(.icon) {
     color: #0a66c2;

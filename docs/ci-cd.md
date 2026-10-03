@@ -57,6 +57,8 @@ Six representative pages (home, services hub, two service pages, projects hub, o
 
 The category minimums match earthcone's. The metric and byte budgets are tighter than the category scores alone would enforce; they leave roughly 2× headroom over today's values so normal content growth passes but a regression doesn't. Change them deliberately, in `lighthouserc.json`, in the PR that needs it.
 
+The site has a light and a dark theme, so both are audited: `lighthouserc.json` forces light (`--blink-settings=preferredColorScheme=1`; Chrome's flag is 0 = dark, 1 = light) and `scripts/lighthouse-dark.mjs` derives a dark run from the same file, so the thresholds live in one place. Without the explicit flag a browser audits whatever scheme its host prefers.
+
 Lighthouse CI is pinned (`@lhci/cli@0.14.0`, the same version earthcone uses), so results don't shift when a new Lighthouse or axe-core ships. Bump it on purpose and run `npm run lighthouse` locally first. Reports are uploaded to Lighthouse's temporary public storage, and the links appear in the job log.
 
 > These are lab measurements. They keep regressions out; they don't replace field data (Search Console's Core Web Vitals report).
@@ -66,7 +68,8 @@ Lighthouse CI is pinned (`@lhci/cli@0.14.0`, the same version earthcone uses), s
 ```bash
 npm run verify         # format check + type-check + build + SEO checks
 npm run test:e2e       # Playwright, against the build (run `npm run build` first)
-npm run lighthouse     # Lighthouse CI, against the build; reports go to .lighthouseci/reports and nothing is uploaded
+npm run lighthouse     # Lighthouse CI, against the build, light theme; reports go to .lighthouseci/reports and nothing is uploaded
+npm run lighthouse:dark # the same budgets with the dark theme forced, on six pages (reports in .lighthouseci/reports-dark)
                        # (uses system Chrome; set CHROME_PATH if needed)
 npm run format         # fix formatting
 ```

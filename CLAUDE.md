@@ -30,7 +30,8 @@ Non-negotiable quality bar for every page shipped: **fast, accessible, SEO-optim
 | --- | --- | --- |
 | Framework | [Astro 7](https://astro.build/) (static output, Node ≥ 22.12) | Ships no JavaScript by default; the site is static content plus one form |
 | Styling | SCSS, scoped per component + one global stylesheet | Ported from the original Angular design; `scopedStyleStrategy: 'class'` keeps component styles beating global ones |
-| Interactivity | Three small vanilla-TS scripts in `src/scripts/` | No UI framework; ~2 KB of JS in total |
+| Theme | Light and dark token sets (`--gh-*` in `global.scss`); **default = the system** (`prefers-color-scheme`), header button cycles system → light → dark | Added 2026-10-03. With no stored choice CSS alone decides (no script, no flash); a stored choice is applied by an inline script in `<head>` |
+| Interactivity | Small vanilla-TS scripts in `src/scripts/` | No UI framework; ~4 KB of JS in total |
 | Icons | Font Awesome 6 glyphs inlined as SVG via `<Icon />` (Iconify JSON packages) | No icon font, no runtime cost |
 | Fonts | Inter (Latin subset, variable), self-hosted via `@fontsource-variable/inter`, preloaded | No third-party font requests |
 | Images | `astro:assets` `<Picture>` → AVIF/WebP with explicit dimensions | Small, no layout shift |
@@ -83,7 +84,7 @@ src/
   lib/                   lastmod.ts (git date), blog.ts (published vs preview), schema.ts (Person/WebSite JSON-LD refs),
                          version.ts (build info: version + commit, resolved at build time), whatsapp.ts (wa.me links),
                          analytics.ts (what this build ships; a malformed GA id fails the build)
-  styles/global.scss     Design tokens (--gh-* GitHub-dark palette) and shared utilities
+  styles/global.scss     Design tokens (--gh-* GitHub palette, a light set and a dark set) and shared utilities
   assets/profile.jpg     Source photo Astro resizes to AVIF/WebP: the GitHub avatar, 460×460 (the owner asked for it on 2026-10-03). Don't request variants wider than 460
   assets/work/           1440×900 home-page screenshots of the client sites (headless Chrome), resized by Astro. Re-capture when a site changes visibly
 scripts/                 check-seo.mjs (post-build SEO guard) · check-version.mjs · release.mjs · release-notes.mjs ·
@@ -140,8 +141,11 @@ Rules to stay inside the budget:
 ## 7. Accessibility
 
 - WCAG 2.1 AA minimum; Lighthouse Accessibility must stay at **1.0**.
-- Colour contrast: text on `--gh-canvas-*` surfaces needs 4.5:1. The accent blue `#2f81f7` is only 4.06:1 on `--gh-canvas-overlay`; use `#58a6ff` for small text there (see `a.action-btn` in `Contact.astro`).
-- `<html>` sets `color-scheme: dark` so native controls (buttons, scrollbars) render light-on-dark; without it default button text is black on a dark page.
+- Colour contrast: text on `--gh-canvas-*` surfaces needs 4.5:1, **in both themes**. In dark the accent blue `#2f81f7` is only 4.06:1 on `--gh-canvas-overlay`, so small text on overlay/elevated surfaces uses `--gh-accent-text` (`#58a6ff` dark, `#0969da` light; see `a.action-btn` in `Contact.astro`). `tests/theme.spec.ts` checks the token pairs for both themes; Lighthouse audits each theme on real pages (`npm run lighthouse` = light, `npm run lighthouse:dark`).
+- **No hard-coded colours in components.** Every colour comes from a `--gh-*` token so both themes work; tinted pills use the `*-subtle`/`*-muted`/`*-fg` tokens (chip, purple, success, danger). A literal is fine only where it is theme-independent (white text on a filled blue button, a brand colour, a mask). Add a token to **both** `tokens-light` and `tokens-dark`.
+- In-sentence links on content pages are underlined (WCAG 1.4.1); `Page.astro` does it for `.page-lead` and `.page-section > p`.
+- Each token set also sets `color-scheme` (`light` or `dark`), so native controls and scrollbars match the theme; `<meta name="color-scheme">` is `light dark` and `theme-color` has a light and a dark tag that `src/scripts/theme.ts` overrides for an explicit choice.
+- **The theme button** (`[data-theme-toggle]` in `Header.astro`) is an icon button whose `aria-label` names the current choice and the next one, with a polite live region for the change. It is hidden until the inline script in `Base.astro` adds `class="js"` to `<html>`, because it does nothing without JavaScript. Stored under `localStorage.theme` as `light`/`dark` (absent = system); reads and writes are wrapped in try/catch.
 - Every icon-only link or button needs an accessible name; the skip link and visible focus states must keep working; `prefers-reduced-motion` disables the role animation and animations globally.
 - Forms: labelled inputs, inline errors with `aria-invalid`, toast is `role="status"`.
 
@@ -171,7 +175,7 @@ Rules to stay inside the budget:
 Workflows in `.github/workflows/` (details and thresholds: `docs/ci-cd.md`):
 
 - `ci.yml` — on PRs to `main` (and callable): Prettier check → `astro check && astro build` → `check:seo` → uploads `dist`; separate job runs the Playwright suite against the build.
-- `lighthouse.yml` — on PRs (and callable): builds, then `lhci autorun` with **`@lhci/cli` pinned to 0.14.0** (same as earthcone; bump deliberately, run `npm run lighthouse` locally first — version drift caused a CI-only false positive there once).
+- `lighthouse.yml` — on PRs (and callable): builds, then `lhci autorun` (forced **light**: `--blink-settings=preferredColorScheme=1`) and `scripts/lighthouse-dark.mjs` (the same budgets, forced **dark**, six pages) with **`@lhci/cli` pinned to 0.14.0** (same as earthcone; bump deliberately, run `npm run lighthouse` locally first — version drift caused a CI-only false positive there once).
 - `deploy.yml` — on push to `main` / manual: **calls both workflows above, then deploys the exact `dist` that passed**, only from `main`; then verifies the live `/version.json` reports the deployed commit, and finally creates the `vX.Y.Z` tag and GitHub Release if that version is new. Running it manually on another branch is a safe dry run.
 - Pages is configured with `build_type: workflow` (Settings → Pages → Source: GitHub Actions). The old committed `docs/` build folder was removed; nothing is served from a branch.
 - CI checks out full git history (`fetch-depth: 0`) because `lastmod` comes from `git log`.
@@ -195,7 +199,8 @@ npm ci
 npm start               # http://localhost:4321 (previews blog drafts)
 npm run verify          # format check + type-check + build + SEO checks — run before pushing
 npm run test:e2e        # Playwright against the build (npm run build first)
-npm run lighthouse      # Lighthouse CI thresholds locally (reports in .lighthouseci/reports)
+npm run lighthouse      # Lighthouse CI thresholds locally, light theme (reports in .lighthouseci/reports)
+npm run lighthouse:dark # the same budgets with the dark theme forced, on six pages
 npm run release -- --dry-run   # preview the next version and changelog section
 ```
 
@@ -203,6 +208,7 @@ npm run release -- --dry-run   # preview the next version and changelog section
 
 - **Before pushing:** `npm run verify`, then `npm run test:e2e` if you touched behaviour, layout or markup.
 - **Playwright** (`tests/`) runs against the production build, never `astro dev`, and uses the system Google Chrome (`channel: 'chrome'`). It is served by `scripts/serve-dist.mjs` because **Astro 7's `astro preview` daemonizes** — the launcher exits immediately, which test runners read as a crashed server. Web3Forms, Turnstile, the clipboard and Google's endpoints are always mocked; **`reuseExistingServer` means a running `astro dev` on port 4321 silently becomes the test target** (symptoms: `environment: development` in `/version.json`, ~1.9 MB of script). Check `lsof -nP -iTCP:4321 -sTCP:LISTEN` first, or run on another port with a throwaway config that spreads `playwright.config.ts` and overrides `baseURL` and `webServer`; tests must never contact a real service. The analytics tests need a separate fake-ID build: `npm run test:analytics` (it builds into `dist-analytics/` and serves it through `DIST_DIR`); in the default run they check that **no** analytics ships.
+- **Headless Chrome follows the host's appearance** (a dark macOS audits the dark theme; a Linux CI runner audits light). Never rely on the default: force it with `--blink-settings=preferredColorScheme=<0|1>` (**0 = dark, 1 = light**, verified by screenshot), as `lighthouserc.json` and `scripts/lighthouse-dark.mjs` do. Playwright's default `colorScheme` is light, so every spec runs in the light theme unless it sets `test.use({ colorScheme })`.
 - **Look at the page, don't just trust green.** Assertions guard what you already know about; screenshots and computed geometry surface the rest. Useful techniques from this project: screenshot each section of old vs new builds side by side (use `captureBeyondViewport` — resizing the viewport to full-page height breaks `100vh` heroes and gives false "no difference"); compare the bounding box of _every element_ between two builds to prove a formatting or refactor change moved nothing.
 - **Mutation-test gates and tests:** deliberately break the site and confirm the right check fails.
 - Prefer a targeted assertion over eyeballing once; screenshots catch what you thought to look at, assertions catch the regression next time.
@@ -224,7 +230,7 @@ Engineering / decisions:
 
 - **Turnstile is not enforced server-side:** `contact.ts` does not forward the token to Web3Forms, so the widget only gates the submit button. Fix needs `cf-turnstile-response` in the payload plus enabling verification in the Web3Forms dashboard (owner).
 - The **résumé markdown and both PDFs are public** in `public/assets/files/` and contain the phone number and email; decide which PDF to keep and whether to keep publishing the `.md`.
-- **More projects (2026-10-03):** the owner asked for `ai-chatbot-ali` and `HandGestureAI` (both public in `Attari-Home`) and "other better ones". Added: the chatbot (page) and HandGestureAI (link card). **Not added, awaiting the owner:** the private repos `Komorebi-Cameron` (luxury web studio site, Astro + React, active), `SchoolGPT` and `UAEChatbot` (local-Llama Python apps) — private and possibly client or unreleased work, so publishing needs the owner's say-so and, for a live site, a URL and a screenshot. Candidates in the personal account `shakoorattari`: `FamilySafety` (.NET 10 clean architecture), `ldap-mcp` and `mcp-servers` (evidence for the AI-tooling service), `vulscan`, `md-to-pdf`. Also noticed: the chatbot's live site returns GitHub's 404 on a deep link such as `/chatbot` (refresh or a shared link breaks; the root works), and the `SchoolGPT` README contains SQL Server `sa` credentials (private repo; rotate or remove).
+- **More projects (2026-10-03):** the owner asked for `ai-chatbot-ali` and `HandGestureAI` (both public in `Attari-Home`) and "other better ones". Added: the chatbot (page) and HandGestureAI (link card). `Komorebi-Cameron` was added on the owner's say-so with its public URL (the repo is private, so there is no source link; its README says the impact figures and domain are placeholders, so none are used). **Not added, awaiting the owner:** `SchoolGPT` and `UAEChatbot` (private local-Llama Python apps, no live site). Candidates in the personal account `shakoorattari`: `FamilySafety` (.NET 10 clean architecture), `ldap-mcp` and `mcp-servers` (evidence for the AI-tooling service), `vulscan`, `md-to-pdf`. Also noticed: the chatbot's live site returns GitHub's 404 on a deep link such as `/chatbot` (refresh or a shared link breaks; the root works), and the `SchoolGPT` README contains SQL Server `sa` credentials (private repo; rotate or remove).
 - **Client work decided 2026-10-03:** the owner asked for Earth Cone and Lail O Nahar in the gallery (`/work/`). Still open: confirm the clients are happy to be shown, and that "I designed and built" and "Website design and development" describe the owner's role correctly (it is the one wording not taken from a repo or live page). The owner said they would list further apps; add them to `src/data/work.ts` with a screenshot.
 - **Team details:** only the owner's one sentence is on the site (`site.team`). Team size, names, roles per person, whether it is a registered company and whether the owner's employer needs to approve outside work are unknown; ask before adding any of them.
 - **Recommendations:** three are shown (Ahmed Bahaa, Rizwan Iqbal, Dominick Antony). Ask them (a courtesy) that they are quoted on the site, and ask whether more exist: the owner's screenshot was cut off below the third.
