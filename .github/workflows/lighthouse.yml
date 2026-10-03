@@ -31,7 +31,11 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          PUBLIC_CF_ANALYTICS_TOKEN: ${{ vars.CF_ANALYTICS_TOKEN }}
+          # Test builds carry NO analytics: these jobs drive the site from GitHub's servers, and with a real ID they
+          # would send fake visits to the real Google Analytics / Cloudflare properties on every run. (The analytics
+          # integration itself is tested separately, with a fake ID and mocked endpoints.)
+          PUBLIC_CF_ANALYTICS_TOKEN: ''
+          PUBLIC_GA_MEASUREMENT_ID: ''
           PUBLIC_GOOGLE_SITE_VERIFICATION: ${{ vars.GOOGLE_SITE_VERIFICATION }}
           PUBLIC_BING_SITE_VERIFICATION: ${{ vars.BING_SITE_VERIFICATION }}
 
