@@ -48,7 +48,7 @@ const { ga } = getAnalyticsConfig();
     background: var(--gh-canvas-subtle);
     border: 1px solid var(--gh-border-default);
     border-radius: 12px;
-    box-shadow: 0 16px 40px rgba(1, 4, 9, 0.7);
+    box-shadow: 0 16px 40px var(--gh-shadow-strong);
   }
 
   .consent:focus {
@@ -68,7 +68,7 @@ const { ga } = getAnalyticsConfig();
   }
 
   p a {
-    color: #58a6ff;
+    color: var(--gh-accent-text);
     text-decoration: underline;
     text-underline-offset: 2px;
     white-space: nowrap;

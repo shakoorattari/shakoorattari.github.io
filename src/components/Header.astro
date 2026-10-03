@@ -1,4 +1,5 @@
 ---
+import Icon from './Icon.astro';
 import { getPublishedPosts } from '../lib/blog';
 
 interface Props {
@@ -67,6 +68,25 @@ const items: { label: string; href: string; page?: string; cta?: boolean }[] = [
           </li>
         ))}
       </ul>
+      <!-- Cycles system -> light -> dark. Hidden until the inline script in Base.astro marks the page as scripted. -->
+      <button
+        type="button"
+        class="theme-toggle"
+        data-theme-toggle
+        data-pref="system"
+        aria-label="Theme: follows your device. Switch to light."
+      >
+        <span class="theme-icon theme-icon-system">
+          <Icon name="fa6-solid:circle-half-stroke" />
+        </span>
+        <span class="theme-icon theme-icon-light">
+          <Icon name="fa6-solid:sun" />
+        </span>
+        <span class="theme-icon theme-icon-dark">
+          <Icon name="fa6-solid:moon" />
+        </span>
+      </button>
+      <span class="sr-only" role="status" aria-live="polite" data-theme-status></span>
       <button
         class="menu-toggle"
         type="button"
@@ -84,6 +104,7 @@ const items: { label: string; href: string; page?: string; cta?: boolean }[] = [
 
 <script>
   import '../scripts/nav';
+  import '../scripts/theme';
 </script>
 
 <style lang="scss">
@@ -99,14 +120,14 @@ const items: { label: string; href: string; page?: string; cta?: boolean }[] = [
       background-color 0.25s ease,
       border-color 0.25s ease,
       backdrop-filter 0.25s ease;
-    background-color: rgba(13, 17, 23, 0.7);
+    background-color: var(--gh-header-bg);
     backdrop-filter: saturate(180%) blur(12px);
     -webkit-backdrop-filter: saturate(180%) blur(12px);
     border-bottom: 1px solid transparent;
   }
 
   .site-header.scrolled {
-    background-color: rgba(13, 17, 23, 0.85);
+    background-color: var(--gh-header-bg-scrolled);
     border-bottom-color: var(--gh-border-default);
   }
 
@@ -169,6 +190,44 @@ const items: { label: string; href: string; page?: string; cta?: boolean }[] = [
     list-style: none;
     gap: 4px;
     align-items: center;
+    margin-left: auto;
+  }
+
+  /* The theme button: an icon showing the current choice (system, light or dark). */
+  .theme-toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    margin-left: 8px;
+    padding: 0;
+    cursor: pointer;
+    color: var(--gh-fg-default);
+    background: var(--gh-canvas-overlay);
+    border: 1px solid var(--gh-border-default);
+    border-radius: 6px;
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease;
+  }
+  :global(html.js) .theme-toggle {
+    display: inline-flex;
+  }
+  .theme-toggle:hover {
+    background: var(--gh-canvas-elevated);
+    border-color: var(--gh-fg-subtle);
+  }
+  .theme-icon {
+    display: none;
+    font-size: 15px;
+    line-height: 0;
+  }
+  .theme-toggle[data-pref='system'] .theme-icon-system,
+  .theme-toggle[data-pref='light'] .theme-icon-light,
+  .theme-toggle[data-pref='dark'] .theme-icon-dark {
+    display: inline-flex;
   }
 
   .nav-links li a {
@@ -186,15 +245,15 @@ const items: { label: string; href: string; page?: string; cta?: boolean }[] = [
 
   .nav-links li a:hover {
     color: var(--gh-fg-default);
-    background-color: rgba(177, 186, 196, 0.12);
+    background-color: var(--gh-hover-bg);
   }
 
   .nav-links li a.active {
     color: var(--gh-fg-default);
-    background-color: rgba(177, 186, 196, 0.08);
+    background-color: var(--gh-active-bg);
   }
 
-  /* The quote button: a filled link at the end of the menu. White on #1f6feb is 5:1. */
+  /* The quote button: a filled link at the end of the menu. White on the emphasis blue is at least 4.6:1 in both themes. */
   .nav-links li a.nav-cta {
     margin-left: 6px;
     color: #fff;
@@ -205,7 +264,7 @@ const items: { label: string; href: string; page?: string; cta?: boolean }[] = [
   .nav-links li a.nav-cta:hover,
   .nav-links li a.nav-cta.active {
     color: #fff;
-    background-color: #388bfd;
+    background-color: var(--gh-accent-emphasis-hover);
   }
 
   .nav-links li a.nav-cta::after {
@@ -256,7 +315,13 @@ const items: { label: string; href: string; page?: string; cta?: boolean }[] = [
 
   /* Ten links need more room than the original seven, so the menu collapses earlier. */
   @media (max-width: 920px) {
+    /* The links become a full-screen menu, so the theme button sits beside the menu button instead. */
+    .theme-toggle {
+      margin: 0 8px 0 auto;
+    }
+
     .nav-links {
+      margin-left: 0;
       position: fixed;
       top: 64px;
       left: -100%;

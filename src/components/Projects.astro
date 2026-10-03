@@ -101,7 +101,7 @@ import { projects } from '../data/projects';
   .project-card:hover {
     transform: translateY(-4px);
     border-color: var(--gh-accent-muted);
-    box-shadow: 0 16px 40px rgba(1, 4, 9, 0.6);
+    box-shadow: 0 16px 40px var(--gh-shadow);
   }
 
   .project-card:hover::after {
@@ -167,9 +167,9 @@ import { projects } from '../data/projects';
   .tech-tags span {
     font-size: 12px;
     padding: 3px 10px;
-    background-color: rgba(56, 139, 253, 0.12);
-    border: 1px solid rgba(56, 139, 253, 0.3);
-    color: #79c0ff;
+    background-color: var(--gh-chip-bg);
+    border: 1px solid var(--gh-chip-border);
+    color: var(--gh-chip-fg);
     border-radius: 999px;
     font-weight: 500;
   }

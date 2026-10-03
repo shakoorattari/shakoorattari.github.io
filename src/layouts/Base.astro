@@ -97,9 +97,24 @@ const graph = {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="color-scheme" content="dark" />
-    <meta name="theme-color" content="#0d1117" />
-
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0d1117" media="(prefers-color-scheme: dark)" />
+    <!--
+      Theme without a flash: with no stored choice the system decides in CSS alone (prefers-color-scheme), so this only
+      applies a stored "light" or "dark" before first paint. It also marks the page as scripted, which reveals the theme
+      button (it does nothing without JavaScript). Wrapped in try/catch because storage can throw (private windows).
+    -->
+    <script is:inline>
+      (function () {
+        var root = document.documentElement;
+        root.classList.add('js');
+        try {
+          var theme = localStorage.getItem('theme');
+          if (theme === 'light' || theme === 'dark') root.setAttribute('data-theme', theme);
+        } catch (e) {}
+      })();
+    </script>
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="keywords" content={site.keywords} />

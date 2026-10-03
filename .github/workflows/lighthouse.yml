@@ -46,3 +46,8 @@ jobs:
         run: |
           npm install -g @lhci/cli@0.14.0
           lhci autorun --config=./lighthouserc.json
+
+      - name: Run Lighthouse CI (dark theme)
+        # The same budgets with the dark theme forced, on the pages that carry the most colour. The run above is pinned
+        # to light, so between them both themes are audited. The config is derived from lighthouserc.json.
+        run: node scripts/lighthouse-dark.mjs

@@ -16,7 +16,7 @@
         "/quote/index.html"
       ],
       "settings": {
-        "chromeFlags": "--no-sandbox"
+        "chromeFlags": "--no-sandbox --blink-settings=preferredColorScheme=1"
       }
     },
     "assert": {

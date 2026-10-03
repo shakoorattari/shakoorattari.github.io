@@ -281,7 +281,7 @@ const whatsappLink = whatsappUrl("Hello Shakoor, I found your website and I'd li
     background: linear-gradient(90deg, transparent, var(--gh-border-default), transparent);
   }
   .section-title p a {
-    color: #58a6ff;
+    color: var(--gh-accent-text);
     font-weight: 600;
     text-decoration: underline;
     text-underline-offset: 3px;
@@ -331,8 +331,8 @@ const whatsappLink = whatsappUrl("Hello Shakoor, I found your website and I'd li
     font-size: 12px;
     font-weight: 600;
     color: var(--gh-success-fg);
-    background: rgba(63, 185, 80, 0.1);
-    border: 1px solid rgba(63, 185, 80, 0.3);
+    background: var(--gh-success-subtle);
+    border: 1px solid var(--gh-success-muted);
     border-radius: 6px;
   }
   .availability-status::before {
@@ -678,10 +678,10 @@ const whatsappLink = whatsappUrl("Hello Shakoor, I found your website and I'd li
 
   /* Link-style action buttons: the base accent blue is 4.06:1 on this surface (needs 4.5:1). */
   a.action-btn {
-    color: #58a6ff;
+    color: var(--gh-accent-text);
   }
   a.action-btn:hover {
-    color: #79c0ff;
+    color: var(--gh-accent-text-hover);
   }
   .toast:not(.success) .t-success,
   .toast:not(.error) .t-error {

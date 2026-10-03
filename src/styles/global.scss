@@ -1,7 +1,98 @@
 /* =====================================================
-   GitHub.com inspired theme tokens
+   Theme tokens (GitHub-inspired).
+   Light is the base. Dark applies when the visitor's system prefers it and they have not chosen light, or when they
+   have chosen dark (data-theme="dark" on <html>, set by the inline script in Base.astro before first paint and by
+   src/scripts/theme.ts). With no choice stored there is no data-theme and the system decides, with no script at all.
+   Every colour in the site comes from a token below: don't hard-code one in a component. Contrast was checked for
+   both sets (text >= 4.5:1 on canvas, subtle and elevated surfaces, and on its own tint).
    ===================================================== */
-:root {
+@mixin tokens-light {
+  color-scheme: light;
+
+  /* Canvas / surfaces */
+  --gh-canvas: #ffffff;
+  --gh-canvas-inset: #ffffff;
+  --gh-canvas-subtle: #f6f8fa;
+  --gh-canvas-overlay: #ffffff;
+  --gh-canvas-elevated: #eef1f4;
+
+  /* Borders */
+  --gh-border-default: #d0d7de;
+  --gh-border-muted: #d8dee4;
+  --gh-border-subtle: rgba(31, 35, 40, 0.1);
+
+  /* Text */
+  --gh-fg-default: #1f2328;
+  --gh-fg-muted: #59636e;
+  --gh-fg-subtle: #636c76;
+  --gh-fg-onEmphasis: #ffffff;
+
+  /* Accents */
+  --gh-accent-fg: #0969da;
+  --gh-accent-emphasis: #0969da;
+  --gh-accent-emphasis-hover: #0550ae;
+  --gh-accent-muted: rgba(9, 105, 218, 0.4);
+  --gh-accent-subtle: rgba(9, 105, 218, 0.1);
+  --gh-accent-text: #0969da;
+  --gh-accent-text-hover: #0550ae;
+
+  --gh-purple: #8250df;
+  --gh-purple-emphasis: #6639ba;
+  --gh-purple-fg: #6639ba;
+  --gh-purple-subtle: rgba(130, 80, 223, 0.08);
+  --gh-purple-muted: rgba(130, 80, 223, 0.3);
+  --gh-pink: #bf3989;
+  --gh-success-fg: #116329;
+  --gh-success-emphasis: #1a7f37;
+  --gh-success-subtle: rgba(26, 127, 55, 0.08);
+  --gh-success-muted: rgba(26, 127, 55, 0.4);
+  --gh-attention-fg: #8a5a00;
+  --gh-danger-fg: #b31d28;
+  --gh-danger-subtle: rgba(209, 36, 47, 0.07);
+  --gh-danger-muted: rgba(209, 36, 47, 0.4);
+  --gh-danger-ring: rgba(209, 36, 47, 0.2);
+
+  /* Chips and tags */
+  --gh-chip-bg: rgba(9, 105, 218, 0.08);
+  --gh-chip-border: rgba(9, 105, 218, 0.3);
+  --gh-chip-fg: #0550ae;
+
+  /* Buttons */
+  --gh-btn-bg: #f6f8fa;
+  --gh-btn-hover-bg: #eaeef2;
+  --gh-btn-active-bg: #e6eaef;
+  --gh-btn-border: rgba(31, 35, 40, 0.15);
+  --gh-btn-inset: rgba(255, 255, 255, 0.25);
+  --gh-btn-ring: rgba(9, 105, 218, 0.25);
+  --gh-btn-glow: rgba(9, 105, 218, 0.3);
+  --gh-gradient-button: linear-gradient(180deg, #0969da, #0550ae);
+  --gh-gradient-button-hover: linear-gradient(180deg, #0550ae, #033d8b);
+
+  /* Header and hover states */
+  --gh-header-bg: rgba(255, 255, 255, 0.75);
+  --gh-header-bg-scrolled: rgba(255, 255, 255, 0.9);
+  --gh-hover-bg: rgba(31, 35, 40, 0.06);
+  --gh-active-bg: rgba(31, 35, 40, 0.04);
+  --gh-pill-bg: rgba(255, 255, 255, 0.92);
+
+  /* Depth and texture */
+  --gh-shadow: rgba(66, 74, 83, 0.2);
+  --gh-shadow-strong: rgba(66, 74, 83, 0.28);
+  --gh-grid-line: rgba(31, 35, 40, 0.07);
+  --gh-star-rgb: 31, 35, 40;
+  --gh-selection: rgba(130, 80, 223, 0.25);
+
+  /* Gradients (GitHub homepage glows) */
+  --gh-gradient-text: linear-gradient(90deg, #1f2328 0%, #424a53 25%, #8250df 60%, #0969da 100%);
+  --gh-gradient-hero:
+    radial-gradient(1200px 600px at 50% -10%, rgba(130, 80, 223, 0.16), transparent 60%),
+    radial-gradient(800px 400px at 80% 20%, rgba(9, 105, 218, 0.12), transparent 60%),
+    radial-gradient(600px 400px at 10% 30%, rgba(191, 57, 137, 0.08), transparent 60%);
+}
+
+@mixin tokens-dark {
+  color-scheme: dark;
+
   /* Canvas / surfaces */
   --gh-canvas: #0d1117;
   --gh-canvas-inset: #010409;
@@ -23,21 +114,57 @@
   /* Accents */
   --gh-accent-fg: #2f81f7;
   --gh-accent-emphasis: #1f6feb;
+  --gh-accent-emphasis-hover: #1158c7;
   --gh-accent-muted: rgba(56, 139, 253, 0.4);
   --gh-accent-subtle: rgba(56, 139, 253, 0.15);
+  --gh-accent-text: #58a6ff;
+  --gh-accent-text-hover: #79c0ff;
 
   --gh-purple: #a371f7;
   --gh-purple-emphasis: #8957e5;
+  --gh-purple-fg: #c9b1fd;
+  --gh-purple-subtle: rgba(163, 113, 247, 0.1);
+  --gh-purple-muted: rgba(163, 113, 247, 0.3);
   --gh-pink: #db61a2;
   --gh-success-fg: #3fb950;
   --gh-success-emphasis: #238636;
+  --gh-success-subtle: rgba(63, 185, 80, 0.1);
+  --gh-success-muted: rgba(63, 185, 80, 0.4);
   --gh-attention-fg: #d29922;
   --gh-danger-fg: #f85149;
+  --gh-danger-subtle: rgba(248, 81, 73, 0.1);
+  --gh-danger-muted: rgba(248, 81, 73, 0.4);
+  --gh-danger-ring: rgba(248, 81, 73, 0.2);
+
+  /* Chips and tags */
+  --gh-chip-bg: rgba(56, 139, 253, 0.12);
+  --gh-chip-border: rgba(56, 139, 253, 0.3);
+  --gh-chip-fg: #79c0ff;
 
   /* Buttons */
   --gh-btn-bg: #21262d;
   --gh-btn-hover-bg: #30363d;
   --gh-btn-active-bg: #161b22;
+  --gh-btn-border: rgba(240, 246, 252, 0.1);
+  --gh-btn-inset: rgba(255, 255, 255, 0.08);
+  --gh-btn-ring: rgba(31, 111, 235, 0.2);
+  --gh-btn-glow: rgba(47, 129, 247, 0.3);
+  --gh-gradient-button: linear-gradient(180deg, #1f6feb, #1158c7);
+  --gh-gradient-button-hover: linear-gradient(180deg, #388bfd, #1f6feb);
+
+  /* Header and hover states */
+  --gh-header-bg: rgba(13, 17, 23, 0.7);
+  --gh-header-bg-scrolled: rgba(13, 17, 23, 0.85);
+  --gh-hover-bg: rgba(177, 186, 196, 0.12);
+  --gh-active-bg: rgba(177, 186, 196, 0.08);
+  --gh-pill-bg: rgba(13, 17, 23, 0.9);
+
+  /* Depth and texture */
+  --gh-shadow: rgba(1, 4, 9, 0.6);
+  --gh-shadow-strong: rgba(1, 4, 9, 0.7);
+  --gh-grid-line: rgba(48, 54, 61, 0.25);
+  --gh-star-rgb: 240, 246, 252;
+  --gh-selection: rgba(163, 113, 247, 0.4);
 
   /* Gradients (GitHub homepage glows) */
   --gh-gradient-text: linear-gradient(90deg, #ffffff 0%, #c9d1d9 25%, #a371f7 60%, #2f81f7 100%);
@@ -45,26 +172,28 @@
     radial-gradient(1200px 600px at 50% -10%, rgba(163, 113, 247, 0.35), transparent 60%),
     radial-gradient(800px 400px at 80% 20%, rgba(47, 129, 247, 0.25), transparent 60%),
     radial-gradient(600px 400px at 10% 30%, rgba(219, 97, 162, 0.18), transparent 60%);
-  --gh-gradient-button: linear-gradient(180deg, #1f6feb, #1158c7);
+}
 
-  /* Legacy aliases for existing component styles */
-  --primary-color: #2f81f7;
-  --primary-color-dark: #1f6feb;
-  --secondary-color: #161b22;
-  --text-color: #f0f6fc;
-  --light-text: #9198a1;
-  --bg-color: #0d1117;
-  --light-bg: #0d1117;
-  --section-bg: #161b22;
-  --dark-bg: #010409;
-  --border-color: #30363d;
+:root {
+  @include tokens-light;
+
   --transition: all 0.25s ease;
-  --box-shadow: 0 0 0 1px var(--gh-border-default);
-  --box-shadow-hover: 0 0 0 1px var(--gh-accent-muted), 0 10px 30px rgba(1, 4, 9, 0.6);
 
   /* Reusable composites */
   --gh-ring: conic-gradient(from 0deg, var(--gh-purple), var(--gh-accent-fg), var(--gh-pink), var(--gh-purple));
   --gh-grad-pb: linear-gradient(90deg, var(--gh-purple), var(--gh-accent-fg));
+}
+
+/* No stored choice and the system prefers dark. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    @include tokens-dark;
+  }
+}
+
+/* The visitor chose dark. */
+:root[data-theme='dark'] {
+  @include tokens-dark;
 }
 
 /* =====================================================
@@ -123,7 +252,6 @@
 }
 
 html {
-  color-scheme: dark;
   interpolate-size: allow-keywords;
 }
 
@@ -166,10 +294,10 @@ body::before {
   inset: 0;
   pointer-events: none;
   background-image:
-    radial-gradient(1px 1px at 20% 30%, rgba(240, 246, 252, 0.08) 50%, transparent 51%),
-    radial-gradient(1px 1px at 70% 80%, rgba(240, 246, 252, 0.06) 50%, transparent 51%),
-    radial-gradient(1px 1px at 40% 60%, rgba(240, 246, 252, 0.05) 50%, transparent 51%),
-    radial-gradient(1px 1px at 85% 25%, rgba(240, 246, 252, 0.07) 50%, transparent 51%);
+    radial-gradient(1px 1px at 20% 30%, rgba(var(--gh-star-rgb), 0.08) 50%, transparent 51%),
+    radial-gradient(1px 1px at 70% 80%, rgba(var(--gh-star-rgb), 0.06) 50%, transparent 51%),
+    radial-gradient(1px 1px at 40% 60%, rgba(var(--gh-star-rgb), 0.05) 50%, transparent 51%),
+    radial-gradient(1px 1px at 85% 25%, rgba(var(--gh-star-rgb), 0.07) 50%, transparent 51%);
   background-size:
     600px 600px,
     400px 400px,
@@ -209,11 +337,11 @@ a {
 }
 
 a:hover {
-  color: #79c0ff;
+  color: var(--gh-accent-text-hover);
 }
 
 ::selection {
-  background: rgba(163, 113, 247, 0.4);
+  background: var(--gh-selection);
   color: var(--gh-fg-onEmphasis);
 }
 
@@ -289,17 +417,17 @@ section {
 .primary-btn {
   background: var(--gh-gradient-button);
   color: var(--gh-fg-onEmphasis);
-  border: 1px solid rgba(240, 246, 252, 0.1);
+  border: 1px solid var(--gh-btn-border);
   box-shadow:
-    0 0 0 1px rgba(31, 111, 235, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    0 0 0 1px var(--gh-btn-ring),
+    inset 0 1px 0 var(--gh-btn-inset);
 }
 
 .primary-btn:hover {
-  background: linear-gradient(180deg, #388bfd, #1f6feb);
+  background: var(--gh-gradient-button-hover);
   color: var(--gh-fg-onEmphasis);
   transform: translateY(-1px);
-  box-shadow: 0 8px 24px rgba(47, 129, 247, 0.3);
+  box-shadow: 0 8px 24px var(--gh-btn-glow);
 }
 
 .secondary-btn {
@@ -326,20 +454,20 @@ section {
 }
 
 .success {
-  background-color: rgba(63, 185, 80, 0.1);
+  background-color: var(--gh-success-subtle);
   color: var(--gh-success-fg);
-  border-color: rgba(63, 185, 80, 0.4);
+  border-color: var(--gh-success-muted);
 }
 
 .error {
-  background-color: rgba(248, 81, 73, 0.1);
+  background-color: var(--gh-danger-subtle);
   color: var(--gh-danger-fg);
-  border-color: rgba(248, 81, 73, 0.4);
+  border-color: var(--gh-danger-muted);
 }
 
 .invalid {
   border-color: var(--gh-danger-fg) !important;
-  box-shadow: 0 0 0 3px rgba(248, 81, 73, 0.2);
+  box-shadow: 0 0 0 3px var(--gh-danger-ring);
 }
 
 .error-message {
@@ -463,9 +591,9 @@ section {
 
 .tech-stack span {
   padding: 3px 10px;
-  background: rgba(56, 139, 253, 0.1);
-  border: 1px solid rgba(56, 139, 253, 0.28);
-  color: #79c0ff;
+  background: var(--gh-chip-bg);
+  border: 1px solid var(--gh-chip-border);
+  color: var(--gh-chip-fg);
   border-radius: 999px;
   font-size: 11.5px;
   font-weight: 500;
@@ -520,9 +648,9 @@ section {
 
 .proj-role {
   padding: 2px 9px;
-  background: rgba(163, 113, 247, 0.12);
-  border: 1px solid rgba(163, 113, 247, 0.3);
-  color: var(--gh-purple);
+  background: var(--gh-purple-subtle);
+  border: 1px solid var(--gh-purple-muted);
+  color: var(--gh-purple-fg);
   border-radius: 999px;
   font-size: 11px;
   align-self: flex-start;
