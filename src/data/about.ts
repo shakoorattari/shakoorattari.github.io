@@ -1,3 +1,6 @@
+import type { ImageMetadata } from 'astro';
+import wesBadge from '../assets/wes-iaq-badge.png';
+
 // Content for the About section. Icons use the "<set>:<name>" form understood by <Icon />.
 
 export const aboutSummary = `Lead Software Engineer and Application Architect with 15+ years of enterprise software delivery across the UAE public sector. Deep expertise in .NET / ASP.NET Core, Angular, OAuth 2.0 / OIDC, multi-tenant IAM, and Azure DevOps CI/CD. I own end-to-end solution architecture — from requirements through production operations — for mission-critical government platforms serving multiple Sharjah entities, with a strong focus on clean code, developer experience, and AI tooling to accelerate engineering velocity.`;
@@ -86,9 +89,21 @@ export interface Certification {
   year: string;
   icon: string;
   link?: string;
+  /** A digital badge, shown instead of the icon. */
+  badge?: { image: ImageMetadata; alt: string };
 }
 
+// The Credly badge is a local image linking to its public page. Credly's embed script is deliberately not used: it
+// would load a third-party script on every page view (see the performance budget in CLAUDE.md).
 export const certifications: Certification[] = [
+  {
+    name: 'International Academic Qualifications',
+    issuer: 'WES',
+    year: 'Credly digital badge',
+    icon: 'fa6-solid:award',
+    link: 'https://www.credly.com/badges/eb7c4611-bcfd-48a5-8ae7-be977082468c/public_url',
+    badge: { image: wesBadge, alt: 'WES International Academic Qualifications badge' },
+  },
   {
     name: 'MCTS — .NET 4.0 Web Applications',
     issuer: 'Microsoft',
