@@ -1,0 +1,100 @@
+---
+import { getAnalyticsConfig } from '../lib/analytics';
+
+const { ga } = getAnalyticsConfig();
+---
+
+<!--
+  Rendered only when a Google Analytics Measurement ID is configured. Hidden until the page has loaded and the
+  browser is idle (see src/scripts/analytics.ts), so it never competes with the content for the first paint.
+-->
+<section
+  id="analytics-consent"
+  class="consent"
+  role="region"
+  aria-label="Analytics consent"
+  tabindex="-1"
+  hidden
+  data-ga-id={ga.measurementId}
+  data-hosts={ga.hosts.join(',')}
+>
+  <p>
+    I'd like to use Google Analytics to see how this site is used. It only runs if you accept, and sets analytics
+    cookies when it does. <a href="/privacy/">Privacy notice</a>
+  </p>
+  <div class="actions">
+    <!-- Same style on purpose: declining must be as easy and as visible as accepting. -->
+    <button type="button" class="btn secondary-btn" data-consent="denied">
+      Decline
+    </button>
+    <button type="button" class="btn secondary-btn" data-consent="granted">
+      Accept
+    </button>
+  </div>
+</section>
+
+<script>
+  import '../scripts/analytics';
+</script>
+
+<style lang="scss">
+  .consent {
+    position: fixed;
+    left: 16px;
+    bottom: 16px;
+    z-index: 1500;
+    width: min(440px, calc(100vw - 32px));
+    padding: 16px 18px;
+    background: var(--gh-canvas-subtle);
+    border: 1px solid var(--gh-border-default);
+    border-radius: 12px;
+    box-shadow: 0 16px 40px rgba(1, 4, 9, 0.7);
+  }
+
+  .consent:focus {
+    outline: none;
+  }
+
+  .consent:focus-visible {
+    outline: 2px solid var(--gh-accent-fg);
+    outline-offset: 2px;
+  }
+
+  p {
+    margin: 0 0 14px;
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--gh-fg-muted);
+  }
+
+  p a {
+    color: #58a6ff;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    white-space: nowrap;
+  }
+
+  .actions {
+    display: flex;
+    gap: 10px;
+  }
+
+  .actions .btn {
+    flex: 1;
+    justify-content: center;
+  }
+
+  @media (max-width: 576px) {
+    .consent {
+      left: 12px;
+      bottom: 12px;
+      width: calc(100vw - 24px);
+    }
+  }
+
+  @media print {
+    .consent {
+      display: none;
+    }
+  }
+</style>

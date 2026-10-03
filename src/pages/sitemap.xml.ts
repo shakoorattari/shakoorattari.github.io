@@ -15,6 +15,7 @@ export const GET: APIRoute = async () => {
     { path: '/services/', lastmod },
     ...services.map((s) => ({ path: `/services/${s.slug}/`, lastmod })),
     { path: '/projects/', lastmod },
+    { path: '/privacy/', lastmod },
     ...caseStudies.map((c) => ({ path: `/projects/${c.slug}/`, lastmod })),
     ...(posts.length
       ? [

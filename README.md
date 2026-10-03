@@ -18,6 +18,7 @@ A fast, static site built with [Astro](https://astro.build) and hosted on GitHub
 | Images | `astro:assets` `<Picture>` → AVIF / WebP with explicit dimensions |
 | Hosting | GitHub Pages, custom domain via `public/CNAME` |
 | CI/CD | GitHub Actions: formatting, type-check, build, SEO checks, Playwright and Lighthouse CI gate every PR and every deploy — see [docs/ci-cd.md](docs/ci-cd.md) |
+| Analytics | Google Analytics 4 (**opt-in**, behind a consent notice) and/or Cloudflare Web Analytics (cookieless); both optional and off until configured — see [docs/analytics.md](docs/analytics.md) |
 | Contact form | [Web3Forms](https://web3forms.com) + [Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/) + honeypot + client-side rate limit |
 
 ## Getting started
@@ -37,6 +38,7 @@ npm start       # dev server on http://localhost:4321
 | `npm run check` | Type-check only (`astro check`) |
 | `npm run lint` / `npm run format` | Check / fix formatting with Prettier |
 | `npm run test:e2e` | Playwright suite against the build (run `npm run build` first) |
+| `npm run test:analytics` | Builds with a *fake* Google Analytics ID and runs the consent/analytics tests with Google mocked — nothing leaves the machine |
 | `npm run lighthouse` | Lighthouse CI thresholds against the build (reports written locally, nothing uploaded) |
 | `npm run verify` | Formatting + type-check + build + SEO checks + version checks + unit tests — what to run before pushing |
 | `npm run release` | Prepare a release: recommended SemVer bump from your commits, `CHANGELOG.md` section, `package.json` + lockfile (`-- --dry-run` to preview) — see [docs/versioning.md](docs/versioning.md) |
@@ -60,7 +62,7 @@ src/
 ├── content/blog/            Articles and outlines (Markdown, unpublished until `draft: false`)
 ├── content.config.ts        Blog schema (title/description limits, `draft` defaults to true)
 ├── components/              Header, Hero, About, Services, Skills, Experience, Projects,
-│                            Contact, SocialProof, Footer, Icon, Breadcrumbs, CtaPanel
+│                            Contact, SocialProof, Footer, Icon, Breadcrumbs, CtaPanel, AnalyticsConsent
 ├── layouts/
 │   ├── Base.astro           <head>: SEO, Open Graph, Twitter, JSON-LD, verification, analytics
 │   └── Page.astro           Layout for services / case studies / blog (breadcrumbs, shared styles)
@@ -69,23 +71,24 @@ src/
 │   ├── services/            /services/ hub + /services/<slug>/
 │   ├── projects/            /projects/ hub + /projects/<slug>/
 │   ├── blog/                /blog/ + /blog/<slug>/ (dev previews drafts)
+│   ├── privacy.astro        /privacy/ — generated from the build config, so it only describes tools that are enabled
 │   ├── 404.astro            Not-found page (noindex)
 │   ├── sitemap.xml.ts       /sitemap.xml — every indexable page, with its own lastmod
 │   ├── rss.xml.ts           /rss.xml (published posts)
 │   ├── llms.txt.ts          /llms.txt — plain-text site map for AI assistants
 │   └── version.json.ts      /version.json — version + build metadata of the deployed site
-├── scripts/                 nav.ts (menu, scroll-spy) · hero-roles.ts · contact.ts (form)
+├── scripts/                 nav.ts (menu, scroll-spy) · hero-roles.ts · contact.ts (form) · analytics.ts (opt-in GA4)
 ├── styles/global.scss       Design tokens and shared utilities
 ├── assets/profile.jpg       Source photo that Astro resizes to AVIF/WebP
 └── lib/                     lastmod.ts (git date), blog.ts (published vs preview), schema.ts (Person/WebSite refs),
-                             version.ts (build info: version + commit)
-scripts/                     check-seo.mjs · check-version.mjs · release.mjs · release-notes.mjs · serve-dist.mjs · lib/release.mjs (+ tests)
+                             version.ts (build info: version + commit), analytics.ts (what this build ships)
+scripts/                     check-seo.mjs · check-version.mjs · release.mjs · release-notes.mjs · serve-dist.mjs · test-analytics.mjs · lib/release.mjs (+ tests)
 CHANGELOG.md                 Keep a Changelog; the source of the GitHub Release notes
-tests/                       Playwright suite: health, navigation, mobile, contact form, SEO
+tests/                       Playwright suite: health, navigation, mobile, contact form, SEO, version, analytics
 playwright.config.ts  lighthouserc.json  .prettierrc.json  .nvmrc  .env.example
 .github/                     workflows (ci, lighthouse, deploy) and the PR template
 astro.config.mjs             Site URL, trailing slashes, legacy-URL redirects
-docs/                        CI/CD, roadmap, visibility playbook, migration notes, project memory, original audit
+docs/                        CI/CD, analytics, versioning, roadmap, visibility playbook, migration notes, project memory, original audit
 CLAUDE.md                    Project instructions (rules, architecture, workflow) for Claude Code and contributors
 .claude/launch.json          Dev / preview server configs for the Claude app
 ```
@@ -136,11 +139,12 @@ All optional and off by default. Set them as GitHub repository **variables** (Se
 
 | Variable | Purpose |
 |---|---|
+| `GA_MEASUREMENT_ID` | Google Analytics 4 Measurement ID (`G-XXXXXXXXXX`). **Opt-in:** shows a consent notice, and Google's script loads only after a visitor accepts |
 | `CF_ANALYTICS_TOKEN` | Cloudflare Web Analytics (cookieless) beacon token |
 | `GOOGLE_SITE_VERIFICATION` | Search Console "URL prefix" verification meta tag |
 | `BING_SITE_VERIFICATION` | Bing Webmaster Tools verification meta tag |
 
-The step-by-step setup is in [docs/visibility-playbook.md](docs/visibility-playbook.md).
+Google Analytics is dormant in development, in CI test builds and on any hostname other than the production domain, honours Global Privacy Control, and has a `/privacy/` page and a footer *Privacy choices* button. How it works, what it costs, the 10 setup steps in Google Analytics, and what each analytics/"rating" tool tells you are in **[docs/analytics.md](docs/analytics.md)**; Search Console and Cloudflare setup is in [docs/visibility-playbook.md](docs/visibility-playbook.md).
 
 ## Contact form
 
@@ -158,7 +162,7 @@ Modelled on the sibling `earthcone` project. Three workflows in `.github/workflo
 
 | Workflow | When | What |
 |---|---|---|
-| `ci.yml` | pull requests | Prettier check · unit tests · type-check + build · SEO checks · version checks · the Playwright suite |
+| `ci.yml` | pull requests | Prettier check · unit tests · type-check + build · SEO checks · version checks · the Playwright suite · the analytics integration tests |
 | `lighthouse.yml` | pull requests | Lighthouse CI (pinned `@lhci/cli@0.14.0`): performance ≥ 0.95, accessibility = 1, best practices ≥ 0.95, SEO = 1, plus LCP, CLS, TBT, JavaScript and page-weight budgets |
 | `deploy.yml` | push to `main` | **Calls both workflows above and deploys to GitHub Pages only if every job passed**, publishing the exact build that was tested; then verifies the live `/version.json` and creates the `vX.Y.Z` tag + GitHub Release if the version is new |
 
@@ -203,6 +207,7 @@ Getting *found* is a separate job from being fast: see **[docs/visibility-playbo
 |---|---|
 | [CLAUDE.md](CLAUDE.md) | Project instructions for Claude Code and contributors: purpose, content rules, architecture, conventions, quality bar, workflow, known gaps |
 | [docs/project-memory.md](docs/project-memory.md) | Decision log, asset provenance and hard-won gotchas |
+| [docs/analytics.md](docs/analytics.md) | Google Analytics (opt-in): design, cost, setup steps, how to read the numbers, and which tool answers "how is my site doing?" |
 | [docs/versioning.md](docs/versioning.md) | The versioning standards, what each bump means for this site, how to release, and what CI verifies |
 | [docs/ci-cd.md](docs/ci-cd.md) | The quality gates, thresholds, running them locally, and branch protection |
 | [docs/seo-performance-roadmap.md](docs/seo-performance-roadmap.md) | Phased SEO / performance plan with status, measurements, known issues |

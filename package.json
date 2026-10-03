@@ -21,7 +21,8 @@
     "verify": "npm run lint && npm run build && npm run check:seo && npm run check:version && npm run test:unit",
     "release": "node scripts/release.mjs",
     "check:version": "node scripts/check-version.mjs",
-    "test:unit": "node --test scripts/lib/release.test.mjs"
+    "test:unit": "node --test scripts/lib/release.test.mjs",
+    "test:analytics": "node scripts/test-analytics.mjs"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.19",

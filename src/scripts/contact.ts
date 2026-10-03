@@ -10,6 +10,12 @@ const getTurnstile = () => (window as unknown as { turnstile?: TurnstileApi }).t
 const TURNSTILE_SRC = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
 const RATE_LIMIT_KEY = 'contact_last_submit';
 
+// Google Analytics event helper. `gtag` exists only after a visitor has accepted analytics (see analytics.ts), so
+// this is a no-op for everyone else. Never pass anything the visitor typed.
+const track = (name: string, params: Record<string, string>) => {
+  (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag?.('event', name, params);
+};
+
 // ---------------------------------------------------------------- toast
 const toast = document.getElementById('contact-toast');
 const toastText = toast?.querySelector<HTMLElement>('.toast-text');
@@ -263,6 +269,7 @@ if (form) {
 
       if (response.ok && data?.success) {
         markSubmitted();
+        track('generate_lead', { method: 'contact_form' });
         submitting = false;
         showToast('success', data.message || "Your message has been sent! I'll get back to you soon.");
         resetForm();

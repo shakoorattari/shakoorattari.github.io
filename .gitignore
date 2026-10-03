@@ -146,3 +146,6 @@ test-results/
 playwright-report/
 blob-report/
 playwright/.cache/
+
+# Analytics test build
+dist-analytics/
