@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-10-03
+
 ### Added
 
 - **A quote path for clients:** `/quote/` has a quote form, a WhatsApp button that opens a chat pre-filled with the same text as the email, and a call button. A "Get a quote" button joins the nav, the hero, the footer, the call-to-action panels and the Contact section.
@@ -101,7 +103,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - The Angular 16 app, its Express server, a 2 MB unused PNG, the committed `docs/` build output and the dev TLS files.
 
-[Unreleased]: https://github.com/shakoorattari/shakoorattari.github.io/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/shakoorattari/shakoorattari.github.io/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/shakoorattari/shakoorattari.github.io/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/shakoorattari/shakoorattari.github.io/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/shakoorattari/shakoorattari.github.io/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/shakoorattari/shakoorattari.github.io/releases/tag/v1.0.0
