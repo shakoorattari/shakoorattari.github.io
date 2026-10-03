@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-10-03
+
 ### Added
 
 - **Light and dark themes.** The site follows the visitor's system by default; a header button cycles system → light → dark and remembers the choice. A stored choice is applied before first paint (no flash), native controls and the browser's UI colour follow the theme, and without JavaScript the system theme still applies. Contrast is checked in both themes by `tests/theme.spec.ts`, and Lighthouse audits both (`npm run lighthouse:dark` is new and runs in CI).
@@ -113,7 +115,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - The Angular 16 app, its Express server, a 2 MB unused PNG, the committed `docs/` build output and the dev TLS files.
 
-[Unreleased]: https://github.com/shakoorattari/shakoorattari.github.io/compare/v1.3.0...HEAD
+[Unreleased]: https://github.com/shakoorattari/shakoorattari.github.io/compare/v1.4.0...HEAD
+[1.4.0]: https://github.com/shakoorattari/shakoorattari.github.io/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/shakoorattari/shakoorattari.github.io/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/shakoorattari/shakoorattari.github.io/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/shakoorattari/shakoorattari.github.io/compare/v1.0.0...v1.1.0
