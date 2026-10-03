@@ -67,9 +67,20 @@ Lighthouse 13.5 (mobile, simulated throttling, gzip server, median of 3), Angula
 | `public/assets/files/ShakoorHussain_Resume_V2.pdf` | The résumé the site links to. `Shakoor_Hussain_Resume.pdf` is an older copy that is published but not linked. |
 | `src/content/blog/rebuilding-portfolio-angular-to-astro.md` | Draft article written from the real migration measurements and bugs; unpublished (`draft: true`). |
 
+## Dependency update (2026-10-03)
+
+Prompted by GitHub's Node 20 deprecation warnings on deploy #37 and `npm install` reporting 2 high-severity vulnerabilities.
+
+- **Actions** moved to the Node 24 majors (see `docs/ci-cd.md`). Release notes were read for every intermediate major: the only behavioural trap was `upload-pages-artifact` dropping dotfiles since v4, handled with `include-hidden-files: true`.
+- **npm**: only in-range updates (62 package versions, no majors: sharp 0.35.5, Vite/rolldown, shiki 4.5, sass 1.105.1, `@types/node` 22.20.5). TypeScript 7 skipped because `@astrojs/check` declares `^5 || ^6`; `@types/node` stays on 22.x to match the runtime.
+- **The "2 high vulnerabilities" are one advisory with no fix.** `http-cache-semantics` ≤ 4.2.0; the latest release (4.2.0) is still affected. `npm audit fix --force` proposes Astro 2.10.9 (a five-major downgrade), so it is a trap. Astro uses the package only for build-time caching of remote images, which this site never does.
+- **Verified**: the previous `main` was built with its old dependencies in a scratch worktree and compared with the new build file by file after normalising commit/hash differences: **54/54 files byte-identical, images included**. Full verify, 101 + 14 Playwright tests and actionlint pass.
+- **Not provable before merge**: the deploy-only Action steps (they only run on `main`).
+
 ## Gotchas learned the hard way
 
 - **Prettier and inline whitespace.** The Astro plugin inserted line breaks between adjacent inline spans, widening the header logo by ~20px on every page and adding a space before the period after the LinkedIn link. Found only by comparing every element's bounding box between builds.
+- **`npm audit fix --force` can propose a downgrade across majors** (Astro 7 → 2.10.9) when the vulnerable package has no patched release. Read what it would install before running it, and prefer `npm view <pkg> version` plus the advisory's `first_patched_version`.
 - **`astro preview` daemonizes** in Astro 7 (launcher exits, server keeps running) — Playwright's `webServer` sees a crash and a stray server is left running (`npx astro preview stop`).
 - **Astro `redirects` shadow real pages** silently (`/projects`).
 - **A test harness can lie.** Resizing the viewport to full-page height made `100vh` heroes enormous, so two blank screenshots "matched"; always check that a check can fail.

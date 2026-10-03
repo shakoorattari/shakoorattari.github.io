@@ -167,6 +167,7 @@ Workflows in `.github/workflows/` (details and thresholds: `docs/ci-cd.md`):
 - Node 22 (`.nvmrc`). Both lockfile formats used to be gitignored; `package-lock.json` is now committed and CI uses `npm ci`.
 - **Every new gate must be mutation-tested** before it is trusted: break the build on purpose and confirm the gate fails (that is how the redirect-shadowing bug and the heading-order bug were found).
 - `.github/actions/{checkout,gh-pages,setup-node}` are unused leftovers from the old CI and can be deleted.
+- **Dependencies:** Actions are on the Node 24 majors (`checkout@v7`, `setup-node@v7`, `upload-artifact@v7`, `download-artifact@v8`, `upload-pages-artifact@v5` with `include-hidden-files: true` to keep `.nojekyll`, `deploy-pages@v5`). **Never run `npm audit fix --force`** — for the current advisory it proposes downgrading Astro to 2.x. `typescript` stays on 6.x (`@astrojs/check` peer range) and `@types/node` on 22.x (the runtime). Policy, the held-back packages and the one known advisory (`http-cache-semantics`, no patched release, build-time-only, unused here) are in `docs/ci-cd.md` → "Keeping dependencies current".
 
 ## 11. Environment & secrets
 
@@ -207,6 +208,8 @@ Owner actions (need their accounts — see `docs/visibility-playbook.md`):
 - **Finish and publish the first article** (a full draft plus three outlines are in `src/content/blog/`).
 
 Engineering / decisions:
+
+- `npm audit` reports **1 high advisory** (`http-cache-semantics`, via Astro's remote-image caching) with **no patched version anywhere**. Not exploitable here (no remote images, build-time only). Re-check periodically; see `docs/ci-cd.md`.
 
 - **Turnstile is not enforced server-side:** `contact.ts` does not forward the token to Web3Forms, so the widget only gates the submit button. Fix needs `cf-turnstile-response` in the payload plus enabling verification in the Web3Forms dashboard (owner).
 - The **résumé markdown and both PDFs are public** in `public/assets/files/` and contain the phone number and email; decide which PDF to keep and whether to keep publishing the `.md`.

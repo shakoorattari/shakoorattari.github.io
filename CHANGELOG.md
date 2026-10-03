@@ -18,6 +18,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
+- GitHub Actions updated to the versions that run on Node 24 (`checkout`, `setup-node`, `upload-artifact`, `download-artifact`, `upload-pages-artifact`, `deploy-pages`), clearing GitHub's Node 20 deprecation warnings. The Pages artifact keeps including `.nojekyll`.
+- Dependencies updated within their ranges (sharp, Vite, shiki, sass and others; no major bumps). The built site is byte-identical to before.
 - CI test builds (Playwright, Lighthouse) now carry no analytics configuration, so test runs can never send fake visits to the real Google Analytics or Cloudflare properties.
 - The Cloudflare Web Analytics beacon is gated by the same build-time configuration helper as Google Analytics.
 

@@ -108,6 +108,28 @@ Earthcone works the same way (ruleset + required CI check). One design choice re
 
 Set as repository **variables** (Settings → Secrets and variables → Actions → Variables): `GA_MEASUREMENT_ID`, `CF_ANALYTICS_TOKEN`, `GOOGLE_SITE_VERIFICATION`, `BING_SITE_VERIFICATION`. The `ci.yml` quality job passes them to the build, and that build is the artifact that gets deployed. **The Playwright and Lighthouse builds deliberately blank the analytics IDs**: those jobs run from GitHub's servers, and with a real ID every run would send fake visits to the real Google Analytics / Cloudflare properties. The integration itself is covered by `npm run test:analytics` (fake ID, mocked Google). Consequence: the deployed build differs from the tested ones only by the analytics snippet and notice. See [`.env.example`](../.env.example) and [visibility-playbook.md](visibility-playbook.md).
 
+## Keeping dependencies current
+
+Check both sides every month or so (`npm outdated`, `npm audit`, and the **Annotations** on a workflow run, which is where GitHub announces runtime deprecations).
+
+**GitHub Actions** are pinned to the major versions that run on Node 24 (GitHub is retiring the Node 20 runtime): `checkout@v7`, `setup-node@v7`, `upload-artifact@v7`, `download-artifact@v8`, `upload-pages-artifact@v5`, `deploy-pages@v5`. Notes for the next bump:
+
+- `upload-pages-artifact` has left out **dotfiles** since v4. `deploy.yml` sets `include-hidden-files: true` so `dist/.nojekyll` keeps being published; remove that only if you decide `.nojekyll` isn't needed (it isn't for Actions-based Pages deploys, but keeping it costs nothing).
+- `upload-artifact` and `download-artifact` are bumped as a pair (the artifact is produced in `ci.yml` and consumed in `deploy.yml`).
+- The deploy-only steps (`download-artifact`, `upload-pages-artifact`, `deploy-pages`, and the release job) **can't run on a pull request**: they are first exercised when the change reaches `main`. A failed deploy leaves the live site on its previous version, and the next push retries it.
+
+**npm** — what is deliberately *not* at the "latest" version, and why:
+
+| Package | Held at | Why |
+|---|---|---|
+| `typescript` | 6.x | `@astrojs/check` declares `typescript ^5 \|\| ^6`; 7.x is outside the supported range. Revisit when `@astrojs/check` widens it |
+| `@types/node` | 22.x | Types should match the runtime we ship on (Node 22, `.nvmrc`), not the newest Node |
+| `@lhci/cli` | 0.14.0 | Pinned deliberately (see "Lighthouse thresholds"): a version drift once caused a CI-only false positive. Bump on purpose, run `npm run lighthouse` locally first |
+
+**Never run `npm audit fix --force` on this repo.** For the current advisory it proposes installing **Astro 2.10.9**, a downgrade across five majors that would break the site.
+
+**Known advisory (checked 2026-10-03): `http-cache-semantics` ≤ 4.2.0, high** ([GHSA-ch52-4w7c-c8xp](https://github.com/advisories/GHSA-ch52-4w7c-c8xp)). It has **no patched version** (4.2.0 is the newest release), so no update can fix it. It comes in through `astro`, which uses it only to cache **remote** images at build time (`astro/dist/assets/build/remote.js`). This site uses only local images, so that code never runs, and nothing of it is in the built site. Accepted and documented rather than hidden. Re-check with `npm audit` (and `npm view http-cache-semantics version`); when a patched release or a new Astro appears, `npm update` will pick it up.
+
 ## When a gate fails
 
 - **Formatting:** `npm run format`, then check `git diff` for whitespace-sensitive markup.
