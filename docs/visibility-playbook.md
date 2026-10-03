@@ -2,7 +2,7 @@
 
 How to get found by people looking for a software engineer, website or application development, or the skills on the résumé. The site is now technically sound and content-rich; most of what remains needs your accounts and your voice, so it lives here as a checklist.
 
-**Last reviewed:** 2026-09-26
+**Last reviewed:** 2026-10-03 (client-work pages and §10 added; the rest is as of 2026-09-26)
 
 ## 1. Where things stood
 
@@ -82,6 +82,10 @@ After publishing: request indexing in Search Console, share on LinkedIn, and cro
 | Shakoor Hussain Attari / Shakoor Attari software engineer | `/` |
 | software engineer Sharjah / UAE, full-stack developer UAE | `/`, `/services/` |
 | web / application development UAE, .NET Angular developer | `/services/web-application-development/` |
+| website design / development UAE, business website developer | `/services/website-design-development/`, `/work/` |
+| technical SEO / local SEO UAE, Core Web Vitals, website speed | `/services/seo-performance/` |
+| request a website or web app quote | `/quote/` |
+| examples of UAE business websites (contractor, equipment rental) | `/work/`, `/work/earth-cone/`, `/work/lail-o-nahar/` |
 | OAuth 2.0 / OIDC consultant, multi-tenant IAM .NET, UAE PASS integration | `/services/identity-sso-oauth/`, `/projects/oneportal-iam/`, articles |
 | API / integration developer, MS Graph, Exchange EWS, G2G integration | `/services/api-integration-microservices/` |
 | solution architect UAE, technical lead | `/services/architecture-technical-leadership/` |
@@ -110,3 +114,26 @@ After publishing: request indexing in Search Console, share on LinkedIn, and cro
 - **An Arabic version** with `hreflang` could reach local searches in Arabic.
 - **Google Business Profile** only makes sense if you operate as a registered service business.
 - Optional: **IndexNow** notifications on deploy speed up Bing/Yandex indexing.
+
+## 10. Winning client work (added 2026-10-03)
+
+The site now has the on-page pieces freelancer portfolios use: a quote path (`/quote/`: form, WhatsApp with the same text, call), a gallery of live work (`/work/`), client-facing services (website design & development, SEO & performance) and real LinkedIn recommendations. What converts a visitor into a client from here needs your accounts, your clients and your voice, so it is a checklist.
+
+**Do first (an hour)**
+- **Ask Earth Cone and Lail O Nahar for two things:** permission to show the work (the pages are live on a branch until you merge), and a small "Website by Shakoor Attari" credit in their footers linking to `https://shakoorattari.com`. Neither site credits you today, and a credit from a real client is the most natural link there is. A one-line testimonial from each is the next best thing; add it to the pages **only** once it is written and approved.
+- **Tell Ahmed Bahaa, Rizwan Iqbal and Dominick Antony** that their LinkedIn recommendations now appear (verbatim, attributed, linked to LinkedIn) on the site. It is a courtesy, and they may want it changed or removed.
+- **LinkedIn:** add a *Services* section (website development, web app development, technical SEO) and put `/work/` and `/quote/` in *Featured*. Your headline already carries the enterprise keywords; keep it, and make the *About* first lines say what clients get.
+- **GitHub organisation `Attari-Home`:** its website field reads `https://AttariHome` (not a valid address): set it to `https://shakoorattari.com`; add a profile README that links to `/work/` and `/quote/`; pin `earthcone`, `lailonahar-website`, `ai-chatbot-ali` and `HandGestureAI`; give `ai-chatbot-ali` a description and topics. Then add `Attari-Home` to the site's `sameAs` if you want the organisation tied to the person.
+
+**Marketplaces and directories (pick two or three, do them well)**
+- Freelance marketplaces such as Upwork, Freelancer, PeoplePerHour, Fiverr (one gig per service), Contra (commission-free portfolio) and, for Arabic-speaking clients, Mostaql or Khamsat. **Read each platform's rules before linking out:** most restrict sharing contact details or taking clients off-platform, so a profile may need to link to `/work/` only, or not at all. Reuse the service pages' wording and the same two case studies.
+- A **Google Business Profile** only makes sense if you operate as a registered service business (see §9).
+- Do not buy reviews, links or "followers", and do not copy another site's profile text.
+
+**Content that earns client trust (your voice, drafts only)**
+- One short article per client site, with the client's permission: *How I built a lead-generation website for a UAE contractor* (what was asked, the choices, what changed). Write it in `src/content/blog/` as a draft and publish it yourself.
+- Add real numbers to the work pages **only** if the clients share them (enquiries per month, speed scores from Search Console). None are claimed today.
+
+**Measure**
+- Search Console: impressions for `/work/` and `/quote/`. Google Analytics (if Accepted) and Cloudflare: visits to `/quote/`, and the `generate_lead` event by `method` (`quote_form`, `whatsapp`, `phone`, `contact_form`).
+- If `/quote/` gets visits but few leads, look at the form (budget field, length) before adding traffic.

@@ -42,7 +42,7 @@ Design goals, in priority order: protect visitors' privacy, keep the site fast, 
 - Consent Mode v2: `ad_storage`, `ad_user_data`, `ad_personalization` are denied permanently (no advertising features); `analytics_storage` is granted because the code only runs after acceptance.
 - `allow_google_signals: false` and `allow_ad_personalization_signals: false`.
 - Cookie lifetime 13 months (Google's default is 2 years). Google states that GA4 doesn't log or store IP addresses.
-- One custom event: **`generate_lead`** with `{ method: 'contact_form' }` when the contact form is sent successfully. It never includes anything the visitor typed. GA4's enhanced measurement adds page views, scrolls, outbound clicks and file downloads (the résumé PDF) with no extra code.
+- One custom event: **`generate_lead`** with `{ method }` — `contact_form` or `quote_form` when a form is sent successfully, `whatsapp` or `phone` when a WhatsApp or call button on the quote page or in the Contact section is clicked (`data-lead`, wired by `trackLeadClicks()` in `src/scripts/form-kit.ts`). Only the channel is sent, never what was typed. It never includes anything the visitor typed. GA4's enhanced measurement adds page views, scrolls, outbound clicks and file downloads (the résumé PDF) with no extra code.
 - A malformed `PUBLIC_GA_MEASUREMENT_ID` **fails the build** with an explanatory error, instead of silently shipping nothing.
 
 **What it costs.** Measured with a placeholder ID and the recording endpoints blocked:
@@ -96,7 +96,7 @@ If nothing shows up: an ad blocker or browser privacy feature is blocking Google
 ## Tests
 
 - `npm run test:e2e` — the default build (no ID) must ship **no** analytics, no notice and no footer button, and the privacy page must say so.
-- `npm run test:analytics` — builds once with a *fake* ID (`G-TEST123456`) into `dist-analytics/` and runs 14 tests with Google's endpoints mocked: asks first (no requests, cookies or `gtag`), Accept/Decline equally prominent, the exact consent and config calls, returning visitors, Decline, GPC, expiry after a year, the hostname guard, withdrawal deleting cookies and restoring focus, keyboard order, `generate_lead` without any form content, and nothing reported without consent.
+- `npm run test:analytics` — builds once with a *fake* ID (`G-TEST123456`) into `dist-analytics/` and runs 15 tests with Google's endpoints mocked: asks first (no requests, cookies or `gtag`), Accept/Decline equally prominent, the exact consent and config calls, returning visitors, Decline, GPC, expiry after a year, the hostname guard, withdrawal deleting cookies and restoring focus, keyboard order, `generate_lead` without any form content (contact form, and the quote form with its WhatsApp and call buttons by channel), and nothing reported without consent.
 - Both run in CI. Each behaviour above was mutation-tested: eight deliberate regressions (tracking before consent, ignoring GPC, leaving cookies, removing the hostname guard, leaking an email into an event, granting ad storage, making Accept more prominent, enabling Google signals) were each caught by its test.
 - Lighthouse CI was also run against the opt-in build with the notice showing: 100 / 100 / 100 / 100 on all six pages, unchanged LCP and CLS.
 
