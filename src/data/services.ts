@@ -17,11 +17,91 @@ export interface Service {
   stack: string[];
   /** Case-study slugs (see caseStudies.ts). */
   caseStudies: string[];
+  /** Websites and apps built for businesses (see work.ts), shown as a gallery on the service page. */
+  work?: string[];
   /** Other service slugs to cross-link. */
   related: string[];
 }
 
 export const services: Service[] = [
+  {
+    slug: 'website-design-development',
+    name: 'Website Design & Development',
+    blurb:
+      'Fast, search-friendly business websites with quote forms, WhatsApp and click-to-call, built by me with a team of developers and designers.',
+    icon: 'fa6-solid:palette',
+    metaTitle: 'Website Design & Development, UAE | Shakoor Attari',
+    metaDescription:
+      'Fast, search-friendly business websites for UAE companies: design, front end, back end, quote forms, WhatsApp leads and SEO, from an engineer and team.',
+    h1: 'Website Design & Development',
+    intro: [
+      'I build business websites that are fast, easy to find and easy to act on: a visitor should be able to call, message you on WhatsApp or request a quote in one tap. For projects that need more hands I work with a team of developers and specialists in front-end, back-end, web design and SEO. You deal with me directly, and the team joins as the project needs.',
+      'The engineering discipline I bring to government platforms goes into business sites too: clean, accessible markup, optimised images, structured data for search engines, and hosting that is quick and simple to run.',
+      'This portfolio and the sites below show the approach: static sites that load quickly on a phone, with the next step always within reach. This site scores 100 in all four Lighthouse categories in lab tests.',
+    ],
+    deliver: [
+      {
+        title: 'Design and front end',
+        text: 'Responsive layouts designed for the phone first, accessible, and written in clean semantic HTML, with light and dark themes where they suit the brand.',
+      },
+      {
+        title: 'Lead capture that matches how customers get in touch',
+        text: 'Quote forms, click-to-call and WhatsApp buttons that open a ready-written message, plus a sticky call bar on mobile, so the next step is always one tap away.',
+      },
+      {
+        title: 'Content that is easy to grow',
+        text: 'Services, projects or a fleet catalogue written as structured content, so adding a page means adding a file, with galleries that stay light through lazy loading and compressed video.',
+      },
+      {
+        title: 'Search-ready from day one',
+        text: 'Structured data (such as LocalBusiness or GeneralContractor), a sitemap, robots rules, canonical URLs and social-sharing metadata built in. See the SEO and performance service for the detail.',
+      },
+      {
+        title: 'Back end and integrations when you need more than a brochure',
+        text: 'Content management, bookings, approval workflows, payments and API integrations on ASP.NET Core and Angular: the stack behind the enterprise platforms I deliver.',
+      },
+      {
+        title: 'Hosting and handover',
+        text: 'Deployed from Git to fast static hosting (Cloudflare Pages or GitHub Pages) with form delivery through Web3Forms, so there is no server of your own to maintain.',
+      },
+    ],
+    selectedWork: [
+      {
+        name: 'Earth Cone Building Contracting',
+        text: 'Astro, Tailwind CSS. A lead-generation site for a UAE contractor: six service pages, project galleries, a quote form, WhatsApp and local-search structured data.',
+        href: '/work/earth-cone/',
+      },
+      {
+        name: 'Lail O Nahar Machinery Rentals',
+        text: 'Astro, Tailwind CSS. A rental site for a crane and man-lift company: a fleet catalogue, call and WhatsApp buttons and a free-quote form.',
+        href: '/work/lail-o-nahar/',
+      },
+      {
+        name: 'Legal Department of Sharjah — public web portal & CMS',
+        text: '.NET Core 6, Angular 14. Multi-role CMS for public content, training-application bookings and admin approval workflows.',
+      },
+      {
+        name: 'This portfolio',
+        text: 'A static Astro site that scores 100 in all four Lighthouse categories in lab tests and ships about 2 KB of JavaScript.',
+        href: '/',
+      },
+    ],
+    stack: [
+      'Astro',
+      'Tailwind CSS',
+      'SCSS',
+      'TypeScript',
+      'Angular',
+      'ASP.NET Core / .NET 8',
+      'Web3Forms',
+      'Cloudflare Pages',
+      'GitHub Pages',
+      'Structured data (JSON-LD)',
+    ],
+    caseStudies: [],
+    work: ['earth-cone', 'lail-o-nahar'],
+    related: ['seo-performance', 'web-application-development', 'api-integration-microservices'],
+  },
   {
     slug: 'web-application-development',
     name: 'Web & Application Development',
@@ -73,6 +153,11 @@ export const services: Service[] = [
         text: '.NET Core 6, Angular 14. Multi-role CMS for public content, training-application bookings and admin approval workflows.',
       },
       {
+        name: 'UAE Information AI Chatbot — own project',
+        text: 'Angular 17, TypeScript, Tailwind CSS. A school robotics competition entry: a chatbot with a curated question bank and Wikipedia look-ups, plus guide pages, deployed to GitHub Pages.',
+        href: '/work/uae-information-chatbot/',
+      },
+      {
         name: 'Sessions Management System',
         text: '.NET 4.8, SignalR, Angular 9. Session agendas, attendance, committee requests and real-time voting.',
       },
@@ -91,7 +176,84 @@ export const services: Service[] = [
       'SonarQube',
     ],
     caseStudies: ['oneportal-digital-workplace'],
-    related: ['api-integration-microservices', 'devops-ci-cd', 'architecture-technical-leadership'],
+    related: [
+      'website-design-development',
+      'api-integration-microservices',
+      'devops-ci-cd',
+      'architecture-technical-leadership',
+    ],
+  },
+  {
+    slug: 'seo-performance',
+    name: 'SEO & Website Performance',
+    blurb:
+      'Technical SEO, local-search foundations and Core Web Vitals: the parts of search visibility that can be built and measured.',
+    icon: 'fa6-solid:magnifying-glass-chart',
+    metaTitle: 'Technical SEO & Website Speed, UAE | Shakoor Attari',
+    metaDescription:
+      'Technical and local SEO for UAE websites: structured data, sitemaps, Core Web Vitals, Search Console and analytics setup, from an engineer and team.',
+    h1: 'SEO & Website Performance',
+    intro: [
+      'Search visibility starts with a site that search engines can crawl, understand and load quickly. I work on that foundation (technical SEO, local-search markup and page speed) together with a team of SEO and web specialists, and I measure the result in Search Console instead of promising rankings.',
+      'I applied the same approach to this portfolio, which had no search presence when I started: a crawlable structure, structured data generated from one source of truth, a sitemap checked in every build and a written visibility plan.',
+      'A realistic expectation matters here. Nobody can guarantee a ranking, and competitive terms are dominated by large directories and agencies. The plan is to win the searches you can (your name, your niche and your local area) and to measure them.',
+    ],
+    deliver: [
+      {
+        title: 'Technical SEO audit and fixes',
+        text: 'Crawlability, canonical URLs, redirects, sitemap and robots rules, heading structure, titles and descriptions, and broken-link checks, automated in the build so they cannot quietly regress.',
+      },
+      {
+        title: 'Structured data',
+        text: 'Person, LocalBusiness, GeneralContractor, Service and BreadcrumbList markup generated from your own data so it always matches the page, with FAQ markup only where there are real questions.',
+      },
+      {
+        title: 'Local-search foundations',
+        text: 'One substantial service-areas page instead of thin city pages, consistent name, address and phone details, and guidance on setting up a Google Business Profile.',
+      },
+      {
+        title: 'Core Web Vitals and speed',
+        text: 'Optimised AVIF and WebP images with explicit dimensions, self-hosted fonts, almost no JavaScript, and Lighthouse budgets that fail the build if speed regresses.',
+      },
+      {
+        title: 'Search Console, analytics and reporting',
+        text: 'Search Console set up with the sitemap submitted, and privacy-respecting analytics (Cloudflare Web Analytics, or Google Analytics 4 behind a consent notice), then reading the queries and pages that matter.',
+      },
+      {
+        title: 'AI and answer-engine readiness',
+        text: 'Clean semantic HTML, an llms.txt file and direct question-and-answer copy so AI assistants can cite your site accurately.',
+      },
+    ],
+    selectedWork: [
+      {
+        name: 'This portfolio',
+        text: 'Structured data from a single data file, a post-build SEO check on every pull request, Lighthouse budgets in CI and a written visibility playbook. 100 in all four Lighthouse categories in lab tests.',
+        href: '/',
+      },
+      {
+        name: 'Earth Cone Building Contracting',
+        text: 'GeneralContractor structured data covering all seven Emirates, one service-areas page, a sitemap and an llms.txt file.',
+        href: '/work/earth-cone/',
+      },
+      {
+        name: 'Lail O Nahar Machinery Rentals',
+        text: 'LocalBusiness structured data with services, offers and the eight areas served, plus canonical URLs and social-sharing metadata.',
+        href: '/work/lail-o-nahar/',
+      },
+    ],
+    stack: [
+      'Technical SEO',
+      'Structured data (JSON-LD)',
+      'Core Web Vitals',
+      'Lighthouse CI',
+      'Google Search Console',
+      'Google Analytics 4',
+      'Cloudflare Web Analytics',
+      'Astro',
+    ],
+    caseStudies: [],
+    work: ['earth-cone', 'lail-o-nahar'],
+    related: ['website-design-development', 'web-application-development', 'devops-ci-cd'],
   },
   {
     slug: 'identity-sso-oauth',

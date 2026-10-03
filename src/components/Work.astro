@@ -1,0 +1,69 @@
+---
+import Icon from './Icon.astro';
+import WorkCard from './WorkCard.astro';
+import { work } from '../data/work';
+---
+
+<section id="work" class="work" aria-labelledby="work-title">
+  <div class="container">
+    <div class="section-title">
+      <h2 id="work-title">Websites &amp; Apps I've Built</h2>
+      <p>
+        Live websites for UAE businesses, built to be fast on a phone, easy to find in search and one tap from a call, a
+        WhatsApp message or a quote request, plus a few projects of my own.
+      </p>
+    </div>
+
+    <ul class="work-grid">
+      {work.map((item) => (
+        <li>
+          <WorkCard item={item} />
+        </li>
+      ))}
+    </ul>
+
+    <p class="work-cta">
+      <a class="btn primary-btn" href="/quote/">
+        Request a quote <Icon name="fa6-solid:arrow-right" />
+      </a>
+      <a class="btn secondary-btn" href="/work/">
+        See all work
+      </a>
+    </p>
+  </div>
+</section>
+
+<style lang="scss">
+  .work {
+    background: var(--gh-canvas-subtle);
+    position: relative;
+  }
+  .work::before,
+  .work::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gh-border-default), transparent);
+  }
+  .work::before {
+    top: 0;
+  }
+  .work::after {
+    bottom: 0;
+  }
+  .work-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr));
+    gap: 20px;
+    list-style: none;
+  }
+  .work-cta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 32px;
+  }
+</style>

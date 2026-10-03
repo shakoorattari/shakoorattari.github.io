@@ -281,6 +281,45 @@ test.describe('build with a (fake) Measurement ID', () => {
     }
   });
 
+  test('the quote form, the WhatsApp button and the call button report only their channel, never what was typed', async ({
+    page,
+  }) => {
+    await mockGoogle(page);
+    await mockContactBackends(page);
+    await page.goto('/quote/');
+    await banner(page).getByRole('button', { name: 'Accept' }).click();
+    await expect.poll(async () => (await dataLayer(page)).length).toBeGreaterThan(0);
+
+    const typed = {
+      name: 'Quote Tester',
+      email: 'quote.tester@example.com',
+      message: 'A confidential description of the project that must never reach analytics.',
+    };
+    await page.locator('#q-name').fill(typed.name);
+    await page.locator('#q-email').fill(typed.email);
+    await page.locator('#q-project').selectOption('New business website');
+    await page.locator('#q-message').fill(typed.message);
+    await expect(page.locator('#quote-form .submit-btn')).toBeEnabled();
+    await page.locator('#quote-form .submit-btn').click();
+    await expect(page.locator('#quote-toast')).toHaveClass(/success/);
+
+    // The buttons would leave the page (wa.me, tel:); only the click is under test.
+    await page
+      .locator('[data-lead]')
+      .evaluateAll((els) => els.forEach((el) => el.addEventListener('click', (e) => e.preventDefault())));
+    await page.locator('[data-wa-compose]').click();
+    await page.locator('a[data-lead="phone"]').click();
+
+    const layer = await dataLayer(page);
+    for (const method of ['quote_form', 'whatsapp', 'phone']) {
+      expect(layer).toContainEqual(['event', 'generate_lead', { method }]);
+    }
+    const serialised = JSON.stringify(layer);
+    for (const secret of [typed.name, typed.email, typed.message, 'New business website']) {
+      expect(serialised).not.toContain(secret);
+    }
+  });
+
   test('without consent a submission reports nothing', async ({ page }) => {
     const google = await mockGoogle(page);
     await mockContactBackends(page);

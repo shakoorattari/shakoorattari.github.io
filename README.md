@@ -57,12 +57,16 @@ src/
 ├── data/                    All content and site config (edit these)
 │   ├── site.ts              Identity, SEO copy, contact details, socials, form keys, tracking config
 │   ├── about.ts  skills.ts  experience.ts  projects.ts
-│   ├── services.ts          The six service pages
-│   └── caseStudies.ts       Case-study pages (projects.ts joined with experience.ts)
+│   ├── services.ts          The eight service pages
+│   ├── caseStudies.ts       Case-study pages (projects.ts joined with experience.ts)
+│   ├── work.ts              Websites and apps built for businesses (the /work/ gallery)
+│   ├── quote.ts             Options for the /quote/ form (project types, timelines, budgets)
+│   └── recommendations.ts   LinkedIn recommendations, verbatim
 ├── content/blog/            Articles and outlines (Markdown, unpublished until `draft: false`)
 ├── content.config.ts        Blog schema (title/description limits, `draft` defaults to true)
 ├── components/              Header, Hero, About, Services, Skills, Experience, Projects,
-│                            Contact, SocialProof, Footer, Icon, Breadcrumbs, CtaPanel, AnalyticsConsent
+│                            Contact, SocialProof, Footer, Icon, Breadcrumbs, CtaPanel, AnalyticsConsent,
+│                            Work, WorkCard, QuoteForm, RecommendationCard
 ├── layouts/
 │   ├── Base.astro           <head>: SEO, Open Graph, Twitter, JSON-LD, verification, analytics
 │   └── Page.astro           Layout for services / case studies / blog (breadcrumbs, shared styles)
@@ -70,6 +74,8 @@ src/
 │   ├── index.astro          The home page
 │   ├── services/            /services/ hub + /services/<slug>/
 │   ├── projects/            /projects/ hub + /projects/<slug>/
+│   ├── work/                /work/ gallery + /work/<slug>/ (websites and apps built for businesses)
+│   ├── quote/               /quote/ — the quote request form (email, WhatsApp, call)
 │   ├── blog/                /blog/ + /blog/<slug>/ (dev previews drafts)
 │   ├── privacy.astro        /privacy/ — generated from the build config, so it only describes tools that are enabled
 │   ├── 404.astro            Not-found page (noindex)
@@ -77,10 +83,11 @@ src/
 │   ├── rss.xml.ts           /rss.xml (published posts)
 │   ├── llms.txt.ts          /llms.txt — plain-text site map for AI assistants
 │   └── version.json.ts      /version.json — version + build metadata of the deployed site
-├── scripts/                 nav.ts (menu, scroll-spy) · hero-roles.ts · contact.ts (form) · analytics.ts (opt-in GA4)
+├── scripts/                 nav.ts (menu, scroll-spy) · hero-roles.ts · contact.ts + quote.ts (forms, on form-kit.ts) · analytics.ts (opt-in GA4)
 ├── styles/global.scss       Design tokens and shared utilities
-├── assets/profile.jpg       Source photo that Astro resizes to AVIF/WebP
-└── lib/                     lastmod.ts (git date), blog.ts (published vs preview), schema.ts (Person/WebSite refs),
+├── assets/profile.jpg       Source photo that Astro resizes to AVIF/WebP (460×460, from the GitHub avatar)
+├── assets/work/             Home-page screenshots of the client sites (1440×900), resized by Astro
+└── lib/                     lastmod.ts (git date), blog.ts (published vs preview), schema.ts (Person/WebSite refs), whatsapp.ts (wa.me links),
                              version.ts (build info: version + commit), analytics.ts (what this build ships)
 scripts/                     check-seo.mjs · check-version.mjs · release.mjs · release-notes.mjs · serve-dist.mjs · test-analytics.mjs · lib/release.mjs (+ tests)
 CHANGELOG.md                 Keep a Changelog; the source of the GitHub Release notes
@@ -106,6 +113,10 @@ Content lives in `src/data/`, not in the components:
 | Architecture case-study cards | `src/data/projects.ts` (challenge / architecture / impact) |
 | Case-study pages | `src/data/caseStudies.ts` — titles, descriptions and related services; the detailed bullets are pulled from `experience.ts` |
 | Service pages | `src/data/services.ts` — copy, deliverables, selected work; `metaTitle` ≤ 60 and `metaDescription` ≤ 155 characters |
+| Websites and apps gallery | `src/data/work.ts` — one entry per site, plus its screenshot in `src/assets/work/`; check every claim against the live site and the repo |
+| Quote form options | `src/data/quote.ts` — project types, timelines and budget ranges (the form and the WhatsApp message both read them) |
+| LinkedIn recommendations | `src/data/recommendations.ts` — verbatim only; fix whitespace, never wording |
+| WhatsApp number | `site.whatsapp` in `src/data/site.ts` (digits only, wa.me format) |
 | Articles | Markdown files in `src/content/blog/` |
 
 Notes:
@@ -114,7 +125,7 @@ Notes:
 - **Contact details:** the public email is `binmushtaq@gmail.com`; the Outlook address is listed as a Teams ID only.
 - **Icons:** use `<Icon name="fa6-solid:envelope" />` (`fa6-solid`, `fa6-brands` or `fa6-regular`). An unknown name fails the build.
 - **Social card:** replace `public/assets/og-image.jpg` with a 1200×630 JPEG (keep it under ~100 KB); the dimensions are declared in `Base.astro`.
-- **Profile photo:** replace `src/assets/profile.jpg`; Astro generates the sizes and formats.
+- **Profile photo:** replace `src/assets/profile.jpg` (hero, about, contact) and `public/assets/files/shakoor_pic.jpeg` (structured data); Astro generates the sizes and formats. Both currently hold the GitHub avatar at 460 px. The social card and the résumé portrait are separate files.
 - **Sitemap:** generated from the data files and published posts — a new hand-written page must be added to the list in `src/pages/sitemap.xml.ts` (`npm run check:seo` fails if the sitemap and the pages disagree).
 - **Writing rule for the service and case-study pages:** every claim must come from the résumé or the existing site data. Don't add numbers, clients or testimonials that aren't real.
 

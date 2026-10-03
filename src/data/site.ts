@@ -9,13 +9,13 @@ export const site = {
   title: 'Shakoor Hussain Attari — Full-Stack Software Engineer, UAE',
   jobTitle: 'Lead Software Engineer, Full-Stack Developer & Application Architect',
   description:
-    'Software engineer and architect in Sharjah, UAE. 15+ years building web and enterprise apps with .NET, Angular and OAuth/OIDC. Open to roles and projects.',
+    'Software engineer in Sharjah, UAE, with a team of developers. Websites, web apps and enterprise platforms on .NET and Angular. Open to roles and projects.',
   shortDescription:
-    'Full-stack software engineer and application architect in Sharjah, UAE. 15+ years of enterprise web and application development: .NET, Angular, OAuth 2.0 / OIDC, multi-tenant IAM and AI tooling.',
+    'Full-stack software engineer and application architect in Sharjah, UAE, working with a team of developers, designers and SEO specialists. 15+ years of enterprise web and application development: .NET, Angular, OAuth 2.0 / OIDC, multi-tenant IAM and AI tooling.',
   schemaDescription:
     'Lead Software Engineer, Full-Stack Developer & Application Architect with 15+ years building enterprise platforms across the UAE public sector. Specializing in .NET, Angular, OAuth 2.0/OIDC, multi-tenant IAM, and AI tooling.',
   heroIntro:
-    'Full-stack software engineer and application architect in Sharjah, UAE. 15+ years building web and enterprise applications for the UAE public sector — .NET, Angular, OAuth 2.0 / OIDC, multi-tenant IAM and AI tooling. Open to senior roles and select projects, in the UAE and remotely worldwide.',
+    'Full-stack software engineer and application architect in Sharjah, UAE. 15+ years building web and enterprise applications for the UAE public sector — .NET, Angular, OAuth 2.0 / OIDC, multi-tenant IAM and AI tooling. I also work with a team of developers, designers and SEO specialists to build websites and apps for businesses. Open to senior roles and client projects, in the UAE and remotely worldwide.',
   keywords:
     'Shakoor Hussain Attari, Lead Software Engineer, Full-Stack Developer, Application Architect, .NET Developer, Angular Developer, OAuth 2.0, OIDC, IAM, UAE, Enterprise Software, Software Architect',
   /** Public contact email (also shown on the page). The Outlook address is a Teams ID only. */
@@ -23,6 +23,8 @@ export const site = {
   teamsId: 'shakoorattari@outlook.com',
   phone: '+971508066735',
   phoneDisplay: '+971 50 806 6735',
+  /** WhatsApp click-to-chat number: international format, digits only (the wa.me form). Public on the page like the phone; not in structured data. */
+  whatsapp: '971508066735',
   region: 'Sharjah',
   country: 'AE',
   locationLabel: 'Sharjah, UAE',
@@ -49,6 +51,8 @@ export const site = {
     'Full-Stack Development',
     'Enterprise Architecture',
     'AI Tooling',
+    'Web Development',
+    'Technical SEO',
   ],
   /** Rotating roles shown under the name; the first one is rendered statically. */
   roles: [
@@ -57,10 +61,13 @@ export const site = {
     'Application Architect',
     '.NET / Angular Specialist',
     'IAM & AI Tooling Engineer',
+    'Website & Web App Developer',
   ],
   /** Short pitch reused on the Services pages. */
   availability:
-    'Open to senior engineering and architecture roles, and to select project work — based in Sharjah, working with teams across the UAE and GCC and remotely worldwide.',
+    'Open to senior engineering and architecture roles, and to client projects — websites, web apps and SEO, delivered with a team of developers and specialists. Based in Sharjah, working with clients across the UAE and GCC and remotely worldwide.',
+  /** One sentence about the team, reused wherever it is mentioned. Source: the owner (2026-10-03). No names, size or company status have been given, so none are claimed. */
+  team: 'a team of developers and specialists in front-end, back-end, web design and SEO',
   resume: '/assets/files/ShakoorHussain_Resume_V2.pdf',
   resumeMarkdown: '/assets/files/ShakoorHussain_Resume.md',
 } as const;

@@ -5,22 +5,24 @@ interface Props {
   /** True on the home page, where nav items are in-page anchors. Elsewhere they point back to "/#id". */
   home?: boolean;
   /** Which section page is open, to mark its link as current. */
-  current?: 'services' | 'projects' | 'blog';
+  current?: 'services' | 'projects' | 'work' | 'quote' | 'blog';
 }
 
 const { home = false, current } = Astro.props;
 const anchor = (id: string) => (home ? `#${id}` : id === 'home' ? '/' : `/#${id}`);
 const hasPosts = (await getPublishedPosts()).length > 0;
 
-const items: { label: string; href: string; page?: string }[] = [
+const items: { label: string; href: string; page?: string; cta?: boolean }[] = [
   { label: 'Home', href: anchor('home') },
   { label: 'About', href: anchor('about') },
   { label: 'Skills', href: anchor('skills') },
   { label: 'Experience', href: anchor('experience') },
-  { label: 'Projects', href: anchor('projects') },
+  { label: 'Work', href: '/work/', page: 'work' },
+  { label: 'Case Studies', href: anchor('projects') },
   { label: 'Services', href: '/services/', page: 'services' },
   ...(hasPosts ? [{ label: 'Blog', href: '/blog/', page: 'blog' }] : []),
   { label: 'Contact', href: anchor('contact') },
+  { label: 'Get a quote', href: '/quote/', page: 'quote', cta: true },
 ];
 ---
 
@@ -57,7 +59,7 @@ const items: { label: string; href: string; page?: string }[] = [
           <li>
             <a
               href={item.href}
-              class:list={{ active: !!item.page && item.page === current }}
+              class:list={{ active: !!item.page && item.page === current, 'nav-cta': item.cta }}
               aria-current={item.page && item.page === current ? 'page' : undefined}
             >
               {item.label}
@@ -192,6 +194,24 @@ const items: { label: string; href: string; page?: string }[] = [
     background-color: rgba(177, 186, 196, 0.08);
   }
 
+  /* The quote button: a filled link at the end of the menu. White on #1f6feb is 5:1. */
+  .nav-links li a.nav-cta {
+    margin-left: 6px;
+    color: #fff;
+    font-weight: 600;
+    background-color: var(--gh-accent-emphasis);
+  }
+
+  .nav-links li a.nav-cta:hover,
+  .nav-links li a.nav-cta.active {
+    color: #fff;
+    background-color: #388bfd;
+  }
+
+  .nav-links li a.nav-cta::after {
+    display: none;
+  }
+
   .nav-links li a.active::after {
     content: '';
     position: absolute;
@@ -234,7 +254,8 @@ const items: { label: string; href: string; page?: string }[] = [
     transform: rotate(-45deg) translate(4px, -4px);
   }
 
-  @media (max-width: 768px) {
+  /* Ten links need more room than the original seven, so the menu collapses earlier. */
+  @media (max-width: 920px) {
     .nav-links {
       position: fixed;
       top: 64px;
@@ -245,8 +266,9 @@ const items: { label: string; href: string; page?: string }[] = [
       border-top: 1px solid var(--gh-border-default);
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      gap: 8px;
+      justify-content: safe center;
+      overflow-y: auto;
+      gap: 6px;
       transition: left 0.25s ease;
     }
 
@@ -256,7 +278,11 @@ const items: { label: string; href: string; page?: string }[] = [
 
     .nav-links li a {
       font-size: 18px;
-      padding: 12px 24px;
+      padding: 10px 24px;
+    }
+
+    .nav-links li a.nav-cta {
+      margin: 6px 0 0;
     }
 
     .menu-toggle {

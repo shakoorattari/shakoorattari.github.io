@@ -6,7 +6,7 @@ This file guides Claude Code (and any contributor) working in this repository. I
 
 **shakoorattari.com** is the personal portfolio of **Shakoor Hussain Attari** — Lead Software Engineer, Full-Stack Developer & Application Architect, based in Sharjah, UAE, with 15+ years of enterprise delivery for UAE government entities (.NET / ASP.NET Core, Angular, OAuth 2.0 / OIDC, multi-tenant IAM, Azure DevOps, MCP servers / AI tooling).
 
-The site's job is to get the owner **found and hired**. Audience (decided 2026-09-26): **both** employers/recruiters hiring senior engineers and architects, **and** clients who need websites or applications built. Region: **UAE/GCC first, open to remote work worldwide.**
+The site's job is to get the owner **found and hired**. Audience (decided 2026-09-26): **both** employers/recruiters hiring senior engineers and architects, **and** clients who need websites or applications built. Region: **UAE/GCC first, open to remote work worldwide.** On 2026-10-03 the owner added that they work with **a team of developers and specialists in front-end, back-end, web design and SEO**, and asked the site to win client projects the way freelancer portfolios do. The site now has a quote path (`/quote/`: form, WhatsApp, call), a websites-and-apps gallery (`/work/`), two client-facing services (website design & development, SEO & performance) and the owner's LinkedIn recommendations. The team is described only in the owner's own words (`site.team`): no names, size or company status were given, so none are claimed.
 
 - The site had **no search visibility** at the start of this work (not in the index, not even findable by name) and **no analytics**. Getting discovered is a first-class goal, not an afterthought — see `docs/visibility-playbook.md`.
 - Broad terms ("hire .NET developer UAE") are owned by job boards. Win on **name searches** and **niche technical queries** (UAE PASS, multi-tenant OIDC, MCP servers). Don't chase rankings with volume.
@@ -19,6 +19,9 @@ Non-negotiable quality bar for every page shipped: **fast, accessible, SEO-optim
 - **Never invent** clients, employers, numbers, prices, testimonials, awards or experiences. If a fact isn't in the résumé, ask the owner.
 - **Blog posts are drafts until the owner finishes them.** Never set `draft: false` or publish on their behalf. Outlines use bracketed prompts for details only the owner knows.
 - Government work is sensitive: no internal hostnames, tenant names, client IDs or unreleased details in public copy.
+- **Client work (`src/data/work.ts`):** verify every claim against the live site *and* the client's repo (`../earthcone`, `../lailonahar-website`) before writing it. A "bilingual" claim for Lail O Nahar was nearly published; the site only shows an Arabic brand name. Say "eight areas", not "eight emirates" (Al Ain is a city). Publish no traffic, ranking or enquiry numbers: none were provided.
+- **Own projects (`kind: 'project'` in `work.ts`) are shown as such** (an "Own project" pill; never as client work) and say plainly what they do *not* do (`scope`). **Read the code, not the README:** `ai-chatbot-ali`'s README promises a PictoBlox AI integration, but the code only has a comment saying it "will be replaced"; the page says the chatbot uses a curated question bank plus Wikipedia look-ups and no language model. That project is a children's school robotics entry, so **no names of children, the team or the school are used in copy** (alt text describes the page instead), and the parental-consent page is not mentioned. A repo-only experiment too small for a real page is a `WorkLink` (the card opens GitHub in a new tab; no page, no sitemap entry); never create a thin page for it.
+- **Recommendations (`src/data/recommendations.ts`) are verbatim LinkedIn text** from the owner's screenshot of the Received tab (2026-10-03). Fix whitespace only, never wording; never add one that is not on LinkedIn. Names, titles and relationships are as LinkedIn shows them. The recommenders have not been asked about the site (see §14).
 - The owner's public email is `binmushtaq@gmail.com`; `shakoorattari@outlook.com` is a Teams ID only. The phone number is public on the page but deliberately **not** in structured data.
 
 ## 2. Tech stack
@@ -53,29 +56,36 @@ src/
   data/                  ALL content and site config — edit these, not the components
     site.ts              Identity, SEO copy, contact details, socials, `contactConfig`, `tracking` (GA id, Cloudflare token, verification tags)
     about.ts skills.ts experience.ts projects.ts
-    services.ts          The six service pages (copy, deliverables, selected work, related links)
+    services.ts          The eight service pages (copy, deliverables, selected work, related links)
     caseStudies.ts       Case-study pages = projects.ts joined with the detailed bullets in experience.ts
+    work.ts              Websites/apps (/work/): `WorkPage` (screenshot + own page) or `WorkLink` (repo-only card), `kind` client|project. Tests can't import it (it imports images)
+    quote.ts             /quote/ form options (project types, timelines, budgets) and the WhatsApp greeting
+    recommendations.ts   LinkedIn recommendations, verbatim, newest first
   content/blog/          Articles + outlines (Markdown). `draft: true` until the owner finishes; `outline: true` never renders
   content.config.ts      Blog schema (title ≤ 70, optional seoTitle ≤ 60, description 70–160)
   components/            Header, Hero, About, Services, Skills, Experience, Projects, Contact, SocialProof, Footer,
-                         Icon, Breadcrumbs, CtaPanel, AnalyticsConsent — one .astro file each, styles scoped inside it
+                         Icon, Breadcrumbs, CtaPanel, AnalyticsConsent, Work, WorkCard, QuoteForm, RecommendationCard — one .astro file each, styles scoped inside it
   layouts/
     Base.astro           <head>: title/description/canonical, Open Graph, Twitter, JSON-LD, verification tags, analytics, font preload
     Page.astro           Content-page layout (breadcrumbs + BreadcrumbList JSON-LD + shared page styles)
   pages/
-    index.astro          Home: hero, about, services, skills, experience, case studies, contact, trust signals
+    index.astro          Home: hero, about, services, work, skills, experience, case studies, recommendations, contact
     services/            /services/ hub + /services/<slug>/
     projects/            /projects/ hub + /projects/<slug>/   (NOT redirected — see §4)
+    work/                /work/ gallery + /work/<slug>/ — client websites with screenshots and live links
+    quote/               /quote/ — quote form; WhatsApp message built from the same text; call button
     blog/                /blog/ + /blog/<slug>/ (dev previews drafts; production builds only published posts)
     privacy.astro        /privacy/ — generated from the build config: describes only the tools that are enabled
     404.astro  sitemap.xml.ts  rss.xml.ts  llms.txt.ts  version.json.ts
-  scripts/               nav.ts (menu, scroll-spy, footer year) · hero-roles.ts (role rotator) · contact.ts (the form) ·
+  scripts/               nav.ts (menu, scroll-spy, footer year) · hero-roles.ts (role rotator) · contact.ts + quote.ts (the forms) ·
+                         form-kit.ts (shared: toast, lazy Turnstile, rate limit, Web3Forms delivery, lead-click events) ·
                          analytics.ts (opt-in GA4: consent, load, withdraw; bundled only when an ID is set)
   lib/                   lastmod.ts (git date), blog.ts (published vs preview), schema.ts (Person/WebSite JSON-LD refs),
-                         version.ts (build info: version + commit, resolved at build time),
+                         version.ts (build info: version + commit, resolved at build time), whatsapp.ts (wa.me links),
                          analytics.ts (what this build ships; a malformed GA id fails the build)
   styles/global.scss     Design tokens (--gh-* GitHub-dark palette) and shared utilities
-  assets/profile.jpg     Source photo Astro resizes to AVIF/WebP (a 335px source — do not request wider variants)
+  assets/profile.jpg     Source photo Astro resizes to AVIF/WebP: the GitHub avatar, 460×460 (the owner asked for it on 2026-10-03). Don't request variants wider than 460
+  assets/work/           1440×900 home-page screenshots of the client sites (headless Chrome), resized by Astro. Re-capture when a site changes visibly
 scripts/                 check-seo.mjs (post-build SEO guard) · check-version.mjs · release.mjs · release-notes.mjs ·
                          serve-dist.mjs (static server for tests) · lib/release.mjs (+ unit tests)
 tests/                   Playwright: health, navigation, mobile, contact-form, seo (+ helpers.ts)
@@ -94,6 +104,7 @@ Keep one component per file; colocate its styles in a `<style lang="scss">` bloc
 - **Titles ≤ 60 characters, descriptions 70–160**, unique per page — enforced by `npm run check:seo`. Blog posts may set `seoTitle`.
 - **One page, one intent.** Service pages (`/services/<slug>/`) target skill/role searches; case studies (`/projects/<slug>/`) are the proof. **Do not mass-generate thin "X in [city]" or "skill of the week" pages** — that is doorway spam and gets penalised. Add a page only when there is genuinely unique, résumé-backed content for it.
 - **Keyword ↔ page map** lives in `docs/visibility-playbook.md` §6. Update it when pages are added.
+- **Client-facing pages (2026-10-03):** `/work/` + `/work/<slug>/` (the proof), `/quote/` (the conversion), and the services `website-design-development` and `seo-performance` (the intent pages). `/services/` is the "Work with me" hub for three audiences: clients wanting a site, employers, and project specialists. Add a `/work/` entry only for a real, live project with facts checked against its repo; do not mass-produce "X in [city]" pages (same doorway rule as above).
 - **Technical basics:** self-canonical URLs, trailing slashes everywhere, `robots.txt` → sitemap, `sitemap.xml` (every indexable page, own `lastmod`), `rss.xml`, `llms.txt`, breadcrumbs, no orphan pages (everything reachable from nav, footer or a page body).
 - **Legacy URLs:** `/about`, `/skills`, `/experience`, `/contact` redirect to the home anchors (`astro.config.mjs` `redirects`, HTML meta-refresh — GitHub Pages cannot do 301s). **A `redirects` entry silently shadows a real page at the same path** (Astro warns about nothing): `/projects` was removed from the list for exactly this reason. `check:seo` catches it via the sitemap comparison.
 - **The blog launches empty on purpose.** `/blog/` is `noindex` and the nav/footer/RSS/sitemap entries appear only once a post is published.
@@ -120,7 +131,7 @@ Enforced by Lighthouse CI (`lighthouserc.json`, mobile, median of 3 runs, six re
 
 Rules to stay inside the budget:
 
-- **No third-party requests on load.** Turnstile loads lazily (form within 400px, or a field focused); the optional Cloudflare beacon is the only third party that loads for everyone. **Google Analytics is opt-in:** `gtag.js` (~150 KB on the wire, measured) is requested only after a visitor clicks Accept, so a visitor who hasn't agreed makes zero Google requests. Never load Google's script before consent, and don't switch to "advanced" consent mode, without the owner deciding it.
+- **No third-party requests on load.** Turnstile loads lazily (form within 400px, or a field focused, tapped or typed in); **a form near the top of its page must pass `{ nearViewport: false }` to `lazyTurnstile`**, as `/quote/` does, or the Cloudflare script loads with the page (the health test caught exactly this); the optional Cloudflare beacon is the only third party that loads for everyone. **Google Analytics is opt-in:** `gtag.js` (~150 KB on the wire, measured) is requested only after a visitor clicks Accept, so a visitor who hasn't agreed makes zero Google requests. Never load Google's script before consent, and don't switch to "advanced" consent mode, without the owner deciding it.
 - CSS is inlined (`inlineStylesheets: 'always'`); fonts self-hosted and preloaded; images through `astro:assets`; icons inlined SVG.
 - No client-side framework, no polyfills, no libraries for things a few lines of vanilla TS can do.
 - Don't apply `content-visibility: auto` to real sections: with `contain-intrinsic-size` it reserved a wrong height and made the page height jump (it was a bug in the old Angular version).
@@ -173,7 +184,7 @@ Workflows in `.github/workflows/` (details and thresholds: `docs/ci-cd.md`):
 
 - Nothing here is a secret. The Web3Forms access key and the Turnstile **site** key are designed to be public and live in `src/data/site.ts` (`contactConfig`); development uses a different Web3Forms key and Cloudflare's always-pass Turnstile test key (`import.meta.env.DEV`).
 - Optional public values (analytics IDs/tokens, search-engine verification tags) are read from `PUBLIC_*` env vars (`.env.example`). In CI they come from GitHub **repository variables** `GA_MEASUREMENT_ID`, `CF_ANALYTICS_TOKEN`, `GOOGLE_SITE_VERIFICATION`, `BING_SITE_VERIFICATION`. Nothing is emitted while empty.
-- **Analytics rules** (details in `docs/analytics.md`): only the *deployed* build (the `ci.yml` quality job) gets the real IDs; the **Playwright and Lighthouse builds blank them** (`PUBLIC_GA_MEASUREMENT_ID: ''`, `PUBLIC_CF_ANALYTICS_TOKEN: ''`) so CI can never send fake visits to the real properties. GA is also dormant in `astro dev`, on any hostname other than the production domain (`PUBLIC_GA_HOSTS`), and for Global Privacy Control visitors. Test GA only with a **fake** ID (`G-TEST123456`) and mocked Google endpoints (`npm run test:analytics`); never with the real ID. Send no personal data in events (the form's content, email, name). Update `/privacy/` (`src/pages/privacy.astro`) whenever a data-handling tool is added or removed.
+- **Analytics rules** (details in `docs/analytics.md`): only the *deployed* build (the `ci.yml` quality job) gets the real IDs; the **Playwright and Lighthouse builds blank them** (`PUBLIC_GA_MEASUREMENT_ID: ''`, `PUBLIC_CF_ANALYTICS_TOKEN: ''`) so CI can never send fake visits to the real properties. GA is also dormant in `astro dev`, on any hostname other than the production domain (`PUBLIC_GA_HOSTS`), and for Global Privacy Control visitors. Test GA only with a **fake** ID (`G-TEST123456`) and mocked Google endpoints (`npm run test:analytics`); never with the real ID. Send no personal data in events (the form's content, email, name). The only custom event is `generate_lead` with `method` = `contact_form`, `quote_form`, `whatsapp` or `phone` (elements marked `data-lead`; wired by `trackLeadClicks()` in `form-kit.ts`, so a page needs the contact or quote script for it to count). Update `/privacy/` (`src/pages/privacy.astro`) whenever a data-handling tool is added or removed.
 - Never commit real secrets. The repo needs no GitHub Actions secrets.
 
 ## 12. Getting started
@@ -191,7 +202,7 @@ npm run release -- --dry-run   # preview the next version and changelog section
 ## 13. QA workflow
 
 - **Before pushing:** `npm run verify`, then `npm run test:e2e` if you touched behaviour, layout or markup.
-- **Playwright** (`tests/`) runs against the production build, never `astro dev`, and uses the system Google Chrome (`channel: 'chrome'`). It is served by `scripts/serve-dist.mjs` because **Astro 7's `astro preview` daemonizes** — the launcher exits immediately, which test runners read as a crashed server. Web3Forms, Turnstile, the clipboard and Google's endpoints are always mocked; tests must never contact a real service. The analytics tests need a separate fake-ID build: `npm run test:analytics` (it builds into `dist-analytics/` and serves it through `DIST_DIR`); in the default run they check that **no** analytics ships.
+- **Playwright** (`tests/`) runs against the production build, never `astro dev`, and uses the system Google Chrome (`channel: 'chrome'`). It is served by `scripts/serve-dist.mjs` because **Astro 7's `astro preview` daemonizes** — the launcher exits immediately, which test runners read as a crashed server. Web3Forms, Turnstile, the clipboard and Google's endpoints are always mocked; **`reuseExistingServer` means a running `astro dev` on port 4321 silently becomes the test target** (symptoms: `environment: development` in `/version.json`, ~1.9 MB of script). Check `lsof -nP -iTCP:4321 -sTCP:LISTEN` first, or run on another port with a throwaway config that spreads `playwright.config.ts` and overrides `baseURL` and `webServer`; tests must never contact a real service. The analytics tests need a separate fake-ID build: `npm run test:analytics` (it builds into `dist-analytics/` and serves it through `DIST_DIR`); in the default run they check that **no** analytics ships.
 - **Look at the page, don't just trust green.** Assertions guard what you already know about; screenshots and computed geometry surface the rest. Useful techniques from this project: screenshot each section of old vs new builds side by side (use `captureBeyondViewport` — resizing the viewport to full-page height breaks `100vh` heroes and gives false "no difference"); compare the bounding box of _every element_ between two builds to prove a formatting or refactor change moved nothing.
 - **Mutation-test gates and tests:** deliberately break the site and confirm the right check fails.
 - Prefer a targeted assertion over eyeballing once; screenshots catch what you thought to look at, assertions catch the regression next time.
@@ -213,6 +224,10 @@ Engineering / decisions:
 
 - **Turnstile is not enforced server-side:** `contact.ts` does not forward the token to Web3Forms, so the widget only gates the submit button. Fix needs `cf-turnstile-response` in the payload plus enabling verification in the Web3Forms dashboard (owner).
 - The **résumé markdown and both PDFs are public** in `public/assets/files/` and contain the phone number and email; decide which PDF to keep and whether to keep publishing the `.md`.
-- Whether to add the client website the owner built (`Attari-Home/earthcone`) as a case study to evidence "website development" — owner decision; do not add it unasked.
-- The hero/about photo is a 335px source (`src/assets/profile.jpg`); a higher-resolution portrait exists in history if a sharper hero is wanted.
-- Possible later: an Arabic version (`hreflang`), genuine client testimonials for the trust-signals section, `rel="me"` links once more profiles exist, Cloudflare Pages for headers/redirects/previews (GitHub Pages fixes `max-age=600` and can't 301).
+- **More projects (2026-10-03):** the owner asked for `ai-chatbot-ali` and `HandGestureAI` (both public in `Attari-Home`) and "other better ones". Added: the chatbot (page) and HandGestureAI (link card). **Not added, awaiting the owner:** the private repos `Komorebi-Cameron` (luxury web studio site, Astro + React, active), `SchoolGPT` and `UAEChatbot` (local-Llama Python apps) — private and possibly client or unreleased work, so publishing needs the owner's say-so and, for a live site, a URL and a screenshot. Candidates in the personal account `shakoorattari`: `FamilySafety` (.NET 10 clean architecture), `ldap-mcp` and `mcp-servers` (evidence for the AI-tooling service), `vulscan`, `md-to-pdf`. Also noticed: the chatbot's live site returns GitHub's 404 on a deep link such as `/chatbot` (refresh or a shared link breaks; the root works), and the `SchoolGPT` README contains SQL Server `sa` credentials (private repo; rotate or remove).
+- **Client work decided 2026-10-03:** the owner asked for Earth Cone and Lail O Nahar in the gallery (`/work/`). Still open: confirm the clients are happy to be shown, and that "I designed and built" and "Website design and development" describe the owner's role correctly (it is the one wording not taken from a repo or live page). The owner said they would list further apps; add them to `src/data/work.ts` with a screenshot.
+- **Team details:** only the owner's one sentence is on the site (`site.team`). Team size, names, roles per person, whether it is a registered company and whether the owner's employer needs to approve outside work are unknown; ask before adding any of them.
+- **Recommendations:** three are shown (Ahmed Bahaa, Rizwan Iqbal, Dominick Antony). Ask them (a courtesy) that they are quoted on the site, and ask whether more exist: the owner's screenshot was cut off below the third.
+- **Quote form:** the budget ranges in `src/data/quote.ts` and the three-step "what happens next" copy on `/quote/` (reply within 24 hours, then a written scope and estimate) are the owner's to confirm or change.
+- Profile photo: now the GitHub avatar (460px). The social card already used the same portrait; the résumé portrait (`shakoor-photo.jpg`, 280px) was left alone.
+- Possible later: an Arabic version (`hreflang`), genuine *client* testimonials (the section now has colleague recommendations only), `rel="me"` links once more profiles exist, Cloudflare Pages for headers/redirects/previews (GitHub Pages fixes `max-age=600` and can't 301).

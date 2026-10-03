@@ -2,6 +2,7 @@ import type { APIRoute } from 'astro';
 import { site } from '../data/site';
 import { services } from '../data/services';
 import { caseStudies } from '../data/caseStudies';
+import { workPages } from '../data/work';
 import { getPublishedPosts } from '../lib/blog';
 import { lastModified } from '../lib/lastmod';
 
@@ -14,6 +15,9 @@ export const GET: APIRoute = async () => {
     { path: '/', lastmod },
     { path: '/services/', lastmod },
     ...services.map((s) => ({ path: `/services/${s.slug}/`, lastmod })),
+    { path: '/work/', lastmod },
+    ...workPages.map((w) => ({ path: `/work/${w.slug}/`, lastmod })),
+    { path: '/quote/', lastmod },
     { path: '/projects/', lastmod },
     { path: '/privacy/', lastmod },
     ...caseStudies.map((c) => ({ path: `/projects/${c.slug}/`, lastmod })),

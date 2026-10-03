@@ -1,0 +1,102 @@
+---
+import Page from '../../layouts/Page.astro';
+import CtaPanel from '../../components/CtaPanel.astro';
+import WorkCard from '../../components/WorkCard.astro';
+import { work, hasPage } from '../../data/work';
+import { caseStudies } from '../../data/caseStudies';
+import { site } from '../../data/site';
+import { personRef, websiteRef } from '../../lib/schema';
+
+const title = 'Websites & Apps Built for UAE Businesses | S. Attari';
+const description =
+  'Websites built for UAE businesses with quote forms and WhatsApp leads, plus my own projects: an Angular chatbot app and a computer-vision experiment.';
+const clients = work.filter((w) => w.kind === 'client');
+const projects = work.filter((w) => w.kind === 'project');
+const path = '/work/';
+const url = new URL(path, site.url).href;
+
+const jsonLd = [
+  {
+    '@type': 'CollectionPage',
+    '@id': `${url}#page`,
+    url,
+    name: "Websites and apps I've built",
+    description,
+    isPartOf: websiteRef,
+    about: personRef,
+    mainEntity: {
+      '@type': 'ItemList',
+      itemListElement: work.map((item, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: item.name,
+        url: hasPage(item) ? new URL(`/work/${item.slug}/`, site.url).href : item.repo,
+      })),
+    },
+  },
+];
+---
+
+<Page
+  title={title}
+  description={description}
+  path={path}
+  crumbs={[{ name: 'Work', href: path }]}
+  current="work"
+  jsonLd={jsonLd}
+>
+  <h1 class="page-title">Websites &amp; apps I've built</h1>
+  <div class="page-lead">
+    <p>
+      Business websites I designed and built, live on the web today, followed by a few projects of my own. The client
+      sites are fast static sites with the next step (a call, a WhatsApp message or a quote request) always within
+      reach, and structured data so search engines understand the business.
+    </p>
+    <p>
+      For larger systems I work with {site.team}. My government platforms are not shown as screenshots because the work
+      is sensitive; they are covered as written <a href="/projects/">architecture case studies</a>.
+    </p>
+  </div>
+
+  <section class="page-section" aria-labelledby="clients-title">
+    <h2 id="clients-title">Client websites</h2>
+    <ul class="card-grid">
+      {clients.map((item, i) => (
+        <li>
+          <WorkCard item={item} level="h3" eager={i === 0} />
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="page-section" aria-labelledby="projects-title">
+    <h2 id="projects-title">Own projects &amp; experiments</h2>
+    <p>
+      Not client work: projects I built to learn, to compete or to try an idea. Each is labelled with what it does and
+      what it does not do.
+    </p>
+    <ul class="card-grid" style="margin-top:20px">
+      {projects.map((item) => (
+        <li>
+          <WorkCard item={item} level="h3" />
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="page-section" aria-labelledby="enterprise-title">
+    <h2 id="enterprise-title">Enterprise platforms</h2>
+    <ul class="link-list">
+      {caseStudies.map((study) => (
+        <li>
+          <a href={`/projects/${study.slug}/`}>{study.title}</a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <CtaPanel
+    heading="Need a website or app?"
+    text="Tell me about the business and what the site should achieve. I reply within 24 hours."
+  />
+</Page>
