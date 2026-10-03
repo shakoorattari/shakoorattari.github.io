@@ -16,6 +16,12 @@ const pageItems = [
     services: ['website-design-development', 'seo-performance'],
   },
   {
+    slug: 'komorebi-cameron',
+    name: 'Komorebi Cameron',
+    url: 'https://attari-home.github.io/Komorebi-Cameron/',
+    services: ['website-design-development'],
+  },
+  {
     slug: 'uae-information-chatbot',
     name: 'UAE Information AI Chatbot',
     url: 'https://attari-home.github.io/ai-chatbot-ali/',
@@ -67,9 +73,9 @@ test('/work/ separates client websites from own projects, and labels each card',
   const clients = page.locator('section[aria-labelledby="clients-title"] .work-card');
   const projects = page.locator('section[aria-labelledby="projects-title"] .work-card');
   await expect(clients).toHaveCount(2);
-  await expect(projects).toHaveCount(2);
+  await expect(projects).toHaveCount(3);
   await expect(clients.locator('.work-kind')).toHaveText(['Client project', 'Client project']);
-  await expect(projects.locator('.work-kind')).toHaveText(['Own project', 'Own project']);
+  await expect(projects.locator('.work-kind')).toHaveText(['Own project', 'Own project', 'Own project']);
 });
 
 test('the experiment has no page of its own: not routable, not in the sitemap, but listed in llms.txt', async ({

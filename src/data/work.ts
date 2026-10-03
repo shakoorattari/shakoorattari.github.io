@@ -6,6 +6,7 @@ import type { ImageMetadata } from 'astro';
 import earthCone from '../assets/work/earth-cone.jpg';
 import lailONahar from '../assets/work/lail-o-nahar.jpg';
 import uaeChatbot from '../assets/work/uae-chatbot.jpg';
+import komorebi from '../assets/work/komorebi-cameron.jpg';
 
 interface WorkBase {
   slug: string;
@@ -157,6 +158,52 @@ export const work: WorkItem[] = [
       'Cloudflare Pages',
     ],
     services: ['website-design-development', 'seo-performance'],
+  },
+  {
+    slug: 'komorebi-cameron',
+    name: 'Komorebi Cameron',
+    kind: 'project',
+    label: 'Studio website · Creative engineering',
+    url: 'https://attari-home.github.io/Komorebi-Cameron/',
+    image: komorebi,
+    imageAlt:
+      'Home page of the Komorebi Cameron studio website: a dark page with glowing pink petals behind the headline "Crafting Unforgettable Digital Experiences" and a theme toggle',
+    blurb:
+      'A flagship studio website with a custom canvas animation engine: drifting petals, a guide petal, selectable colour palettes and a light and dark theme.',
+    tags: ['Astro', 'React islands', 'Canvas', 'Tailwind CSS'],
+    metaTitle: 'Komorebi Cameron: Creative Studio Website | S. Attari',
+    metaDescription:
+      'A studio website with a custom canvas animation engine, colour palettes, light and dark themes and reduced-motion support, built with Astro and React islands.',
+    h1: 'Komorebi Cameron — creative studio website',
+    intro: [
+      'Komorebi Cameron presents itself as a web development and creative engineering studio, and its website is built to show that: a dark, minimal page where a procedural blossom branch and falling petals are drawn on a canvas, and a guide petal drifts down the margins beside the content.',
+      'It is shown here as one of my own projects, an example of how far a fast static site can go on motion and atmosphere without giving up performance or accessibility.',
+    ],
+    goal: 'A studio homepage that feels crafted: strong first impression, motion that respects the visitor, and the usual fundamentals (speed, accessibility, search markup) kept intact.',
+    built: [
+      {
+        title: 'A custom canvas engine',
+        text: 'Petals and a blossom branch are drawn by a small framework-free engine with a pooled petal system, seeded branch generation, wind sway, a quality governor that adapts to the device, and a pause when the tab is hidden. Phones get a lighter configuration.',
+      },
+      {
+        title: 'Light and dark themes, and palettes',
+        text: 'A theme applied before first paint so there is no flash, plus selectable petal palettes that drive both the animation and the interface accents. Light-mode colours are tuned for readable text contrast.',
+      },
+      {
+        title: 'Motion that respects people',
+        text: 'Reduced-motion fallbacks, large touch targets, a skip link and cursor-aware text effects that add atmosphere without hiding content.',
+      },
+      {
+        title: 'Static by default, interactive where it counts',
+        text: 'Astro renders the sections as static HTML; only the canvas, theme and palette controls, smooth scrolling and the contact form are React islands.',
+      },
+      {
+        title: 'Search and sharing basics',
+        text: 'Structured data for a professional service, a sitemap, font preloads and a social preview image.',
+      },
+    ],
+    stack: ['Astro', 'React', 'TypeScript', 'Tailwind CSS', 'Canvas 2D', 'Lenis', 'GitHub Pages'],
+    services: ['website-design-development'],
   },
   {
     slug: 'uae-information-chatbot',

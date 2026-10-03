@@ -15,6 +15,7 @@ export const pages = [
   '/work/',
   '/work/earth-cone/',
   '/work/lail-o-nahar/',
+  '/work/komorebi-cameron/',
   '/work/uae-information-chatbot/',
   '/quote/',
   '/projects/',
