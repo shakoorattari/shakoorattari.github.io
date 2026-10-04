@@ -17,7 +17,7 @@ export const pages = [
   '/work/lail-o-nahar/',
   '/work/komorebi-cameron/',
   '/work/uae-information-chatbot/',
-  '/work/ielts-collocations/',
+  '/work/ielts-study-guide/',
   '/quote/',
   '/projects/',
   '/privacy/',

@@ -28,8 +28,8 @@ const pageItems = [
     services: ['web-application-development'],
   },
   {
-    slug: 'ielts-collocations',
-    name: '1000 IELTS Collocations',
+    slug: 'ielts-study-guide',
+    name: 'IELTS Study Guide',
     url: 'https://shakoorattari.com/ielts/',
     services: ['web-application-development', 'seo-performance'],
   },
@@ -131,12 +131,12 @@ test.describe('IELTS app', () => {
   test('the footer links to it on every page', async ({ page }) => {
     for (const path of ['/', '/work/', '/privacy/']) {
       await page.goto(path);
-      await expect(page.locator('footer a[href="/ielts/"]')).toHaveText('IELTS app');
+      await expect(page.locator('footer a[href="/ielts/"]')).toHaveText('IELTS Study Guide');
     }
   });
 
   test('its work page links to the live app and the source, and says what it is not', async ({ page }) => {
-    await page.goto('/work/ielts-collocations/');
+    await page.goto('/work/ielts-study-guide/');
     await expect(page.locator('.page-meta')).toContainText('Project type');
     await expect(page.locator('.page-meta a.repo-link')).toHaveAttribute(
       'href',
@@ -158,7 +158,7 @@ test.describe('IELTS app', () => {
     expect(robots).toContain('Disallow: /ielts/200-Essays-Mobile.pdf');
     const sitemap = await (await request.get('/sitemap.xml')).text();
     expect(sitemap).not.toContain('/ielts/'); // the app's own sitemap owns that URL
-    expect(sitemap).toContain('https://shakoorattari.com/work/ielts-collocations/');
+    expect(sitemap).toContain('https://shakoorattari.com/work/ielts-study-guide/');
   });
 
   test('llms.txt lists the app, and the privacy page covers it', async ({ page, request }) => {
@@ -166,7 +166,7 @@ test.describe('IELTS app', () => {
     expect(llms).toContain('## Live apps on this domain');
     expect(llms).toContain('(https://shakoorattari.com/ielts/)');
     await page.goto('/privacy/');
-    const section = page.locator('h2', { hasText: 'IELTS practice app' });
+    const section = page.locator('h2', { hasText: 'IELTS Study Guide' });
     await expect(section).toBeVisible();
     await expect(page.locator('.prose')).toContainText('sets no cookies');
   });
