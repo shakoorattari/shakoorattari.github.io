@@ -17,6 +17,15 @@ The log of **what was decided and why**, and where assets came from. `CLAUDE.md`
 | 2026-09-26 | **CI quality gates** modelled on the sibling `earthcone` project; `CLAUDE.md`, `.claude/`, this file | PR #2 |
 | 2026-09-27 | **Versioning** (1.2.0): SemVer + changelog + footer display + `/version.json` + release tooling. Retroactive v1.0.0 (`e730451`) and v1.1.0 (`4b6c5f6`) | `feat/versioning` |
 
+## IELTS app linked (2026-10-04)
+
+The owner's free IELTS study app (`shakoorattari/ielts`, React + Vite, hash routes) is already served at `shakoorattari.com/ielts/`: with a custom domain on the user site, GitHub Pages serves each project site's repo under `domain/<repo>/`. The request was to link it from the portfolio and make its SEO proper.
+
+- **Portfolio side:** a `WorkPage` entry (`ielts-collocations`, kind `project`, screenshot of the dashboard), footer link, `llms.txt` section, privacy paragraph, `robots.txt` lists the app's sitemap and disallows the third-party essay PDF, `check-seo.mjs` `EXTERNAL_APPS`. Facts on the page were read from the app's README, data and code, not assumed (1000 collocations = 10 themes × 100 topics, 202 essays, SM-2 style scheduler, optional private-Gist sync, themes, no analytics or cookies).
+- **App side (its own PR):** Lighthouse already gave it SEO 100, which is shallow: the raw HTML was an empty `<div id="root">` with no `<h1>`, no canonical, Open Graph, structured data or sitemap, a template favicon, and hash routes mean there is only one indexable URL. Added a static, truthful shell in `#root` (replaced by React with measured CLS 0), canonical/OG/Twitter/theme-color/icons, `WebApplication` JSON-LD (no ratings: there are none), a generated `sitemap.xml`, a `noindex` 404, per-screen titles, and `scripts/check-seo.mjs` run in CI (25 deliberate regressions each fail it). Accessibility went 94 → 100 across all routes and six themes (axe): `text-on-brand` and `text-*-ink` tokens replaced white-on-brand and 500-weight status text, and unlabeled `<select>`s got names.
+- **Decision: essays get no indexable pages.** They are © Hardev Sir's IELTS Institute with no permission statement found. Prerendering 202 essay URLs would put third-party text in search under the owner's domain. Open for the owner: confirm permission, and whether `200-Essays-Mobile.pdf` should stay public.
+- **Deploy order:** the app's PR first (the sitemap this repo's `robots.txt` references and the claims on the work page ("a check in the pipeline", contrast) come from it), then this one.
+
 ## Decisions and why
 
 - **Astro instead of upgrading Angular.** Static content plus one form; Angular 16 was out of support and shipped ~116 KiB of JavaScript. Astro ships none by default.

@@ -7,6 +7,7 @@ import earthCone from '../assets/work/earth-cone.jpg';
 import lailONahar from '../assets/work/lail-o-nahar.jpg';
 import uaeChatbot from '../assets/work/uae-chatbot.jpg';
 import komorebi from '../assets/work/komorebi-cameron.jpg';
+import ielts from '../assets/work/ielts-collocations.jpg';
 
 interface WorkBase {
   slug: string;
@@ -29,6 +30,8 @@ export interface WorkPage extends WorkBase {
   /** Home-page screenshot (1440×900); Astro resizes it. */
   image: ImageMetadata;
   imageAlt: string;
+  /** Caption under the screenshot on the page; the default describes a website's home page. */
+  imageCaption?: string;
   metaTitle: string;
   metaDescription: string;
   h1: string;
@@ -249,6 +252,60 @@ export const work: WorkItem[] = [
       'Answers come from the curated bank and live Wikipedia look-ups. It is not backed by a large language model, and the PictoBlox AI integration named in the competition brief is not implemented yet.',
     stack: ['Angular 17', 'TypeScript', 'Tailwind CSS', 'RxJS', 'GitHub Actions', 'GitHub Pages'],
     services: ['web-application-development'],
+  },
+  {
+    slug: 'ielts-collocations',
+    name: '1000 IELTS Collocations',
+    kind: 'project',
+    label: 'Free IELTS study app · React and TypeScript',
+    url: 'https://shakoorattari.com/ielts/',
+    repo: 'https://github.com/shakoorattari/ielts',
+    image: ielts,
+    imageAlt:
+      'Dashboard of the 1000 IELTS Collocations app in its dark theme: counts of mastered, in-review, learning and not-started collocations, shortcuts to Flashcards, Fill the Blank, Quick Quiz and Writing Practice, and a Model essays card',
+    imageCaption: 'The dashboard of the app, captured from the live site with no progress saved yet.',
+    blurb:
+      'A free study app for IELTS candidates: 1000 collocations practised with spaced-repetition flashcards, fill-the-blank drills and quizzes, plus model essays. No sign-up; progress stays in your browser.',
+    tags: ['React', 'TypeScript', 'Tailwind CSS', 'Spaced repetition'],
+    metaTitle: 'IELTS Collocations App: React Study Tool | S. Attari',
+    metaDescription:
+      'A free IELTS study app I built: 1000 collocations with spaced-repetition flashcards, drills, quizzes and model essays, running in the browser with no sign-up.',
+    h1: '1000 IELTS Collocations — a free study app',
+    intro: [
+      'Collocations are words that naturally go together, like “a rigid curriculum”, and they are a common focus when preparing for the IELTS Writing and Speaking tests. A long list is hard to memorise, so I built a free web app that turns 1000 of them into daily practice.',
+      'It is my own project, not client work. It runs entirely in the browser with no backend and no accounts, and it is live at shakoorattari.com/ielts.',
+    ],
+    goal: 'Make collocations stick: practise each one in several different ways, and let a spaced-repetition schedule bring back the ones that are hard to remember.',
+    built: [
+      {
+        title: 'Spaced-repetition flashcards',
+        text: 'An SM-2 style scheduler: grade each card Again, Hard, Good or Easy and the next review moves accordingly, so due cards resurface automatically. A round that is interrupted resumes where it stopped.',
+      },
+      {
+        title: 'Several ways to practise the same phrase',
+        text: 'Fill-the-blank drills with typo-tolerant answer matching, a multiple-choice meaning quiz, and writing practice by topic with autosaved drafts. Every mode feeds the same record for each collocation.',
+      },
+      {
+        title: 'Model essays and a phrase bank',
+        text: 'A library of 202 Task 2 essays, filterable by essay type and topic, with the key phrases highlighted and explained, plus an A–Z searchable phrase bank. The essay text is loaded only when it is opened, which keeps the first load small.',
+      },
+      {
+        title: 'No accounts, no backend',
+        text: 'Progress is stored in the browser. Optional sync between devices uses a private GitHub Gist that belongs to the learner, with a merge that never loses work from either device.',
+      },
+      {
+        title: 'Readable on any screen',
+        text: 'Light, sepia, mint, dark and true-black themes (or automatic, following the device), a navigation menu that adapts to phones, and text colours checked for contrast in every theme.',
+      },
+      {
+        title: 'Built to be found',
+        text: 'A single-page app is easy to build and easy to make invisible, so the build includes a text description that crawlers can read without running JavaScript, structured data, a sitemap, and a check in the deployment pipeline that fails the build if any of it breaks.',
+      },
+    ],
+    scope:
+      'The model essays are © Hardev Sir’s IELTS Institute, Bathinda, and are credited in the app. This is an independent study tool, not affiliated with or endorsed by the organisations that own the IELTS test.',
+    stack: ['React', 'TypeScript', 'Vite', 'Tailwind CSS', 'React Router', 'GitHub Actions', 'GitHub Pages'],
+    services: ['web-application-development', 'seo-performance'],
   },
   {
     slug: 'hand-gesture-ai',
