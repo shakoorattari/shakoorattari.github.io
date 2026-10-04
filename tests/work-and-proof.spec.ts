@@ -29,7 +29,7 @@ const pageItems = [
   },
   {
     slug: 'ielts-study-guide',
-    name: 'IELTS Study Guide',
+    name: 'IELTS Band Builder',
     url: 'https://shakoorattari.com/ielts/',
     services: ['web-application-development', 'seo-performance'],
   },
@@ -131,7 +131,7 @@ test.describe('IELTS app', () => {
   test('the footer links to it on every page', async ({ page }) => {
     for (const path of ['/', '/work/', '/privacy/']) {
       await page.goto(path);
-      await expect(page.locator('footer a[href="/ielts/"]')).toHaveText('IELTS Study Guide');
+      await expect(page.locator('footer a[href="/ielts/"]')).toHaveText('IELTS Band Builder');
     }
   });
 
@@ -166,7 +166,7 @@ test.describe('IELTS app', () => {
     expect(llms).toContain('## Live apps on this domain');
     expect(llms).toContain('(https://shakoorattari.com/ielts/)');
     await page.goto('/privacy/');
-    const section = page.locator('h2', { hasText: 'IELTS Study Guide' });
+    const section = page.locator('h2', { hasText: 'IELTS Band Builder' });
     await expect(section).toBeVisible();
     await expect(page.locator('.prose')).toContainText('sets no cookies');
   });

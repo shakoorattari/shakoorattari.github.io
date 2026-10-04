@@ -255,22 +255,22 @@ export const work: WorkItem[] = [
   },
   {
     slug: 'ielts-study-guide',
-    name: 'IELTS Study Guide',
+    name: 'IELTS Band Builder',
     kind: 'project',
     label: 'Free IELTS study guide · React and TypeScript',
     url: 'https://shakoorattari.com/ielts/',
     repo: 'https://github.com/shakoorattari/ielts',
     image: ielts,
     imageAlt:
-      'Dashboard of the IELTS Study Guide app in its dark theme: counts of mastered, in-review, learning and not-started collocations, shortcuts to Flashcards, Fill the Blank, Quick Quiz and Writing Practice, and a Model essays card',
+      'Dashboard of the IELTS Band Builder app in its dark theme: counts of mastered, in-review, learning and not-started collocations, shortcuts to Flashcards, Fill the Blank, Quick Quiz and Writing Practice, and a Model essays card',
     imageCaption: 'The dashboard of the app, captured from the live site with no progress saved yet.',
     blurb:
       'A free IELTS study guide: 1000 collocations practised with spaced-repetition flashcards, fill-the-blank drills and quizzes, plus model essays to learn from. No sign-up; progress stays in your browser.',
     tags: ['React', 'TypeScript', 'Tailwind CSS', 'Spaced repetition'],
-    metaTitle: 'IELTS Study Guide: A Free React Study App | S. Attari',
+    metaTitle: 'IELTS Band Builder: A Free IELTS Study Guide | S. Attari',
     metaDescription:
       'A free IELTS study guide I built: 1000 collocations with spaced-repetition flashcards, drills and quizzes, plus model essays, in the browser with no sign-up.',
-    h1: 'IELTS Study Guide — a free study app',
+    h1: 'IELTS Band Builder — a free IELTS study guide',
     intro: [
       'Collocations are words that naturally go together, like “a rigid curriculum”, and they are a common focus when preparing for the IELTS Writing and Speaking tests. A long list is hard to memorise, so I built a free IELTS study guide that turns 1000 of them into daily practice, with model essays to learn from.',
       'It is my own project, not client work. It runs entirely in the browser with no backend and no accounts, and it is live at shakoorattari.com/ielts.',
