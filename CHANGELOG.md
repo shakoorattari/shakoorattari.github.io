@@ -10,7 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
-- The free IELTS study app at `/ielts/` (a separate site that GitHub Pages serves under this domain) is now linked from the portfolio: an own-project page at `/work/ielts-collocations/` with its screenshot, a card in the Work gallery on the home page and `/work/`, an "IELTS app" link in every footer, a "Live apps on this domain" section in `llms.txt`, and a paragraph about it on the privacy page.
+- The free IELTS Band Builder app at `/ielts/` (a separate site that GitHub Pages serves under this domain) is now linked from the portfolio: an own-project page at `/work/ielts-study-guide/` with its screenshot, a card in the Work gallery on the home page and `/work/`, an "IELTS Band Builder" link in every footer, a "Live apps on this domain" section in `llms.txt`, and a paragraph about it on the privacy page.
 - `robots.txt` also lists the app's own sitemap (`/ielts/sitemap.xml`; crawlers only read `robots.txt` at the domain root) and keeps the third-party essay PDF inside the app out of search results.
 
 ### Changed

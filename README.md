@@ -128,7 +128,7 @@ Notes:
 - **Icons:** use `<Icon name="fa6-solid:envelope" />` (`fa6-solid`, `fa6-brands` or `fa6-regular`). An unknown name fails the build.
 - **Social card:** replace `public/assets/og-image.jpg` with a 1200×630 JPEG (keep it under ~100 KB); the dimensions are declared in `Base.astro`.
 - **Profile photo:** replace `src/assets/profile.jpg` (hero, about, contact) and `public/assets/files/shakoor_pic.jpeg` (structured data); Astro generates the sizes and formats. Both currently hold the GitHub avatar at 460 px. The social card and the résumé portrait are separate files.
-- **The IELTS app at `/ielts/`** is a separate site (repo `shakoorattari/ielts`) that GitHub Pages serves under this domain. It is not built here: this site links to it (work page, footer, `llms.txt`, privacy page) and `robots.txt` lists its sitemap. Never add a page or file at `/ielts/`; `npm run check:seo` fails if one appears.
+- **The IELTS Band Builder at `/ielts/`** is a separate site (repo `shakoorattari/ielts`) that GitHub Pages serves under this domain. It is not built here: this site links to it (work page, footer, `llms.txt`, privacy page) and `robots.txt` lists its sitemap. Never add a page or file at `/ielts/`; `npm run check:seo` fails if one appears.
 - **Sitemap:** generated from the data files and published posts — a new hand-written page must be added to the list in `src/pages/sitemap.xml.ts` (`npm run check:seo` fails if the sitemap and the pages disagree).
 - **Writing rule for the service and case-study pages:** every claim must come from the résumé or the existing site data. Don't add numbers, clients or testimonials that aren't real.
 
