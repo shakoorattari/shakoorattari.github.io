@@ -26,7 +26,7 @@ Deploy publishes the exact `dist/` that passed the gates (the artifact uploaded 
 | Lighthouse CI | `npm run lighthouse` | A page misses a threshold below (3 runs per page, median) |
 
 ### SEO checks (`scripts/check-seo.mjs`)
-For every indexable page: `<title>` ≤ 60 characters; meta description 70–160; exactly one `<h1>`, first heading is the `<h1>`, **no skipped heading levels**; self-canonical URL; complete Open Graph tags and an `og:image` that exists; unique titles and descriptions; valid JSON-LD with no dangling `@id` references; every `<img>` has `alt`, `width` and `height`; no broken internal links or `#anchors`; `target="_blank"` links carry `rel="noopener"`. And: `sitemap.xml` must list exactly the indexable pages (no more, no fewer), and `robots.txt` must point at it.
+For every indexable page: `<title>` ≤ 60 characters; meta description 70–160; exactly one `<h1>`, first heading is the `<h1>`, **no skipped heading levels**; self-canonical URL; complete Open Graph tags and an `og:image` that exists; unique titles and descriptions; valid JSON-LD with no dangling `@id` references; every `<img>` has `alt`, `width` and `height`; no broken internal links or `#anchors`; `target="_blank"` links carry `rel="noopener"`. And: `sitemap.xml` must list exactly the indexable pages (no more, no fewer), and `robots.txt` must point at it. Separate sites served under this domain (`EXTERNAL_APPS`, currently `/ielts/`) are exempt from the link check, must have their sitemap listed in `robots.txt`, and must not exist in `dist/`; the IELTS app runs its own `check:seo` in its repo.
 
 ### Playwright suite (`tests/`)
 Runs against the production build (`scripts/serve-dist.mjs` serves `dist/` the way GitHub Pages does).

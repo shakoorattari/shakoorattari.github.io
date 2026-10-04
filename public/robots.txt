@@ -1,4 +1,8 @@
 User-agent: *
 Allow: /
+# Third-party essay PDF inside the IELTS app (its source is credited in the app): keep it out of search results.
+Disallow: /ielts/200-Essays-Mobile.pdf
 
 Sitemap: https://shakoorattari.com/sitemap.xml
+# The IELTS practice app at /ielts/ is a separate site (repo shakoorattari/ielts) with its own sitemap.
+Sitemap: https://shakoorattari.com/ielts/sitemap.xml

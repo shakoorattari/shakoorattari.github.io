@@ -27,6 +27,12 @@ const pageItems = [
     url: 'https://attari-home.github.io/ai-chatbot-ali/',
     services: ['web-application-development'],
   },
+  {
+    slug: 'ielts-collocations',
+    name: '1000 IELTS Collocations',
+    url: 'https://shakoorattari.com/ielts/',
+    services: ['web-application-development', 'seo-performance'],
+  },
 ];
 // Too small for a page of its own: the card links straight to the repository.
 const linkItem = {
@@ -73,9 +79,9 @@ test('/work/ separates client websites from own projects, and labels each card',
   const clients = page.locator('section[aria-labelledby="clients-title"] .work-card');
   const projects = page.locator('section[aria-labelledby="projects-title"] .work-card');
   await expect(clients).toHaveCount(2);
-  await expect(projects).toHaveCount(3);
+  await expect(projects).toHaveCount(4);
   await expect(clients.locator('.work-kind')).toHaveText(['Client project', 'Client project']);
-  await expect(projects.locator('.work-kind')).toHaveText(['Own project', 'Own project', 'Own project']);
+  await expect(projects.locator('.work-kind')).toHaveText(['Own project', 'Own project', 'Own project', 'Own project']);
 });
 
 test('the experiment has no page of its own: not routable, not in the sitemap, but listed in llms.txt', async ({
@@ -117,6 +123,53 @@ test('the chatbot page says plainly what it is not', async ({ page }) => {
     'https://github.com/Attari-Home/ai-chatbot-ali',
   );
   await expect(page.locator('.cta-panel h2')).toHaveText('Need a web app?');
+});
+
+// The IELTS study app is its own site (repo shakoorattari/ielts) that GitHub Pages serves under this domain at /ielts/.
+// It is not part of dist/, so these tests check how this site points at it, never the app itself.
+test.describe('IELTS app', () => {
+  test('the footer links to it on every page', async ({ page }) => {
+    for (const path of ['/', '/work/', '/privacy/']) {
+      await page.goto(path);
+      await expect(page.locator('footer a[href="/ielts/"]')).toHaveText('IELTS app');
+    }
+  });
+
+  test('its work page links to the live app and the source, and says what it is not', async ({ page }) => {
+    await page.goto('/work/ielts-collocations/');
+    await expect(page.locator('.page-meta')).toContainText('Project type');
+    await expect(page.locator('.page-meta a.repo-link')).toHaveAttribute(
+      'href',
+      'https://github.com/shakoorattari/ielts',
+    );
+    await expect(page.locator('.work-shot figcaption')).toContainText('dashboard of the app');
+    const scope = page.locator('section[aria-labelledby="scope-title"]');
+    await expect(scope).toContainText('Hardev Sir');
+    await expect(scope).toContainText('not affiliated with or endorsed by');
+    await expect(page.locator('.cta-panel h2')).toHaveText('Need a web app?');
+  });
+
+  test('robots.txt lists its sitemap and keeps the third-party PDF out of search; this sitemap does not list the app', async ({
+    request,
+  }) => {
+    const robots = await (await request.get('/robots.txt')).text();
+    expect(robots).toContain('Sitemap: https://shakoorattari.com/sitemap.xml');
+    expect(robots).toContain('Sitemap: https://shakoorattari.com/ielts/sitemap.xml');
+    expect(robots).toContain('Disallow: /ielts/200-Essays-Mobile.pdf');
+    const sitemap = await (await request.get('/sitemap.xml')).text();
+    expect(sitemap).not.toContain('/ielts/'); // the app's own sitemap owns that URL
+    expect(sitemap).toContain('https://shakoorattari.com/work/ielts-collocations/');
+  });
+
+  test('llms.txt lists the app, and the privacy page covers it', async ({ page, request }) => {
+    const llms = await (await request.get('/llms.txt')).text();
+    expect(llms).toContain('## Live apps on this domain');
+    expect(llms).toContain('(https://shakoorattari.com/ielts/)');
+    await page.goto('/privacy/');
+    const section = page.locator('h2', { hasText: 'IELTS practice app' });
+    await expect(section).toBeVisible();
+    await expect(page.locator('.prose')).toContainText('sets no cookies');
+  });
 });
 
 test('the services hub offers the website and SEO services and the quote path', async ({ page }) => {

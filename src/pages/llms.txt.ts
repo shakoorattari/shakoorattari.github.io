@@ -33,6 +33,9 @@ export const GET: APIRoute = async () => {
         : `- [${w.name}](${w.repo}): ${w.blurb}`,
     ),
     '',
+    '## Live apps on this domain',
+    ...work.filter((w) => hasPage(w) && w.url?.startsWith(site.url)).map((w) => `- [${w.name}](${w.url}): ${w.blurb}`),
+    '',
     '## Case studies',
     ...caseStudies.map((c) => `- [${c.title}](${abs(`/projects/${c.slug}/`)}): ${c.metaDescription}`),
   ];

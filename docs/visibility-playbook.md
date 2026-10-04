@@ -34,6 +34,7 @@ Also: most recruiters find engineers on **LinkedIn**, not Google. The site's mai
 3. **Sitemaps** → submit `https://shakoorattari.com/sitemap.xml`.
 4. **URL inspection** → paste each of these and click *Request indexing*: `/`, `/services/`, and each `/services/…` and `/projects/…` page.
 5. Come back in a week: **Pages** shows what is indexed and, for anything not, the reason.
+6. **The IELTS app** (`/ielts/`, a separate repo) has its own sitemap: submit `https://shakoorattari.com/ielts/sitemap.xml` under **Sitemaps** as well (a Domain property covers it; a URL-prefix property for `https://shakoorattari.com/ielts/` shows its numbers on their own, which is worth adding), and request indexing for `https://shakoorattari.com/ielts/`. Then run <https://search.google.com/test/rich-results> on that URL to see its `WebApplication` markup. Google shows rich results for software apps only when ratings or reviews exist; the app has none, so expect a normal listing, not a rich one.
 
 ### 3.2 Bing Webmaster Tools
 <https://www.bing.com/webmasters> → *Import from Google Search Console*, or add the site and submit the sitemap. Bing also feeds DuckDuckGo and others. (Optional repository variable: `BING_SITE_VERIFICATION`.)
@@ -86,6 +87,7 @@ After publishing: request indexing in Search Console, share on LinkedIn, and cro
 | technical SEO / local SEO UAE, Core Web Vitals, website speed | `/services/seo-performance/` |
 | request a website or web app quote | `/quote/` |
 | examples of UAE business websites (contractor, equipment rental) | `/work/`, `/work/earth-cone/`, `/work/lail-o-nahar/` |
+| IELTS collocations, IELTS vocabulary practice app, free IELTS flashcards | `/ielts/` (the app itself), `/work/ielts-collocations/` (the portfolio's page about it) |
 | OAuth 2.0 / OIDC consultant, multi-tenant IAM .NET, UAE PASS integration | `/services/identity-sso-oauth/`, `/projects/oneportal-iam/`, articles |
 | API / integration developer, MS Graph, Exchange EWS, G2G integration | `/services/api-integration-microservices/` |
 | solution architect UAE, technical lead | `/services/architecture-technical-leadership/` |

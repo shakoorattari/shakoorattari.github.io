@@ -9,6 +9,9 @@ import { join, relative, sep } from 'node:path';
 const DIST = join(process.cwd(), 'dist');
 const SITE = 'https://shakoorattari.com';
 const LIMITS = { titleMax: 60, descMin: 70, descMax: 160 };
+// Separate sites deployed from other repositories and served under this domain (GitHub Pages project sites).
+// They are not in dist/, so links to them can't be verified here; each has its own sitemap, listed in robots.txt.
+const EXTERNAL_APPS = ['/ielts/'];
 
 if (!existsSync(DIST)) {
   console.error('check-seo: dist/ not found — run `npm run build` first.');
@@ -154,6 +157,7 @@ for (const [path, { html }] of indexable) {
       continue;
     }
     if (!href.startsWith('/')) continue;
+    if (EXTERNAL_APPS.some((prefix) => href.startsWith(prefix))) continue;
     const [target, hash] = href.split('#');
     const clean = target.split('?')[0];
     if (!targetExists(clean)) err(path, `broken internal link ${href}`);
@@ -182,8 +186,17 @@ if (!existsSync(sitemapFile)) {
 }
 
 const robotsFile = join(DIST, 'robots.txt');
-if (!existsSync(robotsFile) || !readFileSync(robotsFile, 'utf8').includes(`Sitemap: ${SITE}/sitemap.xml`))
-  err('/robots.txt', 'must reference the sitemap');
+const robots = existsSync(robotsFile) ? readFileSync(robotsFile, 'utf8') : '';
+if (!robots.includes(`Sitemap: ${SITE}/sitemap.xml`)) err('/robots.txt', 'must reference the sitemap');
+for (const prefix of EXTERNAL_APPS) {
+  if (!robots.includes(`Sitemap: ${SITE}${prefix}sitemap.xml`))
+    err(
+      '/robots.txt',
+      `must reference the sitemap of the app at ${prefix} (robots.txt is only read at the domain root)`,
+    );
+  if (existsSync(join(DIST, prefix.replace(/^\//, ''))))
+    err(prefix, 'exists in dist/, where it would shadow the separate site served at that path');
+}
 
 // ------------------------------------------------------------------ report
 console.log(
