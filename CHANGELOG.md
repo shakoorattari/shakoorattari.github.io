@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [1.5.1] - 2026-10-04
+
+### Fixed
+
+- The theme button is the same height as the nav links on desktop (it was taller). On phones it keeps its larger size beside the menu button.
+
 ## [1.5.0] - 2026-10-03
 
 ### Added
@@ -125,7 +131,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - The Angular 16 app, its Express server, a 2 MB unused PNG, the committed `docs/` build output and the dev TLS files.
 
-[Unreleased]: https://github.com/shakoorattari/shakoorattari.github.io/compare/v1.5.0...HEAD
+[Unreleased]: https://github.com/shakoorattari/shakoorattari.github.io/compare/v1.5.1...HEAD
+[1.5.1]: https://github.com/shakoorattari/shakoorattari.github.io/compare/v1.5.0...v1.5.1
 [1.5.0]: https://github.com/shakoorattari/shakoorattari.github.io/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/shakoorattari/shakoorattari.github.io/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/shakoorattari/shakoorattari.github.io/compare/v1.2.0...v1.3.0
