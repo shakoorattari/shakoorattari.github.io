@@ -8,6 +8,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Fixed
+
+- The theme button is the same height as the nav links on desktop (it was taller). On phones it keeps its larger size beside the menu button.
+
 ## [1.5.0] - 2026-10-03
 
 ### Added
@@ -17,7 +21,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Fixed
 
 - At widths between about 920 and 1100 px the header wrapped onto two lines (the theme button took the space); it now collapses to the menu button below 1100 px.
-- The theme button is the same height as the nav links on desktop (it was taller).
 
 ## [1.4.0] - 2026-10-03
 
