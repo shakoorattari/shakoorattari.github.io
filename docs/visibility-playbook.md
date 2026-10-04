@@ -87,7 +87,7 @@ After publishing: request indexing in Search Console, share on LinkedIn, and cro
 | technical SEO / local SEO UAE, Core Web Vitals, website speed | `/services/seo-performance/` |
 | request a website or web app quote | `/quote/` |
 | examples of UAE business websites (contractor, equipment rental) | `/work/`, `/work/earth-cone/`, `/work/lail-o-nahar/` |
-| IELTS collocations, IELTS vocabulary practice app, free IELTS flashcards | `/ielts/` (the app itself), `/work/ielts-collocations/` (the portfolio's page about it) |
+| IELTS study guide, IELTS collocations, IELTS vocabulary practice, free IELTS flashcards | `/ielts/` (the app itself), `/work/ielts-study-guide/` (the portfolio's page about it) |
 | OAuth 2.0 / OIDC consultant, multi-tenant IAM .NET, UAE PASS integration | `/services/identity-sso-oauth/`, `/projects/oneportal-iam/`, articles |
 | API / integration developer, MS Graph, Exchange EWS, G2G integration | `/services/api-integration-microservices/` |
 | solution architect UAE, technical lead | `/services/architecture-technical-leadership/` |
