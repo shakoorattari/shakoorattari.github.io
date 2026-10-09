@@ -2,6 +2,7 @@
 import { render } from 'astro:content';
 import Page from '../../layouts/Page.astro';
 import CtaPanel from '../../components/CtaPanel.astro';
+import AiSummary from '../../components/AiSummary.astro';
 import { getRenderablePosts, type Post } from '../../lib/blog';
 import { site } from '../../data/site';
 import { personRef } from '../../lib/schema';
@@ -71,7 +72,10 @@ const jsonLd = [
       {post.data.updated && <span>Updated {fmt(post.data.updated)}</span>}
       {post.data.tags.length > 0 && <span>{post.data.tags.join(' · ')}</span>}
     </p>
-    <div class="prose">
+    <div style="margin-bottom:32px">
+      <AiSummary source="#post-body" />
+    </div>
+    <div class="prose" id="post-body">
       <Content />
     </div>
   </article>

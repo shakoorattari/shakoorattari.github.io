@@ -1,0 +1,31 @@
+---
+/** The chat on the home page: a short answer built only from this site's own pages, with a transcript. */
+import AiPanel from './AiPanel.astro';
+import ChatBox from './ChatBox.astro';
+import { chatExamples } from '../data/aiChat';
+---
+
+<div class="container ask-wrap">
+  <AiPanel
+    id="ask"
+    feature="chat"
+    api="prompt"
+    title="Ask about Shakoor"
+    intro="A chat that answers from this site's own pages: the websites and apps built, the projects, the skills and the experience, with links to where each answer comes from."
+  >
+    <ChatBox id="ask" examples={chatExamples} />
+  </AiPanel>
+</div>
+
+<style>
+  /* The home sections are full-width bands; this one sits between them, so it only needs breathing room. */
+  .ask-wrap {
+    max-width: 960px;
+    padding-bottom: 72px;
+  }
+  @media (max-width: 768px) {
+    .ask-wrap {
+      padding-bottom: 48px;
+    }
+  }
+</style>

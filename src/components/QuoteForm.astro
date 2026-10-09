@@ -1,5 +1,6 @@
 ---
 import Icon from './Icon.astro';
+import AiPanel from './AiPanel.astro';
 import { site } from '../data/site';
 import { quoteGreeting, quoteOptions } from '../data/quote';
 import { whatsappUrl } from '../lib/whatsapp';
@@ -131,6 +132,31 @@ import { whatsappUrl } from '../lib/whatsapp';
         <Icon name="fa6-solid:circle-exclamation" /> <span></span>
       </div>
     </div>
+
+    <AiPanel
+      id="ai-quote"
+      feature="quote"
+      api="prompt"
+      level={3}
+      compact
+      title="Not sure how to fill this in?"
+      intro="After you describe the project above, on-device AI can suggest the drop-down choices and list details worth adding. Nothing changes until you press “Use this”."
+      fine="Runs on your computer in Chrome: your description stays on it until you send the form. A small model makes the suggestions, so check them."
+    >
+      <div class="ai-actions">
+        <button type="button" class="btn secondary-btn" data-ai-action="suggest">
+          Suggest fields and missing details
+        </button>
+      </div>
+      <div class="ai-output" data-ai-output hidden>
+        <p class="ai-output-title">Suggestions</p>
+        <ul class="ai-suggestions" data-ai-suggestions></ul>
+        <div class="ai-block" data-ai-missing-box hidden>
+          <p class="ai-output-title">Details that would help</p>
+          <ul class="ai-list" data-ai-missing></ul>
+        </div>
+      </div>
+    </AiPanel>
 
     <div class="turnstile-wrap">
       <div class="turnstile-widget" data-turnstile></div>

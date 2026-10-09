@@ -21,6 +21,7 @@ Non-negotiable quality bar for every page shipped: **fast, accessible, SEO-optim
 - Government work is sensitive: no internal hostnames, tenant names, client IDs or unreleased details in public copy.
 - **Client work (`src/data/work.ts`):** verify every claim against the live site *and* the client's repo (`../earthcone`, `../lailonahar-website`) before writing it. A "bilingual" claim for Lail O Nahar was nearly published; the site only shows an Arabic brand name. Say "eight areas", not "eight emirates" (Al Ain is a city). Publish no traffic, ranking or enquiry numbers: none were provided.
 - **Own projects (`kind: 'project'` in `work.ts`) are shown as such** (an "Own project" pill; never as client work) and say plainly what they do *not* do (`scope`). **Read the code, not the README:** `ai-chatbot-ali`'s README promises a PictoBlox AI integration, but the code only has a comment saying it "will be replaced"; the page says the chatbot uses a curated question bank plus Wikipedia look-ups and no language model. That project is a children's school robotics entry, so **no names of children, the team or the school are used in copy** (alt text describes the page instead), and the parental-consent page is not mentioned. A repo-only experiment too small for a real page is a `WorkLink` (the card opens GitHub in a new tab; no page, no sitemap entry); never create a thin page for it.
+- **On-device AI features never state a fact the data files do not.** The model proposes; plain code decides what is shown (it may only cite chunks of `src/lib/ai-knowledge.ts`, numbers must appear in the notes, suggestions must be the form's own options). The knowledge file holds public site content only: **no email or phone number**. See `docs/ai-features.md` before touching `src/scripts/ai/`.
 - **Recommendations (`src/data/recommendations.ts`) are verbatim LinkedIn text** from the owner's screenshot of the Received tab (2026-10-03). Fix whitespace only, never wording; never add one that is not on LinkedIn. Names, titles and relationships are as LinkedIn shows them. The recommenders have not been asked about the site (see §14).
 - The owner's public email is `binmushtaq@gmail.com`; `shakoorattari@outlook.com` is a Teams ID only. The phone number is public on the page but deliberately **not** in structured data.
 
@@ -32,6 +33,7 @@ Non-negotiable quality bar for every page shipped: **fast, accessible, SEO-optim
 | Styling | SCSS, scoped per component + one global stylesheet | Ported from the original Angular design; `scopedStyleStrategy: 'class'` keeps component styles beating global ones |
 | Theme | Light and dark token sets (`--gh-*` in `global.scss`); **default = the system** (`prefers-color-scheme`), header button cycles system → light → dark | Added 2026-10-03. With no stored choice CSS alone decides (no script, no flash); a stored choice is applied by an inline script in `<head>` |
 | Interactivity | Small vanilla-TS scripts in `src/scripts/` | No UI framework; ~4 KB of JS in total |
+| On-device AI | Chrome's built-in **Prompt API** (stable from Chrome 148) and **Summarizer API** (138), in `src/scripts/ai/`; progressive enhancement, desktop Chrome only | Added 2026-10-09: a chat (home page, and an **Ask AI** button + window on every page, shown only where the browser can run it), job-fit check (`/services/`, first after the intro), quote brief helper (`/quote/`), key points (case studies, blog), and a "Try the AI on this site" band under the hero. Nothing runs until a button is pressed; no server, no cost, no data leaves the device. Other browsers see a notice inside the panel, never a floating button or banner. Details, guardrails and how to test: `docs/ai-features.md` |
 | Icons | Font Awesome 6 glyphs inlined as SVG via `<Icon />` (Iconify JSON packages) | No icon font, no runtime cost |
 | Fonts | Inter (Latin subset, variable), self-hosted via `@fontsource-variable/inter`, preloaded | No third-party font requests |
 | Images | `astro:assets` `<Picture>` → AVIF/WebP with explicit dimensions | Small, no layout shift |
@@ -65,7 +67,7 @@ src/
   content/blog/          Articles + outlines (Markdown). `draft: true` until the owner finishes; `outline: true` never renders
   content.config.ts      Blog schema (title ≤ 70, optional seoTitle ≤ 60, description 70–160)
   components/            Header, Hero, About, Services, Skills, Experience, Projects, Contact, SocialProof, Footer,
-                         Icon, Breadcrumbs, CtaPanel, AnalyticsConsent, Work, WorkCard, QuoteForm, RecommendationCard — one .astro file each, styles scoped inside it
+                         Icon, Breadcrumbs, CtaPanel, AnalyticsConsent, Work, WorkCard, QuoteForm, RecommendationCard, AiPanel (+ AiSummary, AiJobFit, AskAssistant, ChatBox, AiChatLauncher, AiShowcase) — one .astro file each, styles scoped inside it
   layouts/
     Base.astro           <head>: title/description/canonical, Open Graph, Twitter, JSON-LD, verification tags, analytics, font preload
     Page.astro           Content-page layout (breadcrumbs + BreadcrumbList JSON-LD + shared page styles)
@@ -81,15 +83,19 @@ src/
   scripts/               nav.ts (menu, scroll-spy, footer year) · hero-roles.ts (role rotator) · contact.ts + quote.ts (the forms) ·
                          form-kit.ts (shared: toast, lazy Turnstile, rate limit, Web3Forms delivery, lead-click events) ·
                          analytics.ts (opt-in GA4: consent, load, withdraw; bundled only when an ID is set)
+  scripts/ai/            On-device AI (see docs/ai-features.md): panels.ts (the only part that loads with a page: support check, launcher) ·
+                         support.ts · runtime.ts · chat-core.ts (retrieval + model + checks) · ui.ts · guard.ts · retrieve.ts · knowledge.ts ·
+                         features/{summary,quote,fit,chat}.ts · chrome-ai.d.ts (typings)
   lib/                   lastmod.ts (git date), blog.ts (published vs preview), schema.ts (Person/WebSite JSON-LD refs),
                          version.ts (build info: version + commit, resolved at build time), whatsapp.ts (wa.me links),
-                         analytics.ts (what this build ships; a malformed GA id fails the build)
+                         analytics.ts (what this build ships; a malformed GA id fails the build) ·
+                         ai-knowledge.ts (site data -> chunks for the AI panels, served at /ai/knowledge.json)
   styles/global.scss     Design tokens (--gh-* GitHub palette, a light set and a dark set) and shared utilities
   assets/profile.jpg     Source photo Astro resizes to AVIF/WebP: the GitHub avatar, 460×460 (the owner asked for it on 2026-10-03). Don't request variants wider than 460
   assets/work/           1440×900 home-page screenshots of the client sites (headless Chrome), resized by Astro. Re-capture when a site changes visibly
 scripts/                 check-seo.mjs (post-build SEO guard) · check-version.mjs · release.mjs · release-notes.mjs ·
                          serve-dist.mjs (static server for tests) · lib/release.mjs (+ unit tests)
-tests/                   Playwright: health, navigation, mobile, contact-form, seo (+ helpers.ts)
+tests/                   Playwright: health, navigation, mobile, contact-form, seo, ai (+ helpers.ts, ai-mock.ts: a stand-in for Chrome's AI)
 CHANGELOG.md             Keep a Changelog; the source of the GitHub Release notes
 docs/                    ci-cd, versioning, roadmap, visibility playbook, migration notes, original audit, project-memory
 .github/                 workflows: ci.yml · lighthouse.yml · deploy.yml — and the PR template
@@ -127,13 +133,15 @@ Enforced by Lighthouse CI (`lighthouserc.json`, mobile, median of 3 runs, six re
 | --- | --- | --- |
 | Performance / Accessibility / Best practices / SEO | ≥ 0.95 / **= 1** / ≥ 0.95 / **= 1** | 1.00 across the board |
 | LCP · CLS · TBT | ≤ 2000 ms · ≤ 0.05 · ≤ 150 ms | 1.05–1.43 s · ≤ 0.001 · 0 ms |
-| JavaScript transferred | ≤ 20 KB | 2.6 KB (home) |
+| JavaScript transferred | ≤ 20 KB | 6.1 KB (home), 6.5 KB (`/quote/`), 2.6 KB on every other page: the AI entry script is on every page (0 before). Home performance 0.99, LCP 1.8 s |
 | Third-party requests | ≤ 2 | 0 |
 | Total page weight | ≤ 200 KB | 60–95 KB |
 
 Rules to stay inside the budget:
 
 - **No third-party requests on load.** Turnstile loads lazily (form within 400px, or a field focused, tapped or typed in); **a form near the top of its page must pass `{ nearViewport: false }` to `lazyTurnstile`**, as `/quote/` does, or the Cloudflare script loads with the page (the health test caught exactly this); the optional Cloudflare beacon is the only third party that loads for everyone. **Google Analytics is opt-in:** `gtag.js` (~150 KB on the wire, measured) is requested only after a visitor clicks Accept, so a visitor who hasn't agreed makes zero Google requests. Never load Google's script before consent, and don't switch to "advanced" consent mode, without the owner deciding it.
+- **Don't make Chrome reload the model.** `runtime.ts` keeps one base session per system prompt and answers on `clone()`s of it (released after 5 idle minutes); creating and destroying a session per question made every question slow and, because Chrome always fires `downloadprogress` (0 then 1) even for a cached model, show "Downloading… 100%". Show download progress only when `availability()` was `downloadable`/`downloading`, and treat 100% as "Preparing", not "ready". Never pass a request's `AbortSignal` to the base session's `create()`.
+- **On-device AI loads nothing but a ~2 KB (gzipped) entry script, on every page** (it carries the "Ask AI" button and a hidden `<dialog>`): no model started, no `/ai/knowledge.json`, and no `availability()` call except the launcher's one idle check that hides it where the model cannot run (`tests/ai.spec.ts` asserts all of it). Feature code is dynamically imported on first use. Never call the API on load (a model download can be many GB), and never start a download without the visitor's explicit click on "Download and continue".
 - CSS is inlined (`inlineStylesheets: 'always'`); fonts self-hosted and preloaded; images through `astro:assets`; icons inlined SVG.
 - No client-side framework, no polyfills, no libraries for things a few lines of vanilla TS can do.
 - Don't apply `content-visibility: auto` to real sections: with `contain-intrinsic-size` it reserved a wrong height and made the page height jump (it was a bug in the old Angular version).
@@ -147,6 +155,7 @@ Rules to stay inside the budget:
 - In-sentence links on content pages are underlined (WCAG 1.4.1); `Page.astro` does it for `.page-lead` and `.page-section > p`.
 - Each token set also sets `color-scheme` (`light` or `dark`), so native controls and scrollbars match the theme; `<meta name="color-scheme">` is `light dark` and `theme-color` has a light and a dark tag that `src/scripts/theme.ts` overrides for an explicit choice.
 - **The theme button** (`[data-theme-toggle]` in `Header.astro`) is an icon button whose `aria-label` names the current choice and the next one, with a polite live region for the change. It is hidden until the inline script in `Base.astro` adds `class="js"` to `<html>`, because it does nothing without JavaScript. Stored under `localStorage.theme` as `light`/`dark` (absent = system); reads and writes are wrapped in try/catch.
+- **AI panels** (`AiPanel.astro`) and the chat: the transcript is a `<div role="log">` with `<div>` turns (`role="log"` is not allowed on a list, and axe then fails the `<li>` children), the "Ask AI" window is a modal `<dialog>` (Escape, close button and backdrop close it; focus returns to the button), status in a polite live region, download progress as a real `<progress>`, results focused after they appear (`tabindex=-1`, `scroll-margin-top` clears the fixed header), `aria-disabled` rather than `disabled` while busy (a focused button that becomes disabled drops keyboard focus), status chips carry a mark as well as a colour, and a button's accessible name must start with its visible text (WCAG 2.5.3: axe caught "Use timeline: …" on a "Use this" button). Axe-checked in every state, both themes, desktop and phone.
 - Every icon-only link or button needs an accessible name; the skip link and visible focus states must keep working; `prefers-reduced-motion` disables the role animation and animations globally.
 - Forms: labelled inputs, inline errors with `aria-invalid`, toast is `role="status"`.
 
@@ -190,6 +199,7 @@ Workflows in `.github/workflows/` (details and thresholds: `docs/ci-cd.md`):
 - Nothing here is a secret. The Web3Forms access key and the Turnstile **site** key are designed to be public and live in `src/data/site.ts` (`contactConfig`); development uses a different Web3Forms key and Cloudflare's always-pass Turnstile test key (`import.meta.env.DEV`).
 - Optional public values (analytics IDs/tokens, search-engine verification tags) are read from `PUBLIC_*` env vars (`.env.example`). In CI they come from GitHub **repository variables** `GA_MEASUREMENT_ID`, `CF_ANALYTICS_TOKEN`, `GOOGLE_SITE_VERIFICATION`, `BING_SITE_VERIFICATION`. Nothing is emitted while empty.
 - **Analytics rules** (details in `docs/analytics.md`): only the *deployed* build (the `ci.yml` quality job) gets the real IDs; the **Playwright and Lighthouse builds blank them** (`PUBLIC_GA_MEASUREMENT_ID: ''`, `PUBLIC_CF_ANALYTICS_TOKEN: ''`) so CI can never send fake visits to the real properties. GA is also dormant in `astro dev`, on any hostname other than the production domain (`PUBLIC_GA_HOSTS`), and for Global Privacy Control visitors. Test GA only with a **fake** ID (`G-TEST123456`) and mocked Google endpoints (`npm run test:analytics`); never with the real ID. Send no personal data in events (the form's content, email, name). The only custom event is `generate_lead` with `method` = `contact_form`, `quote_form`, `whatsapp` or `phone` (elements marked `data-lead`; wired by `trackLeadClicks()` in `form-kit.ts`, so a page needs the contact or quote script for it to count). Update `/privacy/` (`src/pages/privacy.astro`) whenever a data-handling tool is added or removed.
+- **On-device AI and privacy:** prompts stay on the visitor's device (Chrome runs the model; Chrome, not this site, downloads it). `/privacy/` says so; update it if a feature ever sends text anywhere. No analytics events for AI use, and never send what a visitor typed to any service.
 - Never commit real secrets. The repo needs no GitHub Actions secrets.
 
 ## 12. Getting started
@@ -212,6 +222,7 @@ npm run release -- --dry-run   # preview the next version and changelog section
 - **Headless Chrome follows the host's appearance** (a dark macOS audits the dark theme; a Linux CI runner audits light). Never rely on the default: force it with `--blink-settings=preferredColorScheme=<0|1>` (**0 = dark, 1 = light**, verified by screenshot), as `lighthouserc.json` and `scripts/lighthouse-dark.mjs` do. Playwright's default `colorScheme` is light, so every spec runs in the light theme unless it sets `test.use({ colorScheme })`.
 - **Look at the page, don't just trust green.** Assertions guard what you already know about; screenshots and computed geometry surface the rest. Useful techniques from this project: screenshot each section of old vs new builds side by side (use `captureBeyondViewport` — resizing the viewport to full-page height breaks `100vh` heroes and gives false "no difference"); compare the bounding box of _every element_ between two builds to prove a formatting or refactor change moved nothing.
 - **Mutation-test gates and tests:** deliberately break the site and confirm the right check fails.
+- **AI features are tested against `tests/ai-mock.ts`, never a real model** (CI has none and a download would be many GB). The mock reproduces the rules the site depends on (a download needs user activation). A mock cannot show answer quality: check prompts and schemas by hand in a desktop Chrome that can run the model (checklist in `docs/ai-features.md`). `panels.ts` decides support with `typeof globalThis.LanguageModel`, so a test removes the API with `Object.defineProperty(window, 'LanguageModel', { value: undefined })`.
 - Prefer a targeted assertion over eyeballing once; screenshots catch what you thought to look at, assertions catch the regression next time.
 
 ## 14. Known gaps and open decisions
@@ -224,6 +235,8 @@ Owner actions (need their accounts — see `docs/visibility-playbook.md`):
 - **Make the checks required:** add a "Require status checks to pass" rule with the three checks in §9 to the existing `main` ruleset, so a failing check blocks merges (the ruleset currently has none).
 - Fix the **GitHub profile location** (says Dubai; site and résumé say Sharjah), add a profile README linking here, and link the site from LinkedIn.
 - **Finish and publish the first article** (a full draft plus three outlines are in `src/content/blog/`).
+- **Try the AI features on a real model** with the checklist in `docs/ai-features.md` before announcing them. The owner has run the job-fit check on a real model (it worked, and one wrong citation led to the verification step); the chat, the quote helper and key points have only run against a mock, so their answer quality is unverified. Then decide whether to keep the quote panel (it adds a line to the conversion form for non-Chrome visitors) and whether the floating button is welcome on every page.
+- **Pre-existing, not from the AI work:** axe reports `label-content-name-mismatch` on the hero's "LinkedIn Verified Professional" link and the scroll indicator (their `aria-label` leaves out the visible text); Lighthouse does not test that rule.
 
 Engineering / decisions:
 
@@ -238,4 +251,5 @@ Engineering / decisions:
 - **Recommendations:** three are shown (Ahmed Bahaa, Rizwan Iqbal, Dominick Antony). Ask them (a courtesy) that they are quoted on the site, and ask whether more exist: the owner's screenshot was cut off below the third.
 - **Quote form:** the budget ranges in `src/data/quote.ts` and the three-step "what happens next" copy on `/quote/` (reply within 24 hours, then a written scope and estimate) are the owner's to confirm or change.
 - Profile photo: now the GitHub avatar (460px). The social card already used the same portrait; the résumé portrait (`shakoor-photo.jpg`, 280px) was left alone.
+- **AI features, deferred:** the Writer/Rewriter/Proofreader APIs (still origin trials on 2026-10-09), Arabic (the Prompt API on the web does not support it), WebMCP (an experimental origin trial needing an owner-registered token), and an `ai_feature_used` analytics event. Details in `docs/ai-features.md`.
 - Possible later: an Arabic version (`hreflang`), genuine *client* testimonials (the section now has colleague recommendations only), `rel="me"` links once more profiles exist, Cloudflare Pages for headers/redirects/previews (GitHub Pages fixes `max-age=600` and can't 301).

@@ -2,6 +2,8 @@ User-agent: *
 Allow: /
 # Third-party essay PDF inside the IELTS app (its source is credited in the app): keep it out of search results.
 Disallow: /ielts/200-Essays-Mobile.pdf
+# /ai/knowledge.json is read by the on-device AI panels only; it repeats pages that are indexed in their own right.
+Disallow: /ai/
 
 Sitemap: https://shakoorattari.com/sitemap.xml
 # The IELTS practice app at /ielts/ is a separate site (repo shakoorattari/ielts) with its own sitemap.

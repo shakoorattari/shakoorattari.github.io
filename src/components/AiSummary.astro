@@ -1,0 +1,30 @@
+---
+/** "Key points" for a long page. `source` is the selector of the text to summarise (the panel itself is excluded). */
+import AiPanel from './AiPanel.astro';
+
+interface Props {
+  source: string;
+}
+const { source } = Astro.props;
+---
+
+<AiPanel
+  id="ai-summary"
+  feature="summary"
+  api="summarizer"
+  compact
+  title="Short on time? Get the key points"
+  intro="Chrome's on-device AI can summarise this page for you."
+  source={source}
+  fine="Runs on your computer in Chrome and reads only this page. A small model wrote the summary, so check it against the page."
+>
+  <div class="ai-actions">
+    <button type="button" class="btn secondary-btn" data-ai-action="summarize">
+      Summarise this page
+    </button>
+  </div>
+  <div class="ai-output" data-ai-output hidden>
+    <p class="ai-output-title">Key points</p>
+    <ul class="ai-list" data-ai-list></ul>
+  </div>
+</AiPanel>
