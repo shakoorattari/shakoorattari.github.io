@@ -28,9 +28,16 @@ const enterJobDescription =
   'We are hiring a senior backend engineer. You will design OAuth 2.0 and OIDC single sign-on for several tenants, ' +
   'run Kubernetes clusters in production, and mentor a team of engineers on cloud platforms.';
 
-async function open(page: Page, path: string, options: MockOptions = {}) {
-  await installChromeAi(page, options);
+/**
+ * Open a page with the mock installed. A collapsed panel (the key points at the top of a case study) is one button until it
+ * is pressed, so by default this presses it; pass `stayCollapsed` to see the page as it first loads.
+ */
+async function open(page: Page, path: string, options: MockOptions & { stayCollapsed?: boolean } = {}) {
+  const { stayCollapsed = false, ...mock } = options;
+  await installChromeAi(page, mock);
   await page.goto(path);
+  const trigger = page.locator('[data-ai-open]');
+  if (!stayCollapsed && (await trigger.count()) > 0) await trigger.first().click();
 }
 
 // ------------------------------------------------------------------------------------------------ the site data
@@ -828,4 +835,312 @@ test.describe('promotion', () => {
     const headings = await page.locator('main h2').allInnerTexts();
     expect(headings[0]).toBe('Hiring? Check the fit against your job description');
   });
+});
+
+// ------------------------------------------------------------------------------------------------ other browsers
+// Chrome is the reference. Edge's Prompt API is an experimental preview (a flag, another model, other hardware limits);
+// Safari and Firefox have nothing. Each gets wording and numbers that are true for it, and a browser that rejects an
+// option Chrome accepts gets a plainer request instead of a failure.
+const EDGE =
+  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36 Edg/154.0.0.0';
+const EDGE_OLD = EDGE.replaceAll('154', '120');
+const OPERA =
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36 OPR/120.0.0.0';
+const askHome = async (page: Page, text: string) => {
+  await page.locator('#ask-input').fill(text);
+  await page.locator('#ask-input').press('Enter');
+};
+
+test.describe('Edge', () => {
+  test.use({ userAgent: EDGE });
+
+  test('without the Prompt API it explains the experimental flag, not "update Chrome"', async ({ page }) => {
+    await open(page, '/', { apis: 'none' });
+    const notice = panel(page, 'ask').locator('[data-ai-notice]');
+    await expect(notice.locator('[data-ai-notice-title]')).toHaveText('Turn on Edge’s experimental AI, or use Chrome');
+    await expect(notice.locator('[data-ai-notice-body]')).toContainText('edge://flags');
+    await expect(notice.locator('[data-ai-notice-body]')).toContainText('Prompt API for on-device language model');
+    await expect(notice).not.toContainText('Chrome menu');
+  });
+
+  test('without the Summarizer it says the browser does not offer it, not "update Chrome"', async ({ page }) => {
+    await open(page, '/projects/oneportal-iam/', { apis: 'none' });
+    const notice = panel(page, 'ai-summary').locator('[data-ai-notice]');
+    await expect(notice.locator('[data-ai-notice-title]')).toHaveText('On-device AI is switched off here');
+    await expect(notice.locator('[data-ai-notice-body]')).toContainText('Edge does not offer');
+  });
+
+  test("a computer that cannot run it hears Edge's numbers, not Chrome's", async ({ page }) => {
+    await open(page, '/', { availability: 'unavailable' });
+    await askHome(page, 'What identity and SSO work has he done?');
+    const message = status(page, 'ask');
+    await expect(message).toContainText('Edge’s on-device AI');
+    await expect(message).toContainText('experimental preview');
+    await expect(message).toContainText('20 GB');
+    await expect(message).toContainText('5.5 GB');
+    await expect(message).not.toContainText('22 GB');
+  });
+
+  test('the download question and the progress name Edge', async ({ page }) => {
+    await open(page, '/', { availability: 'downloadable' });
+    await askHome(page, 'What identity and SSO work has he done?');
+    await expect(panel(page, 'ask').locator('[data-ai-confirm-text]')).toContainText('Edge needs to download');
+    await watchStatus(page, 'ask');
+    await panel(page, 'ask').getByRole('button', { name: 'Download and continue' }).click();
+    await expect(panel(page, 'ask').locator('.ai-turn-a')).toHaveCount(1);
+    const log = await statusLog(page);
+    expect(log.texts.some((text) => /Downloading Edge’s on-device model/.test(text))).toBe(true);
+    expect(log.texts).toContain('Preparing Edge’s on-device model…');
+  });
+
+  test('an Edge that is too old is told to update Edge', async ({ browser }) => {
+    const context = await browser.newContext({ userAgent: EDGE_OLD });
+    const page = await context.newPage();
+    await open(page, '/', { apis: 'none' });
+    await expect(panel(page, 'ask').locator('[data-ai-notice-title]')).toHaveText('Update Edge to use this');
+    await expect(panel(page, 'ask').locator('[data-ai-notice-body]')).toContainText('Edge menu');
+    await context.close();
+  });
+});
+
+test.describe('another Chromium browser', () => {
+  test.use({ userAgent: OPERA });
+
+  test('without the API it does not talk about the Chrome menu or Chrome versions', async ({ page }) => {
+    await open(page, '/', { apis: 'none' });
+    const notice = panel(page, 'ask').locator('[data-ai-notice]');
+    await expect(notice.locator('[data-ai-notice-title]')).toHaveText('On-device AI is switched off here');
+    await expect(notice).not.toContainText('Chrome menu');
+    await expect(notice).toContainText('Chrome on a desktop or laptop is the best place to try it');
+  });
+
+  test('its numbers are cautious, because nobody has published them', async ({ page }) => {
+    await open(page, '/', { availability: 'unavailable' });
+    await askHome(page, 'What identity and SSO work has he done?');
+    await expect(status(page, 'ask')).toContainText('this browser’s on-device AI');
+    await expect(status(page, 'ask')).toContainText('typically needs');
+  });
+});
+
+test.describe('a browser that does not speak Chrome’s dialect', () => {
+  const identity = 'What identity and SSO work has he done?';
+  const reply = (study: string) => ({
+    answerable: true,
+    answer: 'Shakoor designs OAuth 2.0 / OIDC sign-in.',
+    sources: [study],
+  });
+
+  test('rejects the language hints: it is asked again without them and works', async ({ page, request }) => {
+    const study = idOf(await knowledge(request), 'service', 'Identity, SSO');
+    await open(page, '/', { dialect: { languageHints: 'rejected' } });
+    await queueResponses(page, reply(study));
+    await askHome(page, identity);
+    await expect(panel(page, 'ask').locator('.ai-turn-a .ai-a-text')).toContainText('OAuth 2.0 / OIDC');
+    const calls = await aiState(page);
+    expect(calls.rejected.length, 'the launcher, the model check and create() each had to retry').toBe(3);
+    expect(new Set(calls.rejected)).toEqual(new Set(['languageHints']));
+    await expect(launcher(page), 'the Ask AI button still appears in such a browser').toBeVisible();
+    expect(calls.created).toBe(1);
+  });
+
+  test('cannot enforce a response schema: it is asked for plain JSON and a wrapped reply is read', async ({
+    page,
+    request,
+  }) => {
+    const study = idOf(await knowledge(request), 'service', 'Identity, SSO');
+    await open(page, '/', { dialect: { constraint: 'rejected' } });
+    const wrapped = (answer: string) =>
+      `Sure! Here is the JSON:\n\`\`\`json\n${JSON.stringify({ answerable: true, answer, sources: [study] })}\n\`\`\``;
+    await queueResponses(
+      page,
+      wrapped('Shakoor designs OAuth 2.0 / OIDC sign-in.'),
+      wrapped('Shakoor also delivers it as a service.'),
+    );
+    await askHome(page, identity);
+    await expect(panel(page, 'ask').locator('.ai-turn-a .ai-a-text')).toHaveText(
+      'Shakoor designs OAuth 2.0 / OIDC sign-in.',
+    );
+    await askHome(page, 'What AI and MCP tooling has he built?');
+    await expect(panel(page, 'ask').locator('.ai-turn-a')).toHaveCount(2);
+
+    const calls = await aiState(page);
+    expect(calls.rejected, 'the schema was refused once, then not tried again').toEqual(['constraint']);
+    expect(calls.prompts).toHaveLength(2);
+    for (const prompt of calls.prompts) {
+      expect(prompt.constraint).toBeUndefined();
+      expect(prompt.input, 'the shape is asked for in words instead').toContain(
+        'Reply with only a JSON object that follows this JSON Schema',
+      );
+    }
+  });
+
+  test('the answer checks still apply when the reply is only plain JSON', async ({ page, request }) => {
+    const study = idOf(await knowledge(request), 'service', 'Identity, SSO');
+    await open(page, '/', { dialect: { constraint: 'rejected' } });
+    await queueResponses(
+      page,
+      `{"answerable": true, "answer": "Shakoor has done identity work for 11 years.", "sources": ["${study}"]}`,
+    );
+    await askHome(page, identity);
+    await expect(panel(page, 'ask').locator('.ai-turn-a .ai-a-text')).toContainText('This site does not say');
+  });
+
+  test('the job-fit check and the quote helper also work without an enforced schema', async ({ page, request }) => {
+    const chunks = await knowledge(request);
+    const iam = idOf(chunks, 'skill', 'Identity, Security & IAM');
+    await open(page, '/services/', { dialect: { constraint: 'rejected' } });
+    await page.locator('#ai-fit-input').fill(enterJobDescription);
+    await queueResponses(
+      page,
+      `Here you go: {"requirements":[{"requirement":"OAuth 2.0 and OIDC single sign-on","match":"strong","evidence":["${iam}"]}]}`,
+    );
+    await page.getByRole('button', { name: 'Check the fit' }).click();
+    await expect(panel(page, 'ai-fit').locator('.ai-row .ai-chip')).toHaveText(['Strong evidence']);
+  });
+
+  test('has no clone(): each question gets a session of its own, and still works', async ({ page, request }) => {
+    const study = idOf(await knowledge(request), 'service', 'Identity, SSO');
+    await open(page, '/', { dialect: { clone: 'missing' } });
+    await queueResponses(page, reply(study), reply(study));
+    await askHome(page, identity);
+    await expect(panel(page, 'ask').locator('.ai-turn-a')).toHaveCount(1);
+    await askHome(page, 'What AI and MCP tooling has he built?');
+    await expect(panel(page, 'ask').locator('.ai-turn-a')).toHaveCount(2);
+    const calls = await aiState(page);
+    expect(calls.clones).toBe(0);
+    expect(calls.created, 'one session per question').toBe(2);
+    expect(calls.destroyed, 'and each released afterwards').toBe(2);
+  });
+});
+
+test.describe('when something unexpected goes wrong', () => {
+  test('it says what, so a browser quirk can be told from a passing glitch, and keeps the question', async ({
+    page,
+  }) => {
+    const warnings: string[] = [];
+    page.on('console', (message) => message.type() === 'warning' && warnings.push(message.text()));
+    await open(page, '/');
+    // Two failures in a row: a single one is retried, plainly, once.
+    await queueResponses(page, { __throw: 'DataCloneError' }, { __throw: 'DataCloneError' });
+    await askHome(page, 'What identity and SSO work has he done?');
+
+    await expect(status(page, 'ask')).toContainText('On-device AI could not finish that. Try again in a moment.');
+    await expect(status(page, 'ask')).toContainText('Details: DataCloneError: mock failure');
+    await expect(page.locator('#ask-input')).toHaveValue('What identity and SSO work has he done?');
+    expect(warnings.some((text) => text.includes('[on-device AI]'))).toBe(true);
+  });
+
+  test('one failed attempt is retried once, plainly, without switching schema enforcement off for good', async ({
+    page,
+    request,
+  }) => {
+    const study = idOf(await knowledge(request), 'service', 'Identity, SSO');
+    await open(page, '/');
+    const good = { answerable: true, answer: 'Shakoor designs OAuth 2.0 / OIDC sign-in.', sources: [study] };
+    await queueResponses(page, { __throw: 'DataCloneError' }, good, good);
+    await askHome(page, 'What identity and SSO work has he done?');
+    await expect(panel(page, 'ask').locator('.ai-turn-a .ai-a-text')).toContainText('OAuth 2.0 / OIDC');
+    await askHome(page, 'What AI and MCP tooling has he built?');
+    await expect(panel(page, 'ask').locator('.ai-turn-a')).toHaveCount(2);
+
+    const { prompts } = await aiState(page);
+    // The mock records a call before it fails: [0] the attempt that failed, [1] the plain retry, [2] the next question.
+    expect(prompts).toHaveLength(3);
+    expect(prompts[0].constraint, 'first asked with the schema').toBeDefined();
+    expect(prompts[1].constraint, 'the retry asked in plain words').toBeUndefined();
+    expect(prompts[2].constraint, 'a passing glitch did not disable the schema for the next question').toBeDefined();
+  });
+
+  test('the usual failures stay friendly, with no technical detail', async ({ page }) => {
+    await open(page, '/');
+    await queueResponses(page, { __throw: 'QuotaExceededError' });
+    await askHome(page, 'What identity and SSO work has he done?');
+    await expect(status(page, 'ask')).toHaveText('That is too long for the on-device model. Try something shorter.');
+  });
+
+  test('panels name no particular browser in their badge or fine print', async ({ page }) => {
+    await open(page, '/');
+    await expect(panel(page, 'ask').locator('.ai-badge')).toHaveText('On-device AI');
+    await expect(panel(page, 'ask').locator('.ai-fine')).not.toContainText('Chrome');
+  });
+});
+
+// ------------------------------------------------------------------------------------------------ a collapsed panel
+test.describe('the key points start as one button', () => {
+  const trigger = (page: Page) => page.locator('[data-ai-open="ai-summary"]');
+
+  test('one quiet button at first: nothing about the panel, the browser or the model is on show', async ({ page }) => {
+    await open(page, '/projects/oneportal-iam/', { stayCollapsed: true });
+    await expect(trigger(page)).toBeVisible();
+    await expect(trigger(page)).toHaveText('Short on time? Get the key points');
+    await expect(trigger(page)).toHaveAttribute('aria-expanded', 'false');
+    await expect(trigger(page)).toHaveAttribute('aria-controls', 'ai-summary');
+    await expect(panel(page, 'ai-summary')).toBeHidden();
+    expect((await aiState(page)).created).toBe(0);
+  });
+
+  test('a click opens the panel, moves focus to it and leaves no second button behind', async ({ page }) => {
+    await open(page, '/projects/oneportal-iam/', { stayCollapsed: true });
+    await trigger(page).click();
+    await expect(panel(page, 'ai-summary')).toBeVisible();
+    await expect(panel(page, 'ai-summary').locator('[data-ai-body]')).toBeVisible();
+    await expect(panel(page, 'ai-summary').getByRole('heading', { name: 'Key points of this page' })).toBeFocused();
+    await expect(trigger(page)).toBeHidden();
+  });
+
+  test('in a browser that cannot run it, the notice appears only once asked for', async ({ page }) => {
+    await open(page, '/projects/oneportal-iam/', { apis: 'none', stayCollapsed: true });
+    await expect(panel(page, 'ai-summary').locator('[data-ai-notice]')).toBeHidden(); // no notice at the top of every case study
+    await trigger(page).click();
+    await expect(panel(page, 'ai-summary').locator('[data-ai-notice]')).toBeVisible();
+  });
+
+  test('the button takes the same room whether or not the browser has the API', async ({ browser }) => {
+    const height = async (apis: 'both' | 'none') => {
+      const context = await browser.newContext({ viewport: { width: 412, height: 823 } });
+      const page = await context.newPage();
+      await open(page, '/projects/oneportal-iam/', { apis, stayCollapsed: true });
+      const top = await page.locator('#study-body').evaluate((el) => el.getBoundingClientRect().top);
+      await context.close();
+      return Math.round(top);
+    };
+    expect(await height('none')).toBe(await height('both'));
+  });
+});
+
+// ------------------------------------------------------------------------------------------------ layout stability
+// The page script decides which state a panel is in (controls, or a notice). On a slow machine it runs after the first
+// paint, and anything it reveals above the content pushes that content down: a layout shift, which the Lighthouse budget
+// (CLS <= 0.05) caught on a CI runner when the key-points panel sat at the top of a case study. These delay the scripts
+// to reproduce a slow machine, with the API present and absent, and measure the shift the way Lighthouse does.
+test.describe('layout stability when the page script runs late', () => {
+  test.use({ viewport: { width: 412, height: 823 } });
+  const pagesToCheck = ['/', '/services/', '/quote/', '/projects/oneportal-iam/', '/work/'];
+
+  for (const apis of ['both', 'none'] as const) {
+    for (const path of pagesToCheck) {
+      test(`${path} does not jump (${apis === 'both' ? 'API present' : 'API absent'})`, async ({ page }) => {
+        await page.route('**/_astro/*.js', async (route) => {
+          await new Promise((resolve) => setTimeout(resolve, 1500));
+          await route.continue();
+        });
+        await installChromeAi(page, { apis });
+        await page.goto(path);
+        await page.waitForLoadState('networkidle');
+        const shift = await page.evaluate(
+          () =>
+            new Promise<number>((resolve) => {
+              let total = 0;
+              new PerformanceObserver((list) => {
+                for (const entry of list.getEntries() as unknown as { value: number; hadRecentInput: boolean }[]) {
+                  if (!entry.hadRecentInput) total += entry.value;
+                }
+              }).observe({ type: 'layout-shift', buffered: true });
+              setTimeout(() => resolve(total), 400);
+            }),
+        );
+        expect(shift, `${path} shifted by ${shift.toFixed(3)}`).toBeLessThan(0.01);
+      });
+    }
+  }
 });

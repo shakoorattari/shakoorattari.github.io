@@ -1,5 +1,7 @@
 // The parts of a panel every feature shares: the status line, download progress, the "download the model?" question
 // and the Stop button. Loaded together with the feature, i.e. only once someone uses the panel.
+import { browserPossessive } from './support';
+
 export interface PanelUi {
   /** The polite live region under the controls. */
   say(text: string, tone?: 'info' | 'error'): void;
@@ -43,7 +45,7 @@ export function createPanelUi(panel: HTMLElement): PanelUi {
         bar.removeAttribute('value');
         if (lastBucket !== 4) {
           lastBucket = 4;
-          status.textContent = 'Preparing Chrome’s on-device model…';
+          status.textContent = `Preparing ${browserPossessive()} on-device model…`;
           status.dataset.tone = 'info';
         }
         return;
@@ -53,7 +55,7 @@ export function createPanelUi(panel: HTMLElement): PanelUi {
       const bucket = Math.floor(bar.value * 4);
       if (bucket !== lastBucket) {
         lastBucket = bucket;
-        status.textContent = `Downloading Chrome’s on-device model… ${Math.round(bar.value * 100)}%`;
+        status.textContent = `Downloading ${browserPossessive()} on-device model… ${Math.round(bar.value * 100)}%`;
         status.dataset.tone = 'info';
       }
     },

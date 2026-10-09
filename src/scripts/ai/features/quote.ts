@@ -5,7 +5,7 @@ import type { FeatureFactory } from '../feature';
 import { quoteOptions } from '../../../data/quote';
 import { h, reveal } from '../dom';
 import { ENGLISH_ONLY, isMostlyArabic, isString, parseObject, stringList, tidy } from '../guard';
-import { fitToContext, openPromptSession, reportFailure } from '../runtime';
+import { fitToContext, openPromptSession, promptStructured, reportFailure } from '../runtime';
 
 type SelectName = 'project' | 'timeline' | 'budget';
 
@@ -81,10 +81,12 @@ const quote: FeatureFactory = (panel, ui) => {
         try {
           ui.say('Reading your description…');
           const fitted = await fitToContext(session, brief);
-          const raw = await session.prompt(`Project description:\n${fitted.text}`, {
-            responseConstraint: schema,
-            signal: controller.signal,
-          });
+          const raw = await promptStructured(
+            session,
+            `Project description:\n${fitted.text}`,
+            schema,
+            controller.signal,
+          );
           const answer = parseObject(raw);
           if (!answer) {
             ui.say('The on-device model gave an answer that could not be read. Try again.', 'error');

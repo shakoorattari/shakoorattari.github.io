@@ -10,7 +10,7 @@ import { h, link, reveal } from '../dom';
 import { ENGLISH_ONLY, clip, isMostlyArabic, parseObject, stringList, tidy } from '../guard';
 import { loadKnowledge } from '../knowledge';
 import { rank, relation } from '../retrieve';
-import { fitToContext, openPromptSession, reportFailure } from '../runtime';
+import { fitToContext, openPromptSession, promptStructured, reportFailure } from '../runtime';
 
 type Match = 'strong' | 'partial' | 'none';
 interface Row {
@@ -99,10 +99,7 @@ const fit: FeatureFactory = (panel, ui) => {
         try {
           ui.say('Comparing the job description with the site…');
           const fitted = await fitToContext(session, description, promptFor, 900);
-          const raw = await session.prompt(promptFor(fitted.text), {
-            responseConstraint: schema,
-            signal: controller.signal,
-          });
+          const raw = await promptStructured(session, promptFor(fitted.text), schema, controller.signal);
           const answer = parseObject(raw);
           const items = answer && Array.isArray(answer.requirements) ? answer.requirements : null;
           if (!items) {

@@ -1,7 +1,7 @@
 // On-device AI panels. This is the only AI code that loads with a page, and it does very little: for each panel it
 // checks (synchronously, with no model call) whether this browser offers the API, then either shows the panel or a
 // "use Chrome" notice. A feature's code, and the model, are only fetched when someone presses a button.
-import { PROMPT_LANGUAGES, hasApi, showNotice, type AiApi } from './support';
+import { hasApi, promptAvailability, showNotice, type AiApi } from './support';
 import type { AiFeature, FeatureFactory } from './feature';
 
 type Loader = () => Promise<{ default: FeatureFactory }>;
@@ -20,7 +20,8 @@ async function load(panel: HTMLElement): Promise<AiFeature> {
   return module.default(panel, createPanelUi(panel));
 }
 
-document.querySelectorAll<HTMLElement>('[data-ai-panel]').forEach((panel) => {
+/** Decide what this panel shows (its controls, or a "use another browser" notice) and wire it up. */
+function setUp(panel: HTMLElement) {
   const api = panel.dataset.aiApi as AiApi;
   if (!hasApi(api)) {
     showNotice(panel, api);
@@ -52,6 +53,29 @@ document.querySelectorAll<HTMLElement>('[data-ai-panel]').forEach((panel) => {
       run(form, event);
     }
   });
+}
+
+document.querySelectorAll<HTMLElement>('[data-ai-panel]').forEach((panel) => {
+  if (!panel.hasAttribute('data-ai-collapsed')) {
+    setUp(panel);
+    return;
+  }
+  // A collapsed panel is one button until it is pressed, so nothing appears late above the content (a layout shift).
+  const trigger = document.querySelector<HTMLButtonElement>(`[data-ai-open="${panel.id}"]`);
+  trigger?.addEventListener(
+    'click',
+    () => {
+      trigger.setAttribute('aria-expanded', 'true');
+      trigger.hidden = true;
+      panel.hidden = false;
+      setUp(panel);
+      // Keyboard and screen-reader users land on what they opened.
+      const heading = panel.querySelector<HTMLElement>('h2, h3');
+      heading?.setAttribute('tabindex', '-1');
+      heading?.focus();
+    },
+    { once: true },
+  );
 });
 
 // ---- the "Ask AI" button and window, on every page. Shown only where this browser can run the model: a visitor in
@@ -61,7 +85,7 @@ const launcher = document.querySelector<HTMLButtonElement>('[data-ai-launcher]')
 const dialog = document.querySelector<HTMLDialogElement>('[data-ai-dialog]');
 if (launcher && dialog && hasApi('prompt')) {
   const check = () =>
-    globalThis.LanguageModel!.availability(PROMPT_LANGUAGES).then(
+    promptAvailability().then(
       (state) => {
         launcher.hidden = state === 'unavailable';
       },
