@@ -10,11 +10,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- **On-device AI features** that run in Chrome on a desktop or laptop, on the visitor's own computer, using Chrome's built-in Prompt and Summarizer APIs. Nothing runs until a button is pressed, and no text leaves the device. Other browsers see a short "open this in Chrome" notice inside the panel, never a site-wide banner.
+  - **Ask about Shakoor**, a chat on the home page and an **Ask AI** button on every page (shown only in a browser that can run it) that opens the same chat in a window. It answers from this site's own content: the websites and apps built, the projects, the skills and the experience, including overviews such as the technologies used most and the career timeline, with links to the sections each answer comes from. It remembers the conversation for follow-ups ("tell me more about that"). A question the site cannot answer gets a plain "this site does not say".
+  - **Job-fit check**, first on `/services/` after the introduction: paste a job description and see which of its requirements the site gives evidence for, and which it does not. Every citation is checked against the site's own text: one the model got wrong is replaced by the right evidence, and a looser link is shown as partial, never strong.
+  - **Quote brief helper** on `/quote/`: suggests the form's project type, timeline and budget from the description, and lists details worth adding. Nothing changes until "Use this" is pressed.
+  - **Key points** on case-study pages (and blog posts once published).
+  - Chrome asks first before downloading its model (a large, one-time download); the site never starts it without a click on "Download and continue".
+- A "Try the AI on this site" band under the home-page hero that links to the three tools, working in every browser.
+- `/ai/knowledge.json`: the site's content as small chunks for those features, built from the same data files as the pages (no email or phone number in it; `robots.txt` keeps crawlers out). `docs/ai-features.md` documents the design, the guardrails and how to check it in Chrome.
+- A privacy-page section on the on-device AI features.
+- 58 Playwright tests for them against a mock of Chrome's AI (`tests/ai-mock.ts`).
 - The free IELTS Band Builder app at `/ielts/` (a separate site that GitHub Pages serves under this domain) is now linked from the portfolio: an own-project page at `/work/ielts-study-guide/` with its screenshot, a card in the Work gallery on the home page and `/work/`, an "IELTS Band Builder" link in every footer, a "Live apps on this domain" section in `llms.txt`, and a paragraph about it on the privacy page.
 - `robots.txt` also lists the app's own sitemap (`/ielts/sitemap.xml`; crawlers only read `robots.txt` at the domain root) and keeps the third-party essay PDF inside the app out of search results.
 
 ### Changed
 
+- Every page now loads a small script (about 2 KB gzipped) and carries the hidden chat window, so the Ask AI button can appear. It does nothing until a button is pressed.
 - `npm run check:seo` knows about separate sites served under this domain: links into `/ielts/` are not treated as broken, `robots.txt` must list their sitemap, and a page built into `dist/ielts/` (which would shadow the app) fails the check.
 
 ## [1.5.1] - 2026-10-04

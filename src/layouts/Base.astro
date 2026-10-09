@@ -6,6 +6,7 @@ import { lastModified } from '../lib/lastmod';
 import { getBuildInfo } from '../lib/version';
 import { getAnalyticsConfig } from '../lib/analytics';
 import AnalyticsConsent from '../components/AnalyticsConsent.astro';
+import AiChatLauncher from '../components/AiChatLauncher.astro';
 
 interface Props {
   title?: string;
@@ -165,6 +166,7 @@ const graph = {
     <div class="app">
       <slot />
     </div>
+    <AiChatLauncher />
     {analytics.cloudflare && (
       <script
         is:inline

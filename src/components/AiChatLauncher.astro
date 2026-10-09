@@ -1,0 +1,142 @@
+---
+/**
+ * The "Ask AI" button and window on every page. The button stays hidden unless this browser can run Chrome's on-device AI
+ * (src/scripts/ai/panels.ts decides), so visitors in other browsers see no floating button at all: they meet the AI
+ * only inside a panel, where a notice explains what to do. It also loads the one script every AI panel needs.
+ */
+import Icon from './Icon.astro';
+import AiPanel from './AiPanel.astro';
+import ChatBox from './ChatBox.astro';
+import { chatExamples } from '../data/aiChat';
+---
+
+<button type="button" class="ai-launcher" data-ai-launcher aria-haspopup="dialog" hidden>
+  <Icon name="fa6-solid:wand-magic-sparkles" /> Ask AI
+</button>
+
+<dialog class="ai-dialog" data-ai-dialog aria-labelledby="ai-chat-title">
+  <div class="ai-dialog-bar">
+    <button type="button" class="ai-dialog-close" data-ai-close aria-label="Close the chat">
+      <Icon name="fa6-solid:xmark" />
+    </button>
+  </div>
+  <AiPanel
+    id="ai-chat"
+    feature="chat"
+    api="prompt"
+    title="Ask about Shakoor"
+    intro="Questions about the websites and apps built, the projects, the skills and the experience, answered from this site's own pages."
+  >
+    <ChatBox id="ai-chat" examples={chatExamples} />
+  </AiPanel>
+</dialog>
+
+<script>
+  import '../scripts/ai/panels';
+</script>
+
+<style lang="scss">
+  .ai-launcher {
+    position: fixed;
+    right: 16px;
+    bottom: 16px;
+    z-index: 1400;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 10px 18px;
+    border: 1px solid var(--gh-btn-border);
+    border-radius: 999px;
+    background: var(--gh-purple-emphasis);
+    color: var(--gh-fg-onEmphasis);
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 8px 24px var(--gh-shadow);
+    transition: var(--transition);
+  }
+  .ai-launcher:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 28px var(--gh-shadow-strong);
+  }
+
+  .ai-dialog {
+    margin: auto;
+    width: min(760px, calc(100vw - 24px));
+    max-height: min(88vh, 800px);
+    padding: 0;
+    overflow: auto;
+    color: var(--gh-fg-default);
+    background: var(--gh-canvas);
+    border: 1px solid var(--gh-border-default);
+    border-radius: 14px;
+    box-shadow: 0 24px 64px var(--gh-shadow-strong);
+  }
+  /* A scrim is theme-independent, so it is the one literal colour here. */
+  .ai-dialog::backdrop {
+    background: rgba(1, 4, 9, 0.6);
+  }
+  .ai-dialog-bar {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    display: flex;
+    justify-content: flex-end;
+    height: 0;
+  }
+  .ai-dialog-close {
+    position: relative;
+    top: 10px;
+    right: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--gh-border-default);
+    border-radius: 50%;
+    background: var(--gh-canvas-overlay);
+    color: var(--gh-fg-default);
+    cursor: pointer;
+  }
+  .ai-dialog-close:hover {
+    background: var(--gh-canvas-elevated);
+  }
+  /* The panel is the dialog's content: no second frame. */
+  .ai-dialog :global(.ai-panel) {
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    padding: 22px 64px 22px 24px;
+  }
+
+  @media (max-width: 576px) {
+    .ai-dialog {
+      width: 100vw;
+      max-width: 100vw;
+      height: 100dvh;
+      max-height: 100dvh;
+      border: 0;
+      border-radius: 0;
+    }
+    .ai-dialog :global(.ai-panel) {
+      padding: 18px 60px 18px 16px;
+    }
+  }
+  /* On a phone the analytics notice (AnalyticsConsent.astro, class .consent) spans the bottom edge: sit above it
+     instead of on it. Its id is not used here, because this CSS is on every page and the default build must not mention it. */
+  @media (max-width: 576px) {
+    :global(body:has(.consent:not([hidden]))) .ai-launcher {
+      bottom: 172px;
+    }
+  }
+</style>
+
+<style is:global>
+  /* Keep the page from scrolling behind the open chat window. */
+  html:has(dialog.ai-dialog[open]) {
+    overflow: hidden;
+  }
+</style>

@@ -1,0 +1,41 @@
+---
+/** Job-fit check for the /services/ hub: paste a job description, see which requirements the site gives evidence for. */
+import AiPanel from './AiPanel.astro';
+---
+
+<AiPanel
+  id="ai-fit"
+  feature="fit"
+  api="prompt"
+  class="page-section"
+  title="Hiring? Check the fit against your job description"
+  intro="Paste a job description and see which of its requirements this site gives evidence for, with links to that evidence. Anything the site does not show is marked as not found."
+  fine="Runs on your computer in Chrome: the job description never leaves it. A small on-device model does the matching and can miss things, so read the linked evidence."
+>
+  <form data-ai-form>
+    <label class="ai-label" for="ai-fit-input">
+      Job description
+    </label>
+    <textarea
+      id="ai-fit-input"
+      class="ai-field"
+      data-ai-input
+      rows="7"
+      maxlength="6000"
+      placeholder="Paste the responsibilities and requirements here."
+    ></textarea>
+    <div class="ai-actions">
+      <button type="submit" class="btn primary-btn">
+        Check the fit
+      </button>
+    </div>
+  </form>
+  <div class="ai-output" data-ai-output hidden>
+    <p class="ai-output-title">Fit against this site</p>
+    <p class="ai-summary" data-ai-summary></p>
+    <ul class="ai-results" data-ai-list></ul>
+    <p class="ai-after">
+      Anything marked “not found” may still be something I can do. <a href="/#contact">Ask me directly</a>.
+    </p>
+  </div>
+</AiPanel>

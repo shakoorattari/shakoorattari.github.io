@@ -1,0 +1,53 @@
+---
+/**
+ * The chat's controls: transcript, question box, example questions, clear button. It goes inside an <AiPanel
+ * feature="chat">; src/scripts/ai/features/chat.ts fills it in. `id` keeps the input's id unique when the page has two.
+ */
+interface Props {
+  id: string;
+  examples: string[];
+}
+const { id, examples } = Astro.props;
+---
+
+<div class="ai-chat">
+  <!-- A log is announced as it grows; tabindex lets keyboard users scroll it even when it holds no links. -->
+  <div
+    class="ai-transcript"
+    role="log"
+    aria-live="polite"
+    aria-relevant="additions"
+    aria-label="Conversation"
+    tabindex="0"
+    data-ai-transcript
+  ></div>
+  <form data-ai-form>
+    <label class="ai-label" for={`${id}-input`}>
+      Your question
+    </label>
+    <div class="ai-inline">
+      <input
+        id={`${id}-input`}
+        class="ai-field"
+        data-ai-input
+        type="text"
+        maxlength="200"
+        autocomplete="off"
+        placeholder="For example: What has he built for clients?"
+      />
+      <button type="submit" class="btn primary-btn">
+        Ask
+      </button>
+    </div>
+  </form>
+  <div class="ai-examples" role="group" aria-label="Example questions" data-ai-examples>
+    {examples.map((question) => (
+      <button type="button" class="ai-example" data-ai-action="example" data-question={question}>
+        {question}
+      </button>
+    ))}
+  </div>
+  <button type="button" class="ai-clear" data-ai-action="clear" hidden>
+    Clear conversation
+  </button>
+</div>
