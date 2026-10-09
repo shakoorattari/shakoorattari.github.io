@@ -14,6 +14,11 @@ export interface MockOptions {
   availability?: Availability;
   /** How long `prompt()` and `summarize()` take, so a test can press Stop. */
   delay?: number;
+  /**
+   * Ways another browser's dialect can differ from Chrome's (Edge's Prompt API is an experimental preview that documents
+   * fewer options): reject the language hints, reject a response schema, or have no `clone()`.
+   */
+  dialect?: { languageHints?: 'rejected'; constraint?: 'rejected'; clone?: 'missing' };
 }
 
 export interface MockState {
@@ -30,6 +35,8 @@ export interface MockState {
   prompts: { input: string; system: string; constraint: unknown }[];
   /** What `summarize()` receives. */
   summarized: string[];
+  /** What the mock refused, in order: 'languageHints' or 'constraint'. */
+  rejected: string[];
   /** Queued replies. An object is sent as JSON; { __throw: 'Name' } throws a DOMException of that name. */
   responses: unknown[];
   summaries: string[];
@@ -39,7 +46,7 @@ type MockWindow = Window & { __ai: MockState };
 
 export async function installChromeAi(page: Page, options: MockOptions = {}) {
   await page.addInitScript(
-    ({ apis, availability, delay }) => {
+    ({ apis, availability, delay, dialect }) => {
       if (apis === 'none') {
         Object.defineProperty(window, 'LanguageModel', { value: undefined, configurable: true });
         Object.defineProperty(window, 'Summarizer', { value: undefined, configurable: true });
@@ -55,6 +62,7 @@ export async function installChromeAi(page: Page, options: MockOptions = {}) {
         quota: 8000,
         prompts: [],
         summarized: [],
+        rejected: [],
         responses: [],
         summaries: ['- First point\n- Second point\n- Third point'],
       };
@@ -68,6 +76,15 @@ export async function installChromeAi(page: Page, options: MockOptions = {}) {
             reject(new DOMException('Aborted', 'AbortError'));
           });
         });
+
+      const hinted = (o?: Record<string, unknown>) =>
+        !!o && ('expectedInputs' in o || 'expectedInputLanguages' in o || 'outputLanguage' in o);
+      const rejectHints = (o?: Record<string, unknown>) => {
+        if (dialect.languageHints === 'rejected' && hinted(o)) {
+          state.rejected.push('languageHints');
+          throw new TypeError('expectedInputs is not supported');
+        }
+      };
 
       // Like Chrome: `downloadprogress` always fires (loaded 0, then 1), even when the model is already on the computer,
       // and 1 only means "downloaded": the session is not ready until the model has been loaded, a moment more.
@@ -91,6 +108,11 @@ export async function installChromeAi(page: Page, options: MockOptions = {}) {
 
       // As in Chrome, aborting the signal given to create() destroys that session, even long after it was created.
       const makeSession = (system: string, signal?: AbortSignal): Record<string, unknown> => {
+        const session = buildSession(system, signal);
+        if (dialect.clone === 'missing') delete session.clone;
+        return session;
+      };
+      const buildSession = (system: string, signal?: AbortSignal): Record<string, unknown> => {
         let destroyed = false;
         signal?.addEventListener('abort', () => {
           if (!destroyed) state.destroyed++;
@@ -103,6 +125,10 @@ export async function installChromeAi(page: Page, options: MockOptions = {}) {
             return Math.ceil(String(input).length / 4);
           },
           async prompt(input: string, call: { responseConstraint?: unknown; signal?: AbortSignal } = {}) {
+            if (dialect.constraint === 'rejected' && call.responseConstraint) {
+              state.rejected.push('constraint');
+              throw new TypeError('responseConstraint is not supported');
+            }
             state.prompts.push({ input, system, constraint: call.responseConstraint });
             await wait(state.delay, call.signal);
             const next = state.responses.shift();
@@ -126,8 +152,9 @@ export async function installChromeAi(page: Page, options: MockOptions = {}) {
       Object.defineProperty(window, 'LanguageModel', {
         configurable: true,
         value: {
-          async availability() {
+          async availability(options?: Record<string, unknown>) {
             state.availabilityCalls++;
+            rejectHints(options);
             return state.availability;
           },
           async create(create: {
@@ -135,6 +162,7 @@ export async function installChromeAi(page: Page, options: MockOptions = {}) {
             monitor?: (m: EventTarget) => void;
             signal?: AbortSignal;
           }) {
+            rejectHints(create as Record<string, unknown>);
             await open(create);
             return makeSession(create.initialPrompts?.[0]?.content ?? '', create.signal);
           },
@@ -144,11 +172,13 @@ export async function installChromeAi(page: Page, options: MockOptions = {}) {
       Object.defineProperty(window, 'Summarizer', {
         configurable: true,
         value: {
-          async availability() {
+          async availability(options?: Record<string, unknown>) {
             state.availabilityCalls++;
+            rejectHints(options);
             return state.availability;
           },
           async create(create: { monitor?: (m: EventTarget) => void; signal?: AbortSignal }) {
+            rejectHints(create as Record<string, unknown>);
             await open(create);
             return {
               inputQuota: state.quota,
@@ -168,7 +198,12 @@ export async function installChromeAi(page: Page, options: MockOptions = {}) {
         },
       });
     },
-    { apis: options.apis ?? 'both', availability: options.availability ?? 'available', delay: options.delay ?? 10 },
+    {
+      apis: options.apis ?? 'both',
+      availability: options.availability ?? 'available',
+      delay: options.delay ?? 10,
+      dialect: options.dialect ?? {},
+    },
   );
 
   // "Copy page link" in the notice.

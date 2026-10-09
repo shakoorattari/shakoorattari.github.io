@@ -35,7 +35,7 @@ const {
   level = 2,
   compact = false,
   source,
-  fine = 'Runs on your computer in Chrome: what you type here is not sent to this site. On-device AI can be wrong, so check the sources it links to.',
+  fine = 'Runs on your computer, in your browser: what you type here is not sent to this site. On-device AI can be wrong, so check the sources it links to.',
   class: className,
 } = Astro.props;
 const Heading = level === 3 ? 'h3' : 'h2';
@@ -51,7 +51,7 @@ const Heading = level === 3 ? 'h3' : 'h2';
   data-ai-source={source}
 >
   <p class="ai-badge">
-    <Icon name="fa6-solid:wand-magic-sparkles" /> On-device AI, in Chrome
+    <Icon name="fa6-solid:wand-magic-sparkles" /> On-device AI
   </p>
   <Heading id={`${id}-title`}>{title}</Heading>
   <p class="ai-intro">{intro}</p>

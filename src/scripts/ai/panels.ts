@@ -1,7 +1,7 @@
 // On-device AI panels. This is the only AI code that loads with a page, and it does very little: for each panel it
 // checks (synchronously, with no model call) whether this browser offers the API, then either shows the panel or a
 // "use Chrome" notice. A feature's code, and the model, are only fetched when someone presses a button.
-import { PROMPT_LANGUAGES, hasApi, showNotice, type AiApi } from './support';
+import { hasApi, promptAvailability, showNotice, type AiApi } from './support';
 import type { AiFeature, FeatureFactory } from './feature';
 
 type Loader = () => Promise<{ default: FeatureFactory }>;
@@ -61,7 +61,7 @@ const launcher = document.querySelector<HTMLButtonElement>('[data-ai-launcher]')
 const dialog = document.querySelector<HTMLDialogElement>('[data-ai-dialog]');
 if (launcher && dialog && hasApi('prompt')) {
   const check = () =>
-    globalThis.LanguageModel!.availability(PROMPT_LANGUAGES).then(
+    promptAvailability().then(
       (state) => {
         launcher.hidden = state === 'unavailable';
       },

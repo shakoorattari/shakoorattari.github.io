@@ -1,12 +1,35 @@
 // Opening Chrome's on-device models: availability, the download question, progress, and friendly errors.
 // Everything here runs only after a click, and only when the browser exposes the API (see support.ts).
-import { PROMPT_LANGUAGES } from './support';
+import {
+  PROMPT_LANGUAGES,
+  browserName,
+  detectBrowser,
+  isDialectProblem,
+  promptAvailability,
+  type Browser,
+} from './support';
 import type { PanelUi } from './ui';
 
-const UNAVAILABLE =
-  'This computer cannot run Chrome’s on-device AI. It needs a desktop or laptop with Windows 10/11, macOS 13 or later, or Linux, about 22 GB of free disk space, and either a graphics card with more than 4 GB of memory or 16 GB of RAM with four or more CPU cores.';
-const DOWNLOAD_QUESTION =
-  'Chrome needs to download its on-device AI model first. It is a large, one-time download that Chrome keeps and shares with other sites that use it. Your text stays on this computer. Download it now?';
+// The numbers differ by browser, so the message does too (Chrome: developer.chrome.com/docs/ai/prompt-api; Edge:
+// learn.microsoft.com/microsoft-edge/web-platform/prompt-api, where it is an experimental preview).
+const UNAVAILABLE: Record<Browser, string> = {
+  chrome:
+    'This computer cannot run Chrome’s on-device AI. It needs a desktop or laptop with Windows 10/11, macOS 13 or later, or Linux, about 22 GB of free disk space, and either a graphics card with more than 4 GB of memory or 16 GB of RAM with four or more CPU cores.',
+  edge: 'This computer cannot run Edge’s on-device AI, which is still an experimental preview. It needs Windows 10/11 or macOS 13.3 or later, at least 20 GB of free disk space, a graphics card with 5.5 GB or more of memory and an unmetered connection for the one-time download. Chrome on a desktop or laptop is the other thing to try.',
+  chromium:
+    'This computer cannot run this browser’s on-device AI. It typically needs a desktop or laptop with a graphics card with several GB of memory and about 20 GB of free disk space. Chrome on a desktop or laptop is the best place to try it.',
+  other:
+    'This computer cannot run on-device AI. It typically needs a desktop or laptop with a graphics card with several GB of memory and about 20 GB of free disk space. Chrome on a desktop or laptop is the best place to try it.',
+};
+const downloadQuestion = () =>
+  `${browserName()} needs to download its on-device AI model first. It is a large, one-time download that is kept and shared with other sites that use it. Your text stays on this computer. Download it now?`;
+
+/** What went wrong, in a few words, for the people who have to fix it: "TypeError: responseConstraint is not supported". */
+export function detailOf(error: unknown): string {
+  const name = error instanceof Error ? error.name : typeof error;
+  const message = (error instanceof Error ? error.message : String(error)).replace(/\s+/g, ' ').trim().slice(0, 140);
+  return message ? `${name}: ${message}` : name;
+}
 
 /** A friendly sentence for a failure, or null when the visitor stopped it on purpose. */
 export function describeFailure(error: unknown): string | null {
@@ -15,21 +38,31 @@ export function describeFailure(error: unknown): string | null {
     case 'AbortError':
       return null;
     case 'NotAllowedError':
-      return 'Chrome needs a fresh click before it can start the download. Press the button again.';
+      return 'The browser needs a fresh click before it can start the download. Press the button again.';
     case 'QuotaExceededError':
       return 'That is too long for the on-device model. Try something shorter.';
     case 'NotSupportedError':
       return 'The on-device model cannot handle that request.';
     default:
-      return 'On-device AI could not finish that. Try again in a moment.';
+      // Unexpected: say why, so a browser or a hardware quirk can be told apart from a passing glitch.
+      return `On-device AI could not finish that. Try again in a moment. Details: ${detailOf(error)}`;
   }
 }
 
-/** Show the outcome of a failed or stopped run in the panel. */
+/** Show the outcome of a failed or stopped run in the panel (and, for a surprise, in the console for whoever debugs it). */
 export function reportFailure(ui: PanelUi, error: unknown): void {
   const message = describeFailure(error);
+  if (message && !/^(The browser needs|That is too long|The on-device model cannot)/.test(message)) {
+    console.warn('[on-device AI]', error);
+  }
   ui.say(message ?? 'Stopped.', message ? 'error' : 'info');
 }
+
+// ---------------------------------------------------------------- browsers speak slightly different dialects
+// Chrome's Prompt API is the reference; Edge's is an experimental preview that documents fewer options. A browser that
+// rejects an option the page sends (language hints, a JSON schema, clone) should get a plainer request, not a failure.
+const mustSurface = (error: unknown): boolean =>
+  error instanceof Error && ['AbortError', 'QuotaExceededError', 'NotAllowedError'].includes(error.name);
 
 /**
  * Download progress, but only when a download is happening. Chrome always fires `downloadprogress` (0, then 1), even
@@ -50,15 +83,16 @@ async function ready(check: () => Promise<AiAvailability>, ui: PanelUi): Promise
   let state: AiAvailability;
   try {
     state = await check();
-  } catch {
-    ui.say('On-device AI could not start. Try again in a moment.', 'error');
+  } catch (error) {
+    console.warn('[on-device AI]', error);
+    ui.say(`On-device AI could not start. Try again in a moment. Details: ${detailOf(error)}`, 'error');
     return null;
   }
   if (state === 'unavailable') {
-    ui.say(UNAVAILABLE, 'error');
+    ui.say(UNAVAILABLE[detectBrowser()], 'error');
     return null;
   }
-  if (state === 'downloadable' && !(await ui.confirm(DOWNLOAD_QUESTION, 'Download and continue'))) {
+  if (state === 'downloadable' && !(await ui.confirm(downloadQuestion(), 'Download and continue'))) {
     ui.say('Cancelled. Nothing was downloaded.');
     return null;
   }
@@ -104,7 +138,8 @@ function recall<T>(key: string): T | undefined {
 
 /**
  * A Prompt API session primed with a system prompt, or null (the panel already says why). It is a clone of a kept base
- * session, so destroy it when done: that frees the clone and leaves the model loaded.
+ * session, so destroy it when done: that frees the clone and leaves the model loaded. In a browser without `clone()` it
+ * is a session of its own, created per question (slower, but it works).
  */
 export async function openPromptSession(
   ui: PanelUi,
@@ -123,24 +158,29 @@ export async function openPromptSession(
         reportFailure(ui, error);
         return null;
       }
-      forget(key); // Chrome released the base: start again below
+      forget(key); // the browser released the base: start again below
     }
   }
 
-  const state = await ready(() => api.availability(PROMPT_LANGUAGES), ui);
+  const state = await ready(promptAvailability, ui);
   if (!state) return null;
   ui.say('Starting the on-device model…');
   const loading = new AbortController();
   const forward = () => loading.abort();
   init.signal?.addEventListener('abort', forward, { once: true });
   try {
-    const base = await api.create({
-      ...PROMPT_LANGUAGES,
+    const options: LanguageModelCreateOptions = {
       initialPrompts: [{ role: 'system', content: init.system }],
       monitor: monitorTo(ui, state !== 'available'),
       signal: loading.signal,
-    });
+    };
+    // Language hints are a Chrome detail: a browser that rejects them is asked again without.
+    const base = await createWithFallback(
+      () => api.create({ ...PROMPT_LANGUAGES, ...options }),
+      () => api.create(options),
+    );
     init.signal?.removeEventListener('abort', forward); // from here on, Stop must not destroy the shared base
+    if (typeof base.clone !== 'function') return base; // no clone(): one session per question
     remember(key, base);
     return await base.clone({ signal: init.signal });
   } catch (error) {
@@ -150,6 +190,54 @@ export async function openPromptSession(
     init.signal?.removeEventListener('abort', forward);
     ui.progress(null);
   }
+}
+
+/** Ask with options; if the browser rejects them as unsupported, ask once more without. Anything else is a real failure. */
+async function createWithFallback<T>(withOptions: () => Promise<T>, plain: () => Promise<T>): Promise<T> {
+  try {
+    return await withOptions();
+  } catch (error) {
+    if (mustSurface(error) || !isDialectProblem(error)) throw error;
+    console.warn('[on-device AI] retrying with plainer options after', error);
+    return await plain();
+  }
+}
+
+async function availabilityOf(withOptions: () => Promise<AiAvailability>, plain: () => Promise<AiAvailability>) {
+  return createWithFallback(withOptions, plain);
+}
+
+let constraintWorks = true;
+
+/**
+ * Prompt for a JSON object that follows `schema`. Chrome can enforce the schema while it generates; a browser that cannot
+ * (or rejects this one) is asked again, plainly, to reply with only JSON of that shape. Either way the caller still
+ * validates every field, so a looser reply is no less safe, only less tidy. One failed attempt is retried once; only a
+ * browser that actually rejected the schema is asked the plain way from then on, so a passing glitch does not switch
+ * enforcement off for the rest of the visit.
+ */
+export async function promptStructured(
+  session: LanguageModelSession,
+  input: string,
+  schema: object,
+  signal?: AbortSignal,
+): Promise<string> {
+  let rejectedSchema = false;
+  if (constraintWorks) {
+    try {
+      return await session.prompt(input, { responseConstraint: schema, signal });
+    } catch (error) {
+      if (mustSurface(error)) throw error;
+      rejectedSchema = isDialectProblem(error);
+      console.warn('[on-device AI] the constrained prompt failed; asking for plain JSON instead', error);
+    }
+  }
+  const reply = await session.prompt(
+    `${input}\n\nReply with only a JSON object that follows this JSON Schema, with no other text:\n${JSON.stringify(schema)}`,
+    { signal },
+  );
+  if (rejectedSchema) constraintWorks = false;
+  return reply;
 }
 
 /** A summarizer for these options. It keeps no conversation, so one instance serves every call: do not destroy it. */
@@ -165,18 +253,27 @@ export async function openSummarizer(
   const kept = recall<SummarizerSession>(key);
   if (kept) return kept;
 
-  const state = await ready(() => api.availability(options), ui);
+  // Language hints are optional: a browser that rejects them is asked again without.
+  const plain: SummarizerOptions = { ...options, expectedInputLanguages: undefined, outputLanguage: undefined };
+  const state = await ready(
+    () =>
+      availabilityOf(
+        () => api.availability(options),
+        () => api.availability(plain),
+      ),
+    ui,
+  );
   if (!state) return null;
   ui.say('Starting the on-device model…');
   const loading = new AbortController();
   const forward = () => loading.abort();
   signal?.addEventListener('abort', forward, { once: true });
   try {
-    const session = await api.create({
-      ...options,
-      monitor: monitorTo(ui, state !== 'available'),
-      signal: loading.signal,
-    });
+    const extra = { monitor: monitorTo(ui, state !== 'available'), signal: loading.signal };
+    const session = await createWithFallback(
+      () => api.create({ ...options, ...extra }),
+      () => api.create({ ...plain, ...extra }),
+    );
     signal?.removeEventListener('abort', forward);
     return remember(key, session);
   } catch (error) {

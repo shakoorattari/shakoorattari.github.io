@@ -1,13 +1,23 @@
 // Small, pure checks that keep the model's output honest. The model proposes; these decide what is shown.
 
-/** Parse the model's JSON, or null when it is not an object (a constrained response normally is, but never assume). */
+/**
+ * Parse the model's JSON, or null when it is not an object. A constrained reply is exactly JSON; one from a browser that
+ * could not constrain it may come wrapped in a sentence or a code fence, so the outermost braces are tried too.
+ */
 export function parseObject(raw: string): Record<string, unknown> | null {
-  try {
-    const value: unknown = JSON.parse(raw);
-    return value && typeof value === 'object' && !Array.isArray(value) ? (value as Record<string, unknown>) : null;
-  } catch {
-    return null;
-  }
+  const attempt = (text: string): Record<string, unknown> | null => {
+    try {
+      const value: unknown = JSON.parse(text);
+      return value && typeof value === 'object' && !Array.isArray(value) ? (value as Record<string, unknown>) : null;
+    } catch {
+      return null;
+    }
+  };
+  const whole = attempt(raw);
+  if (whole) return whole;
+  const start = raw.indexOf('{');
+  const end = raw.lastIndexOf('}');
+  return start >= 0 && end > start ? attempt(raw.slice(start, end + 1)) : null;
 }
 
 export const isString = (value: unknown): value is string => typeof value === 'string';

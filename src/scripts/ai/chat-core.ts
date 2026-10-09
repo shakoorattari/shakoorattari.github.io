@@ -12,7 +12,7 @@ import type { KnowledgeChunk } from '../../lib/ai-knowledge';
 import type { PanelUi } from './ui';
 import { clip, numbersAreGrounded, parseObject, stringList, tidy } from './guard';
 import { rank, tokenize } from './retrieve';
-import { fitToContext, openPromptSession } from './runtime';
+import { fitToContext, openPromptSession, promptStructured } from './runtime';
 
 export interface Turn {
   question: string;
@@ -83,7 +83,7 @@ export async function respond(
       required: ['answerable', 'answer', 'sources'],
       additionalProperties: false,
     };
-    const raw = await session.prompt(promptFor(fitted.text), { responseConstraint: schema, signal });
+    const raw = await promptStructured(session, promptFor(fitted.text), schema, signal);
     const reply = parseObject(raw);
 
     const text = tidy(reply?.answer, 700);
