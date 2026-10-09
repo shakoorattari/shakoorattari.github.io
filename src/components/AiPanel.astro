@@ -19,6 +19,15 @@ interface Props {
   level?: 2 | 3;
   /** A smaller panel for places where it sits beside the main content (a form, the top of an article). */
   compact?: boolean;
+  /**
+   * Start as a single button that opens the panel. For a panel high on a page: what the page script reveals after the
+   * first paint (its controls, or a notice) would push the content below it down, a layout shift that a slow machine
+   * shows and Lighthouse counts. The button is the same size in every browser from the first paint, and what a click
+   * opens does not count as a shift.
+   */
+  collapsed?: boolean;
+  /** The text of that button. */
+  trigger?: string;
   /** CSS selector of the text a summary reads. */
   source?: string;
   /** Replaces the default privacy line. */
@@ -34,6 +43,8 @@ const {
   feature,
   level = 2,
   compact = false,
+  collapsed = false,
+  trigger = 'Try on-device AI',
   source,
   fine = 'Runs on your computer, in your browser: what you type here is not sent to this site. On-device AI can be wrong, so check the sources it links to.',
   class: className,
@@ -41,11 +52,18 @@ const {
 const Heading = level === 3 ? 'h3' : 'h2';
 ---
 
+{collapsed && (
+  <button type="button" class="btn secondary-btn ai-open" data-ai-open={id} aria-expanded="false" aria-controls={id}>
+    <Icon name="fa6-solid:wand-magic-sparkles" /> {trigger}
+  </button>
+)}
 <section
   id={id}
   class:list={['ai-panel', { compact }, className]}
   aria-labelledby={`${id}-title`}
+  hidden={collapsed}
   data-ai-panel
+  data-ai-collapsed={collapsed ? '' : undefined}
   data-ai-api={api}
   data-ai-feature={feature}
   data-ai-source={source}
@@ -113,6 +131,16 @@ const Heading = level === 3 ? 'h3' : 'h2';
   }
   .ai-panel.compact {
     padding: 14px 18px;
+  }
+  /* The button that opens a collapsed panel: absent without JavaScript (like the panel), the same size in every browser. */
+  .ai-open {
+    display: none;
+    min-height: 44px;
+    white-space: normal;
+    text-align: left;
+  }
+  :global(.js) .ai-open {
+    display: inline-flex;
   }
 
   .ai-badge {

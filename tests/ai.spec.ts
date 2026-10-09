@@ -28,9 +28,16 @@ const enterJobDescription =
   'We are hiring a senior backend engineer. You will design OAuth 2.0 and OIDC single sign-on for several tenants, ' +
   'run Kubernetes clusters in production, and mentor a team of engineers on cloud platforms.';
 
-async function open(page: Page, path: string, options: MockOptions = {}) {
-  await installChromeAi(page, options);
+/**
+ * Open a page with the mock installed. A collapsed panel (the key points at the top of a case study) is one button until it
+ * is pressed, so by default this presses it; pass `stayCollapsed` to see the page as it first loads.
+ */
+async function open(page: Page, path: string, options: MockOptions & { stayCollapsed?: boolean } = {}) {
+  const { stayCollapsed = false, ...mock } = options;
+  await installChromeAi(page, mock);
   await page.goto(path);
+  const trigger = page.locator('[data-ai-open]');
+  if (!stayCollapsed && (await trigger.count()) > 0) await trigger.first().click();
 }
 
 // ------------------------------------------------------------------------------------------------ the site data
@@ -1056,4 +1063,84 @@ test.describe('when something unexpected goes wrong', () => {
     await expect(panel(page, 'ask').locator('.ai-badge')).toHaveText('On-device AI');
     await expect(panel(page, 'ask').locator('.ai-fine')).not.toContainText('Chrome');
   });
+});
+
+// ------------------------------------------------------------------------------------------------ a collapsed panel
+test.describe('the key points start as one button', () => {
+  const trigger = (page: Page) => page.locator('[data-ai-open="ai-summary"]');
+
+  test('one quiet button at first: nothing about the panel, the browser or the model is on show', async ({ page }) => {
+    await open(page, '/projects/oneportal-iam/', { stayCollapsed: true });
+    await expect(trigger(page)).toBeVisible();
+    await expect(trigger(page)).toHaveText('Short on time? Get the key points');
+    await expect(trigger(page)).toHaveAttribute('aria-expanded', 'false');
+    await expect(trigger(page)).toHaveAttribute('aria-controls', 'ai-summary');
+    await expect(panel(page, 'ai-summary')).toBeHidden();
+    expect((await aiState(page)).created).toBe(0);
+  });
+
+  test('a click opens the panel, moves focus to it and leaves no second button behind', async ({ page }) => {
+    await open(page, '/projects/oneportal-iam/', { stayCollapsed: true });
+    await trigger(page).click();
+    await expect(panel(page, 'ai-summary')).toBeVisible();
+    await expect(panel(page, 'ai-summary').locator('[data-ai-body]')).toBeVisible();
+    await expect(panel(page, 'ai-summary').getByRole('heading', { name: 'Key points of this page' })).toBeFocused();
+    await expect(trigger(page)).toBeHidden();
+  });
+
+  test('in a browser that cannot run it, the notice appears only once asked for', async ({ page }) => {
+    await open(page, '/projects/oneportal-iam/', { apis: 'none', stayCollapsed: true });
+    await expect(panel(page, 'ai-summary').locator('[data-ai-notice]')).toBeHidden(); // no notice at the top of every case study
+    await trigger(page).click();
+    await expect(panel(page, 'ai-summary').locator('[data-ai-notice]')).toBeVisible();
+  });
+
+  test('the button takes the same room whether or not the browser has the API', async ({ browser }) => {
+    const height = async (apis: 'both' | 'none') => {
+      const context = await browser.newContext({ viewport: { width: 412, height: 823 } });
+      const page = await context.newPage();
+      await open(page, '/projects/oneportal-iam/', { apis, stayCollapsed: true });
+      const top = await page.locator('#study-body').evaluate((el) => el.getBoundingClientRect().top);
+      await context.close();
+      return Math.round(top);
+    };
+    expect(await height('none')).toBe(await height('both'));
+  });
+});
+
+// ------------------------------------------------------------------------------------------------ layout stability
+// The page script decides which state a panel is in (controls, or a notice). On a slow machine it runs after the first
+// paint, and anything it reveals above the content pushes that content down: a layout shift, which the Lighthouse budget
+// (CLS <= 0.05) caught on a CI runner when the key-points panel sat at the top of a case study. These delay the scripts
+// to reproduce a slow machine, with the API present and absent, and measure the shift the way Lighthouse does.
+test.describe('layout stability when the page script runs late', () => {
+  test.use({ viewport: { width: 412, height: 823 } });
+  const pagesToCheck = ['/', '/services/', '/quote/', '/projects/oneportal-iam/', '/work/'];
+
+  for (const apis of ['both', 'none'] as const) {
+    for (const path of pagesToCheck) {
+      test(`${path} does not jump (${apis === 'both' ? 'API present' : 'API absent'})`, async ({ page }) => {
+        await page.route('**/_astro/*.js', async (route) => {
+          await new Promise((resolve) => setTimeout(resolve, 1500));
+          await route.continue();
+        });
+        await installChromeAi(page, { apis });
+        await page.goto(path);
+        await page.waitForLoadState('networkidle');
+        const shift = await page.evaluate(
+          () =>
+            new Promise<number>((resolve) => {
+              let total = 0;
+              new PerformanceObserver((list) => {
+                for (const entry of list.getEntries() as unknown as { value: number; hadRecentInput: boolean }[]) {
+                  if (!entry.hadRecentInput) total += entry.value;
+                }
+              }).observe({ type: 'layout-shift', buffered: true });
+              setTimeout(() => resolve(total), 400);
+            }),
+        );
+        expect(shift, `${path} shifted by ${shift.toFixed(3)}`).toBeLessThan(0.01);
+      });
+    }
+  }
 });

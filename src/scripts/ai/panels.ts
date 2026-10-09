@@ -20,7 +20,8 @@ async function load(panel: HTMLElement): Promise<AiFeature> {
   return module.default(panel, createPanelUi(panel));
 }
 
-document.querySelectorAll<HTMLElement>('[data-ai-panel]').forEach((panel) => {
+/** Decide what this panel shows (its controls, or a "use another browser" notice) and wire it up. */
+function setUp(panel: HTMLElement) {
   const api = panel.dataset.aiApi as AiApi;
   if (!hasApi(api)) {
     showNotice(panel, api);
@@ -52,6 +53,29 @@ document.querySelectorAll<HTMLElement>('[data-ai-panel]').forEach((panel) => {
       run(form, event);
     }
   });
+}
+
+document.querySelectorAll<HTMLElement>('[data-ai-panel]').forEach((panel) => {
+  if (!panel.hasAttribute('data-ai-collapsed')) {
+    setUp(panel);
+    return;
+  }
+  // A collapsed panel is one button until it is pressed, so nothing appears late above the content (a layout shift).
+  const trigger = document.querySelector<HTMLButtonElement>(`[data-ai-open="${panel.id}"]`);
+  trigger?.addEventListener(
+    'click',
+    () => {
+      trigger.setAttribute('aria-expanded', 'true');
+      trigger.hidden = true;
+      panel.hidden = false;
+      setUp(panel);
+      // Keyboard and screen-reader users land on what they opened.
+      const heading = panel.querySelector<HTMLElement>('h2, h3');
+      heading?.setAttribute('tabindex', '-1');
+      heading?.focus();
+    },
+    { once: true },
+  );
 });
 
 // ---- the "Ask AI" button and window, on every page. Shown only where this browser can run the model: a visitor in
